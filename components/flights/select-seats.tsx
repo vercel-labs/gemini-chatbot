@@ -41,11 +41,11 @@ export const SelectSeats = ({
         Great! Here are the seats available for you to pick for the flight you
         chose!
       </p>
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-col gap-4 p-4 bg-white border rounded-lg">
+      <div className="flex flex-col gap-4 dark:text-zinc-300">
+        <div className="flex flex-col gap-4 p-4 bg-white border rounded-lg dark:bg-zinc-950">
           <div className="flex flex-row items-center gap-4">
             <div className="p-2 border rounded-md size-8 bg-zinc-100 md:size-12">
-              <img src="https://www.gstatic.com/flights/airline_logos/70px/LA.png" />
+              <img src="https://www.gstatic.com/flights/airline_logos/70px/multi.png" />
             </div>
             <div>
               <div className="text-sm text-zinc-500 md:text-base">
@@ -58,7 +58,7 @@ export const SelectSeats = ({
           </div>
 
           <div
-            className={`relative flex w-full flex-row justify-center rounded-lg border bg-zinc-600 px-4 font-medium`}
+            className={`relative flex w-full flex-row justify-center rounded-lg border bg-zinc-600 px-4 font-medium dark:bg-zinc-800`}
           >
             <div className="flex flex-col gap-4 p-4 border-x border-zinc-400 bg-zinc-50">
               {[4, 3, 2, 1].map((row, rowIndex) => (
@@ -125,7 +125,7 @@ export const SelectSeats = ({
             {suggestions.map(suggestion => (
               <div
                 key={suggestion}
-                className="flex flex-row items-center gap-2 px-3 py-2 text-sm bg-white border rounded-lg cursor-pointer shrink-0 hover:bg-zinc-100"
+                className="flex flex-row items-center gap-2 px-3 py-2 text-sm bg-white border rounded-lg cursor-pointer shrink-0 hover:bg-zinc-100 dark:bg-zinc-950 dark:hover:bg-zinc-900"
                 onClick={async () => {
                   const response = await submitUserMessage(suggestion, [])
                   setMessages((currentMessages: any[]) => [

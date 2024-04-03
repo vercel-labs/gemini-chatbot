@@ -41,11 +41,11 @@ export const ListHotels = ({
   const [_, setMessages] = useUIState()
 
   return (
-    <div className="flex flex-col gap-2 bg-white p-2 font-medium border rounded-lg">
+    <div className="flex flex-col gap-2 bg-white p-2 font-medium border rounded-lg dark:bg-zinc-950">
       {hotels.map(hotel => (
         <div
           key={hotel.id}
-          className="p-2 flex flex-row justify-between hover:bg-zinc-100 rounded-lg cursor-pointer"
+          className="p-2 flex flex-row justify-between hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-lg cursor-pointer"
           onClick={async () => {
             const response = await submitUserMessage(
               `I want to book the ${hotel.name}, proceed to checkout by calling checkoutBooking function.`

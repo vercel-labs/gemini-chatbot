@@ -65,7 +65,7 @@ export const FlightStatus = ({
       <div className="flex flex-col gap-4 rounded-lg border bg-white p-4 font-medium dark:bg-zinc-950">
         <div className="flex flex-row items-center gap-4">
           <div className="size-12 rounded-md border bg-zinc-100 p-2">
-            <img src="https://www.gstatic.com/flights/airline_logos/70px/LA.png" />
+            <img src="https://www.gstatic.com/flights/airline_logos/70px/multi.png" />
           </div>
           <div>
             <div className="text-sm text-zinc-500">
@@ -124,7 +124,7 @@ export const FlightStatus = ({
         {suggestions.map(suggestion => (
           <div
             key={suggestion}
-            className="flex flex-row items-center gap-2 px-3 py-2 text-sm bg-white border rounded-lg cursor-pointer shrink-0 hover:bg-zinc-100"
+            className="flex flex-row items-center gap-2 px-3 py-2 text-sm bg-white border rounded-lg cursor-pointer shrink-0 hover:bg-zinc-100 dark:bg-zinc-950 dark:hover:bg-zinc-900"
             onClick={async () => {
               const response = await submitUserMessage(suggestion)
               setMessages((currentMessages: any[]) => [

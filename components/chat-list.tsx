@@ -7,6 +7,9 @@ import { PurchaseTickets } from './flights/purchase-ticket'
 import { BotCard } from './stocks'
 import { ListHotels } from './hotels/list-hotels'
 import { ListFlights } from './flights/list-flights'
+import { SelectSeats } from './flights/select-seats'
+import { BoardingPass } from './flights/boarding-pass'
+import { FlightStatus } from './flights/flight-status'
 
 export interface ChatList {
   messages: UIState
@@ -51,10 +54,4 @@ export function ChatList({ messages, session, isShared }: ChatList) {
       ))}
     </div>
   ) : null
-  // ) : null
-  // <div className="relative mx-auto max-w-2xl px-4">
-  //   <BotCard>
-  //     <ListHotels />
-  //   </BotCard>
-  // </div>
 }

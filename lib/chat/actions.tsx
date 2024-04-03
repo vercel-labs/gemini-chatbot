@@ -33,6 +33,7 @@ import { google } from 'ai/google'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { z } from 'zod'
 import { ListHotels } from '@/components/hotels/list-hotels'
+import { Destinations } from '@/components/flights/destinations'
 
 const genAI = new GoogleGenerativeAI(
   process.env.GOOGLE_GENERATIVE_AI_API_KEY || ''
@@ -248,21 +249,11 @@ async function submitUserMessage(content: string) {
         const { toolName, args } = delta
 
         if (toolName === 'listDestinations') {
+          const { destinations } = args
+
           uiStream.done(
             <BotCard>
-              <div className="flex flex-col gap-3 text-zinc-950">
-                <div className="">
-                  Here is a list of holiday destinations based on the books you
-                  have read. Choose one to proceed to booking a flight.
-                </div>
-                <ul>
-                  {args.destinations.map(destination => (
-                    <li className="list-disc" key={destination}>
-                      - {destination}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <Destinations destinations={destinations} />
             </BotCard>
           )
 
