@@ -70,8 +70,8 @@ export const PurchaseTickets = ({
         {currentStatus === 'requires_confirmation' ? (
           <div className="flex flex-col gap-4">
             <p className="">
-              Thanks for choosing your seats! Confirm your purchase to complete
-              your booking.
+              Thanks for choosing your flight and hotel reservations! Confirm
+              your purchase to complete your booking.
             </p>
             <div
               className="p-2 text-center rounded-md cursor-pointer bg-zinc-800 text-zinc-50 hover:bg-zinc-950 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
@@ -81,7 +81,7 @@ export const PurchaseTickets = ({
                 setDisplay(display)
               }}
             >
-              Pay ${summary.price}
+              Pay $834
             </div>
           </div>
         ) : currentStatus === 'requires_code' ? (

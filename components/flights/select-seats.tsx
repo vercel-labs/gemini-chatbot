@@ -38,8 +38,8 @@ export const SelectSeats = ({
   return (
     <div>
       <p className="mb-4">
-        Great! Here are the seats available for you to pick for the flight you
-        chose!
+        Great! Here are the available seats for your flight. Please select a
+        seat to continue.
       </p>
       <div className="flex flex-col gap-4 dark:text-zinc-300">
         <div className="flex flex-col gap-4 p-4 bg-white border rounded-lg dark:bg-zinc-950">
