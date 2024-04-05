@@ -69,11 +69,10 @@ export function PromptForm({
     >
       <input
         type="file"
-        accept="image/*"
         className="hidden"
         id="file"
         ref={fileRef}
-        onChange={event => {
+        onChange={async event => {
           if (!event.target.files) {
             toast.error('No file selected')
             return
@@ -81,16 +80,24 @@ export function PromptForm({
 
           const file = event.target.files[0]
 
-          const reader = new FileReader()
-          reader.readAsDataURL(file)
-
-          reader.onloadend = async () => {
-            const base64String = reader.result
-            const responseMessage = await describeImage(base64String)
+          if (file.type.startsWith('video/')) {
+            const responseMessage = await describeImage('')
             setMessages(currentMessages => [
               ...currentMessages,
               responseMessage
             ])
+          } else {
+            const reader = new FileReader()
+            reader.readAsDataURL(file)
+
+            reader.onloadend = async () => {
+              const base64String = reader.result
+              const responseMessage = await describeImage(base64String)
+              setMessages(currentMessages => [
+                ...currentMessages,
+                responseMessage
+              ])
+            }
           }
         }}
       />

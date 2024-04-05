@@ -34,6 +34,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai'
 import { z } from 'zod'
 import { ListHotels } from '@/components/hotels/list-hotels'
 import { Destinations } from '@/components/flights/destinations'
+import { Video } from '@/components/media/video'
 
 const genAI = new GoogleGenerativeAI(
   process.env.GOOGLE_GENERATIVE_AI_API_KEY || ''
@@ -49,35 +50,52 @@ async function describeImage(imageBase64: string) {
 
   uiStream.update(
     <BotCard>
-      <div className="flex flex-col gap-2">
-        <img className="rounded-lg" src={imageBase64} />
-        <div className="flex flex-row gap-2 items-center">
-          <SpinnerIcon />
-          <div className="text-zinc-500 text-sm">Analyzing image...</div>
-        </div>
-      </div>
+      <Video isLoading />
     </BotCard>
   )
   ;(async () => {
-    const imageData = imageBase64.split(',')[1]
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro-vision' })
-    const prompt = 'List the books in this image.'
-    const image = {
-      inlineData: {
-        data: imageData,
-        mimeType: 'image/png'
-      }
-    }
+    let text = ''
 
-    const result = await model.generateContent([prompt, image])
-    const text = result.response.text()
+    // if attachment is video for demo purposes
+    if (imageBase64 === '') {
+      await new Promise(resolve => setTimeout(resolve, 5000))
+
+      text = `
+      The books in this image are:
+
+      1. The Little Prince by Antoine de Saint-Exupéry
+      2. The Prophet by Kahlil Gibran
+      3. Man's Search for Meaning by Viktor Frankl
+      4. The Alchemist by Paulo Coelho
+      5. The Kite Runner by Khaled Hosseini
+      6. To Kill a Mockingbird by Harper Lee
+      7. The Catcher in the Rye by J.D. Salinger
+      8. The Great Gatsby by F. Scott Fitzgerald
+      9. 1984 by George Orwell
+      10. Animal Farm by George Orwell
+      `
+    } else {
+      const imageData = imageBase64.split(',')[1]
+      const model = genAI.getGenerativeModel({ model: 'gemini-pro-vision' })
+      const prompt = 'List the books in this image.'
+      const image = {
+        inlineData: {
+          data: imageData,
+          mimeType: 'image/png'
+        }
+      }
+
+      const result = await model.generateContent([prompt, image])
+      text = result.response.text()
+      console.log(text)
+    }
 
     spinnerStream.done(null)
     messageStream.done(null)
 
     uiStream.done(
       <BotCard>
-        <img className="rounded-lg" src={imageBase64} />
+        <Video />
       </BotCard>
     )
 
@@ -133,7 +151,11 @@ async function submitUserMessage(content: string) {
           description: 'List destination cities, max 5.',
           parameters: z.object({
             destinations: z.array(
-              z.string().describe('List of destination cities.')
+              z
+                .string()
+                .describe(
+                  'List of destination cities. Include paris as one of the cities.'
+                )
             )
           })
         },
