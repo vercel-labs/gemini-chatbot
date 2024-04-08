@@ -40,21 +40,21 @@ export const ListFlights = ({
   const flights = [
     {
       id: 1,
-      airlines: 'KLM Airlines',
+      airlines: 'United Airlines',
       departureTime: '8:30 PM',
       arrivalTime: '4:20 PM+1',
       price: 531
     },
     {
       id: 2,
-      airlines: 'KLM Airlines',
+      airlines: 'United Airlines',
       departureTime: '2:40 PM',
       arrivalTime: '10:25 AM+1',
       price: 564
     },
     {
       id: 3,
-      airlines: 'KLM Airlines',
+      airlines: 'United Airlines',
       departureTime: '3:00 PM',
       arrivalTime: '10:50 AM+1',
       price: 611
@@ -101,10 +101,11 @@ export const ListFlights = ({
               }}
             >
               <div className="flex flex-row items-center gap-2 md:w-60">
-                <div className="size-8 rounded-md border bg-zinc-100 p-1 md:size-12 md:p-2">
+                <div className="size-8 md:size-12">
                   <img
+                    className="rounded-md border"
                     src={
-                      'https://www.gstatic.com/flights/airline_logos/70px/multi.png'
+                      'https://www.gstatic.com/flights/airline_logos/70px/UA.png'
                     }
                   />
                 </div>

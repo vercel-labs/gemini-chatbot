@@ -19,20 +19,20 @@ export const ListHotels = ({
   hotels = [
     {
       id: 1,
-      name: 'Hôtel Cluny Sorbonne',
-      description: 'Traditional quarters in a casual lodging',
+      name: 'The St. Regis Rome',
+      description: 'Renowned luxury hotel with a lavish spa',
       price: 101
     },
     {
       id: 2,
-      name: 'Tonic Hotel Du Louvre',
-      description: 'Cozy downtown hotel with free Wi-Fi',
+      name: 'The Inn at the Roman Forum',
+      description: 'Upscale hotel with Roman ruins and a bar',
       price: 145
     },
     {
       id: 3,
-      name: 'Hôtel de France Quartier-Latin',
-      description: 'Laid-back lodging with free Wi-Fi',
+      name: 'Hotel Roma',
+      description: 'Vibrant property with free breakfast',
       price: 112
     }
   ]
@@ -43,8 +43,8 @@ export const ListHotels = ({
   return (
     <div className="flex flex-col gap-4">
       <div>
-        We recommend a 3 night stay in Paris. Here are some hotels you can
-        choose from.
+        We recommend a 3 night stay in Rome. Here are some hotels you can choose
+        from.
       </div>
 
       <div className="flex flex-col gap-2 bg-white p-2 font-medium border rounded-lg dark:bg-zinc-950">

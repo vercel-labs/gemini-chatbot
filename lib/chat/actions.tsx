@@ -154,7 +154,7 @@ async function submitUserMessage(content: string) {
               z
                 .string()
                 .describe(
-                  'List of destination cities. Include paris as one of the cities.'
+                  'List of destination cities. Include rome as one of the cities.'
                 )
             )
           })
@@ -165,8 +165,8 @@ async function submitUserMessage(content: string) {
           parameters: z.object({
             departingCity: z.string(),
             arrivalCity: z.string(),
-            departingAirport: z.string(),
-            arrivalAirport: z.string(),
+            departingAirport: z.string().describe('Departing airport code'),
+            arrivalAirport: z.string().describe('Arrival airport code'),
             date: z
               .string()
               .describe(
@@ -232,7 +232,7 @@ async function submitUserMessage(content: string) {
       The date today is ${format(new Date(), 'd LLLL, yyyy')}. 
       The user's current location is San Francisco, CA, so the departure city will be San Francisco and airport will be San Francisco International Airport (SFO). The user would like to book the flight out on May 12, 2024.
 
-      List KLM Royal Dutch Airlines flights only.
+      List United Airlines flights only.
       
       Here's the flow: 
         1. List holiday destinations based on a collection of books.

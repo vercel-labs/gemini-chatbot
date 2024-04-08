@@ -37,8 +37,8 @@ export function ChatPanel({
   const exampleMessages = [
     {
       heading: 'List flights flying from',
-      subheading: 'San Francisco to Paris today',
-      message: `List flights flying from San Francisco to Paris today`
+      subheading: 'San Francisco to Rome today',
+      message: `List flights flying from San Francisco to Rome today`
     },
     {
       heading: 'What is the status',

@@ -44,8 +44,11 @@ export const SelectSeats = ({
       <div className="flex flex-col gap-4 dark:text-zinc-300">
         <div className="flex flex-col gap-4 p-4 bg-white border rounded-lg dark:bg-zinc-950">
           <div className="flex flex-row items-center gap-4">
-            <div className="p-2 border rounded-md size-8 bg-zinc-100 md:size-12">
-              <img src="https://www.gstatic.com/flights/airline_logos/70px/multi.png" />
+            <div className="size-8 md:size-12">
+              <img
+                className="border rounded-md"
+                src="https://www.gstatic.com/flights/airline_logos/70px/UA.png"
+              />
             </div>
             <div>
               <div className="text-sm text-zinc-500 md:text-base">
