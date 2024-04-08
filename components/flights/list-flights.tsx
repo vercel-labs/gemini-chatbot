@@ -69,17 +69,17 @@ export const ListFlights = ({
         <div className="flex flex-row gap-4">
           <div>
             <div className="text-xs text-zinc-500">DEPARTURE</div>
-            <div className="text-lg">{departingCity}</div>
+            <div className="text-sm md:text-lg">{departingCity}</div>
           </div>
           <div>
             <div className="text-xs text-zinc-500">ARRIVAL</div>
-            <div className="text-lg">{arrivalCity}</div>
+            <div className="text-sm md:text-lg">{arrivalCity}</div>
           </div>
         </div>
         <div className="flex flex-row gap-4">
           <div>
             <div className="text-right text-xs text-zinc-500">DATE</div>
-            <div className="text">{date}</div>
+            <div className="text-sm md:text-lg">{date}</div>
           </div>
         </div>
       </div>

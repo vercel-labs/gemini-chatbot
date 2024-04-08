@@ -51,7 +51,7 @@ export const ListHotels = ({
         {hotels.map(hotel => (
           <div
             key={hotel.id}
-            className="p-2 flex flex-row justify-between hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-lg cursor-pointer"
+            className="p-2 flex flex-row justify-between hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-lg cursor-pointer gap-4"
             onClick={async () => {
               const response = await submitUserMessage(
                 `I want to book the ${hotel.name}, proceed to checkout by calling checkoutBooking function.`
@@ -62,7 +62,7 @@ export const ListHotels = ({
               ])
             }}
           >
-            <div className="flex flex-row gap-4">
+            <div className="flex flex-col  md:flex-row gap-4">
               <div className="h-12 w-20 bg-zinc-100 border rounded-md">
                 <img
                   className="object-cover h-full rounded-md"
@@ -77,7 +77,7 @@ export const ListHotels = ({
 
             <div>
               <div className="text-emerald-700 text-right">${hotel.price}</div>
-              <div className="text-zinc-500">per night</div>
+              <div className="text-zinc-500 text-right text-sm">per night</div>
             </div>
           </div>
         ))}

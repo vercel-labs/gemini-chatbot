@@ -64,8 +64,11 @@ export const FlightStatus = ({
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-4 rounded-lg border bg-white p-4 font-medium dark:bg-zinc-950">
         <div className="flex flex-row items-center gap-4">
-          <div className="size-12 rounded-md border bg-zinc-100 p-2">
-            <img src="https://www.gstatic.com/flights/airline_logos/70px/multi.png" />
+          <div className="size-12">
+            <img
+              className="rounded-md border"
+              src="https://www.gstatic.com/flights/airline_logos/70px/UA.png"
+            />
           </div>
           <div>
             <div className="text-sm text-zinc-500">
@@ -90,7 +93,9 @@ export const FlightStatus = ({
               <div className="text-sm text-zinc-500">Terminal N · GATE D43</div>
             </div>
             <div>
-              <div className="text-2xl text-red-600">{departingTime}</div>
+              <div className="text-lg md:text-2xl text-red-600">
+                {departingTime}
+              </div>
               <div className="text-red-600">2h 15m late</div>
               <div className="text-sm text-zinc-500">in 6h 50m</div>
             </div>
@@ -113,7 +118,9 @@ export const FlightStatus = ({
               <div className="text-sm text-zinc-500">Baggage Belt 1</div>
             </div>
             <div className="flex flex-col">
-              <div className="text-2xl text-red-600">{arrivalTime}</div>
+              <div className="text-lg md:text-2xl text-red-600">
+                {arrivalTime}
+              </div>
               <div className="text-red-600">2h 15m late</div>
             </div>
           </div>
