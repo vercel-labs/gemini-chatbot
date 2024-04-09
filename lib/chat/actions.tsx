@@ -36,8 +36,6 @@ import { ListHotels } from '@/components/hotels/list-hotels'
 import { Destinations } from '@/components/flights/destinations'
 import { Video } from '@/components/media/video'
 
-export const maxDuration = 60 * 2 // 2 minutes
-
 const genAI = new GoogleGenerativeAI(
   process.env.GOOGLE_GENERATIVE_AI_API_KEY || ''
 )
@@ -476,7 +474,7 @@ export async function validateCode() {
   ;(async () => {
     await sleep(2000)
 
-    ui.update(
+    ui.done(
       <div className="flex flex-col items-center justify-center gap-3 p-4 text-emerald-700">
         <CheckIcon />
         <div>Payment Succeeded</div>
@@ -498,7 +496,7 @@ export async function validateCode() {
       ]
     })
 
-    status.update('completed')
+    status.done('completed')
   })()
 
   return {
