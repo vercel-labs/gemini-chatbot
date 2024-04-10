@@ -477,10 +477,10 @@ export async function validateCode() {
     await sleep(2000)
 
     ui.done(
-      <div className="flex flex-col items-center justify-center gap-3 p-4 text-emerald-700">
+      <div className="flex flex-col items-center text-center justify-center gap-3 p-4 text-emerald-700">
         <CheckIcon />
         <div>Payment Succeeded</div>
-        <div className="text-sm text-zinc-500">
+        <div className="text-sm text-zinc-600">
           Thanks for your purchase! You will receive an email confirmation
           shortly.
         </div>

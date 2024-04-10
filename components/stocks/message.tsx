@@ -1,6 +1,8 @@
 'use client'
 
-import { GoogleIcon, IconUser } from '@/components/ui/icons'
+/* eslint-disable @next/next/no-img-element */
+
+import { GoogleIcon, IconGemini, IconUser } from '@/components/ui/icons'
 import { cn } from '@/lib/utils'
 import { spinner } from './spinner'
 import { CodeBlock } from '../ui/codeblock'
@@ -37,7 +39,7 @@ export function BotMessage({
   return (
     <div className={cn('group relative flex items-start md:-ml-12', className)}>
       <div className="bg-background flex size-[25px] shrink-0 select-none items-center justify-center rounded-lg border shadow-sm">
-        <GoogleIcon />
+        <img className="size-6" src="/images/gemini.png" alt="gemini logo" />
       </div>
       <div className="ml-4 flex-1 space-y-2 overflow-hidden px-1">
         <MemoizedReactMarkdown
@@ -101,7 +103,7 @@ export function BotCard({
           !showAvatar && 'invisible'
         )}
       >
-        <GoogleIcon />
+        <img className="size-6" src="/images/gemini.png" alt="gemini logo" />
       </div>
       <div className="ml-4 flex-1 pl-2">{children}</div>
     </div>
@@ -124,7 +126,7 @@ export function SpinnerMessage() {
   return (
     <div className="group relative flex items-start md:-ml-12">
       <div className="bg-background flex size-[25px] shrink-0 select-none items-center justify-center rounded-lg border shadow-sm">
-        <GoogleIcon />
+        <img className="size-6" src="/images/gemini.png" alt="gemini logo" />
       </div>
       <div className="ml-4 h-[24px] flex flex-row items-center flex-1 space-y-2 overflow-hidden px-1">
         {spinner}
