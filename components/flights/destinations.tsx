@@ -7,15 +7,15 @@ export const Destinations = ({ destinations }: { destinations: string[] }) => {
   const [_, setMessages] = useUIState()
 
   return (
-    <div className="flex flex-col gap-3 text-zinc-950 dark:text-zinc-200">
-      <div className="dark:text-zinc-200">
+    <div className="grid gap-4">
+      <p>
         Here is a list of holiday destinations based on the books you have read.
         Choose one to proceed to booking a flight.
-      </div>
-      <div className="flex flex-col gap-1">
+      </p>
+      <div className="flex flex-col sm:flex-row items-start gap-2">
         {destinations.map(destination => (
-          <div
-            className="bg-white rounded-xl p-2 tezt-`inc-800 dark:text-zinc-200 cursor-pointer hover:bg-zinc-200 dark:bg-zinc-950 border"
+          <button
+            className="flex items-center gap-2 px-3 py-2 text-sm transition-colors bg-sky-50 hover:bg-sky-100 rounded-xl cursor-pointer"
             key={destination}
             onClick={async () => {
               const response = await submitUserMessage(
@@ -28,7 +28,7 @@ export const Destinations = ({ destinations }: { destinations: string[] }) => {
             }}
           >
             {destination}
-          </div>
+          </button>
         ))}
       </div>
     </div>

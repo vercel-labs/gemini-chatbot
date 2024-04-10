@@ -41,17 +41,16 @@ export const ListHotels = ({
   const [_, setMessages] = useUIState()
 
   return (
-    <div className="flex flex-col gap-4">
-      <div>
+    <div className="grid gap-4">
+      <p>
         We recommend a 3 night stay in Rome. Here are some hotels you can choose
         from.
-      </div>
-
-      <div className="flex flex-col gap-2 bg-white p-2 font-medium border rounded-xl dark:bg-zinc-950">
+      </p>
+      <div className="grid gap-4 p-2 sm:p-4 border border-zinc-200 rounded-2xl bg-white">
         {hotels.map(hotel => (
           <div
             key={hotel.id}
-            className="p-2 flex flex-row justify-between hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-xl cursor-pointer gap-4"
+            className="p-2 flex justify-between hover:bg-sky-50 rounded-xl cursor-pointer gap-4"
             onClick={async () => {
               const response = await submitUserMessage(
                 `I want to book the ${hotel.name}, proceed to checkout by calling checkoutBooking function.`
@@ -62,22 +61,23 @@ export const ListHotels = ({
               ])
             }}
           >
-            <div className="flex flex-col  md:flex-row gap-4">
-              <div className="h-12 w-20 bg-zinc-100 border rounded-lg">
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="w-20 bg-sky-100 aspect-video rounded-lg overflow-hidden">
                 <img
-                  className="object-cover h-full rounded-lg"
+                  className="object-cover aspect-video h-full rounded-lg"
                   src={`/images/${hotel.id}.jpg`}
                 />
               </div>
               <div>
-                <div>{hotel.name}</div>
-                <div className="text-zinc-500">{hotel.description}</div>
+                <div className="font-medium">{hotel.name}</div>
+                <div className="text-sm text-zinc-600">{hotel.description}</div>
               </div>
             </div>
-
-            <div>
-              <div className="text-emerald-700 text-right">${hotel.price}</div>
-              <div className="text-zinc-500 text-right text-sm">per night</div>
+            <div className="shrink-0">
+              <div className="text-lg font-medium text-right">
+                ${hotel.price}
+              </div>
+              <div className="text-zinc-600 text-xs text-right">per night</div>
             </div>
           </div>
         ))}

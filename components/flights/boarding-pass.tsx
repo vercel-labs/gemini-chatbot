@@ -1,5 +1,6 @@
 'use client'
 
+/* eslint-disable @next/next/no-img-element */
 import Barcode from 'react-jsbarcode'
 
 interface BoardingPassProps {
@@ -30,51 +31,53 @@ export const BoardingPass = ({
   }
 }: BoardingPassProps) => {
   return (
-    <div
-      className={`flex flex-col items-center gap-2 rounded-xl border bg-white p-4 font-medium text-zinc-950`}
-    >
-      <div className="flex flex-col w-full gap-2">
-        <div className="flex flex-col justify-between pb-3 border-b border-zinc-900 md:flex-row md:items-center">
-          <div className="flex flex-col gap-3 md:flex-row md:items-center">
-            <div className="flex flex-row items-center text-lg leading-5">
-              {summary.airline}
-            </div>
-          </div>
-          <div className="text-lg leading-5">Gate {summary.gate}</div>
+    <div className="grid gap-4 p-4 sm:p-6 border border-zinc-200 rounded-2xl bg-white">
+      <div className="flex gap-4 items-start">
+        <div className="w-10 sm:w-12 shrink-0 aspect-square rounded-lg bg-sky-50 overflow-hidden">
+          <img
+            src="https://www.gstatic.com/flights/airline_logos/70px/UA.png"
+            className="object-cover aspect-square"
+            alt="airline logo"
+          />
         </div>
-
-        <div className="flex flex-col p-2 rounded-xl bg-zinc-100">
-          <div className="">Rauch / Guillermo</div>
-          <div className="flex flex-col justify-between md:flex-row">
-            <div className="">{summary.departure}</div>
-            <div className="flex flex-col gap-2 md:flex-row">
-              <div className="">{summary.date}</div>
-            </div>
-            <div className="">{summary.arrival}</div>
+        <div className="">
+          <div className="font-medium text-lg">{summary.airline}</div>
+          <div className="text-sm">
+            {summary.departure} - {summary.arrival}
           </div>
         </div>
-
-        <div className="flex flex-col gap-2 md:flex-row">
-          <div className="p-2 rounded-xl bg-zinc-100">
-            <div className="text-sm">SEAT</div>
-            <div className="text-lg">{summary.seat}</div>
-          </div>
-          <div className="flex-1 p-2 rounded-xl bg-zinc-100">
-            <div className="text-sm">CLASS</div>
-            <div className="text-lg">BUSINESS</div>
-          </div>
-          <div className="p-2 rounded-xl bg-zinc-100">
-            <div className="text-sm">DEPARTS</div>
-            <div className="text-lg">{summary.departureTime}</div>
-          </div>
-          <div className="p-2 rounded-xl bg-zinc-100">
-            <div className="text-sm">ARRIVAL</div>
-            <div className="text-lg">{summary.arrivalTime}</div>
-          </div>
+        <div className="ml-auto text-center">
+          <div className="text-xs text-zinc-600 uppercase">Gate</div>
+          <div className="text-2xl font-mono">{summary.gate}</div>
         </div>
       </div>
-
-      <div className="hidden md:block">
+      <div className="grid gap-1 p-4 rounded-xl bg-sky-50">
+        <div className="font-medium text-lg">Rauch / Guillermo</div>
+        <div className="flex text-sm justify-between">
+          <div>{summary.departure}</div>
+          <div className="">{summary.date}</div>
+          <div className="">{summary.arrival}</div>
+        </div>
+      </div>
+      <div className="flex flex-col gap-2 md:flex-row">
+        <div className="px-4 py-3 rounded-xl bg-sky-50 grid gap-1">
+          <div className="text-xs text-zinc-600 uppercase">Seat</div>
+          <div className="text-2xl font-mono leading-none">{summary.seat}</div>
+        </div>
+        <div className="px-4 py-3 rounded-xl bg-sky-50 flex-1 grid gap-1">
+          <div className="text-xs text-zinc-600 uppercase">Class</div>
+          <div className="text-xl leading-none">BUSINESS</div>
+        </div>
+        <div className="px-4 py-3 rounded-xl bg-sky-50 grid gap-1">
+          <div className="text-xs text-zinc-600 uppercase">Departs</div>
+          <div className="text-xl leading-none">{summary.departureTime}</div>
+        </div>
+        <div className="px-4 py-3 rounded-xl bg-sky-50 grid gap-1">
+          <div className="text-xs text-zinc-600 uppercase">Arrival</div>
+          <div className="text-lg leading-none">{summary.arrivalTime}</div>
+        </div>
+      </div>
+      <div className="hidden sm:flex">
         <Barcode
           value="12345RAUCHG"
           options={{ format: 'code128', height: 20, displayValue: false }}
