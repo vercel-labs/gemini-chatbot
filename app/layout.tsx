@@ -15,7 +15,7 @@ export const metadata = {
     template: `%s - Next.js Gemini Chatbot`
   },
   description:
-    'An generative UI chatbot built with Google Gemini, the Vercel AI SDK, and Next.js.',
+    'Build your own generative UI chatbot using the Vercel AI SDK and Google Gemini',
   icons: {
     icon: '/favicon.ico',
     shortcut: '/favicon-16x16.png',
