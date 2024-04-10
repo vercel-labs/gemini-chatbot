@@ -254,6 +254,7 @@ async function submitUserMessage(content: string) {
       if (type === 'text-delta') {
         const { textDelta } = delta
         textContent += textDelta
+        spinnerStream.done(null)
         messageStream.update(<BotMessage content={textContent} />)
 
         aiState.update({

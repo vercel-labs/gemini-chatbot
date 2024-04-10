@@ -78,7 +78,7 @@ export const PurchaseTickets = ({
                 setDisplay(display)
               }}
             >
-              Pay $834
+              Pay $981
             </button>
           </div>
         ) : currentStatus === 'requires_code' ? (
