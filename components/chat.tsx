@@ -1,16 +1,18 @@
 'use client'
 
-import { cn } from '@/lib/utils'
 import { ChatList } from '@/components/chat-list'
 import { ChatPanel } from '@/components/chat-panel'
 import { EmptyScreen } from '@/components/empty-screen'
-import { useLocalStorage } from '@/lib/hooks/use-local-storage'
-import { useEffect, useState } from 'react'
-import { useUIState, useAIState } from 'ai/rsc'
-import { Session } from '@/lib/types'
-import { usePathname, useRouter } from 'next/navigation'
+import { ListFlights } from '@/components/flights/list-flights'
+import { ListHotels } from '@/components/hotels/list-hotels'
 import { Message } from '@/lib/chat/actions'
+import { useLocalStorage } from '@/lib/hooks/use-local-storage'
 import { useScrollAnchor } from '@/lib/hooks/use-scroll-anchor'
+import { Session } from '@/lib/types'
+import { cn } from '@/lib/utils'
+import { useAIState, useUIState } from 'ai/rsc'
+import { usePathname, useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 export interface ChatProps extends React.ComponentProps<'div'> {
@@ -62,10 +64,7 @@ export function Chat({ id, className, session, missingKeys }: ChatProps) {
       className="group w-full overflow-auto pl-0 peer-[[data-state=open]]:lg:pl-[250px] peer-[[data-state=open]]:xl:pl-[300px]"
       ref={scrollRef}
     >
-      <div
-        className={cn('pb-[200px] pt-4 md:pt-10', className)}
-        ref={messagesRef}
-      >
+      <div className={cn('pb-[200px] pt-4', className)} ref={messagesRef}>
         {messages.length ? (
           <ChatList messages={messages} isShared={false} session={session} />
         ) : (

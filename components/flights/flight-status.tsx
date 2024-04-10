@@ -6,6 +6,9 @@ import { useActions, useUIState } from 'ai/rsc'
 import {
   ArrowDownRight,
   ArrowUpRight,
+  CheckIcon,
+  IconCheck,
+  IconStop,
   SparklesIcon
 } from '@/components/ui/icons'
 
@@ -61,77 +64,75 @@ export const FlightStatus = ({
   const [_, setMessages] = useUIState()
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-4 rounded-xl border bg-white p-4 font-medium dark:bg-zinc-950">
-        <div className="flex flex-row items-center gap-4">
-          <div className="size-12">
+    <div className="grid gap-4">
+      <div className="grid gap-4 p-4 sm:p-6 border border-zinc-200 rounded-2xl bg-white">
+        <div className="flex items-center gap-4">
+          <div className="w-10 sm:w-12 shrink-0 aspect-square rounded-lg bg-sky-50 overflow-hidden">
             <img
-              className="rounded-lg border"
               src="https://www.gstatic.com/flights/airline_logos/70px/UA.png"
+              className="object-cover aspect-square"
+              alt="airline logo"
             />
           </div>
           <div>
-            <div className="text-sm text-zinc-500">
+            <div className="font-medium">
               {date} · {flightCode}
             </div>
-            <div>
+            <div className="text-sm text-zinc-600">
               {departingCity} to {arrivalCity}
             </div>
           </div>
         </div>
-
-        <div className="flex flex-col items-center gap-2">
-          <div className="flex w-full flex-row justify-between">
+        <div className="grid items-center gap-8 relative">
+          <div className="w-px h-full absolute top-1 left-[1.1rem] sm:left-[1.45rem] bg-zinc-200" />
+          <div className="flex w-full relative gap-4 pl-2 sm:pl-3.5 items-start">
+            <div className="rounded-full bg-zinc-200 p-1 text-zinc-500 [&>svg]:size-2.5 size-5 flex items-center justify-center shrink-0 translate-y-1">
+              <ArrowUpRight />
+            </div>
             <div>
-              <div className="flex flex-row items-center gap-2 text-2xl">
-                {departingAirportCode}
-                <div className="rounded-full bg-zinc-200 p-1 text-zinc-500">
-                  <ArrowUpRight />
-                </div>
-              </div>
+              <div className="text-2xl font-medium">{departingAirportCode}</div>
               <div>{departingAirport}</div>
-              <div className="text-sm text-zinc-500">Terminal N · GATE D43</div>
+              <div className="text-sm text-zinc-600">Terminal N · GATE D43</div>
             </div>
-            <div>
-              <div className="text-lg md:text-2xl text-red-600">
-                {departingTime}
+            <div className="ml-auto font-mono">
+              <div className="text-lg md:text-xl">{departingTime}</div>
+              <div className="text-sm text-zinc-600">in 6h 50m</div>
+              <div className="text-red-600 text-sm font-medium">
+                2h 15m late
               </div>
-              <div className="text-red-600">2h 15m late</div>
-              <div className="text-sm text-zinc-500">in 6h 50m</div>
             </div>
           </div>
-
-          <div className="p-2 text-sm text-zinc-500">
-            Total 11h 30m · 5,563mi · Overnight
+          <div className="flex w-full relative gap-4 pl-2 sm:pl-3.5 min-h-10 items-center">
+            <div className="rounded-full bg-zinc-200 p-1 text-zinc-500 [&>svg]:size-2.5 size-5 flex items-center justify-center shrink-0">
+              <IconCheck />
+            </div>
+            <div className="text-sm sm:text-base text-zinc-600">
+              Total 11h 30m · 5, 563mi · Overnight
+            </div>
           </div>
-
-          <div className="flex w-full flex-row justify-between">
+          <div className="flex w-full relative gap-4 pl-2 sm:pl-3.5 items-start">
+            <div className="rounded-full bg-zinc-200 p-1 text-zinc-500 [&>svg]:size-2.5 size-5 flex items-center justify-center shrink-0 translate-y-1">
+              <ArrowDownRight />
+            </div>
             <div>
-              <div className="flex flex-row items-center gap-2 text-2xl">
-                {arrivalAirportCode}
-                <div className="rounded-full bg-zinc-200 p-1 text-zinc-500">
-                  <ArrowDownRight />
-                </div>
-              </div>
+              <div className="text-2xl font-medium">{arrivalAirportCode}</div>
               <div>{arrivalAirport}</div>
-              <div className="text-sm">Terminal 2 · GATE 59A</div>
-              <div className="text-sm text-zinc-500">Baggage Belt 1</div>
+              <div className="text-sm text-zinc-600">Terminal 2 · GATE 59A</div>
             </div>
-            <div className="flex flex-col">
-              <div className="text-lg md:text-2xl text-red-600">
-                {arrivalTime}
+            <div className="ml-auto font-mono">
+              <div className="text-lg md:text-xl">{arrivalTime}</div>
+              <div className="text-red-600 text-sm font-medium">
+                2h 15m late
               </div>
-              <div className="text-red-600">2h 15m late</div>
             </div>
           </div>
         </div>
       </div>
-
-      <div className="flex flex-row flex-wrap gap-2">
+      <div className="flex flex-col sm:flex-row items-start gap-2">
         {suggestions.map(suggestion => (
           <div
             key={suggestion}
-            className="flex flex-row items-center gap-2 px-3 py-2 text-sm bg-white border rounded-xl cursor-pointer shrink-0 hover:bg-zinc-100 dark:bg-zinc-950 dark:hover:bg-zinc-900"
+            className="flex items-center gap-2 px-3 py-2 text-sm transition-colors bg-sky-50 hover:bg-sky-100 rounded-xl cursor-pointer"
             onClick={async () => {
               const response = await submitUserMessage(suggestion)
               setMessages((currentMessages: any[]) => [
