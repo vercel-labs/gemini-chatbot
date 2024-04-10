@@ -54,7 +54,7 @@ export const PurchaseTickets = ({
       <div className="grid gap-4 p-4 sm:p-6 border border-zinc-200 rounded-2xl bg-white">
         <div className="flex">
           <div className="flex items-center gap-2 text-zinc-950">
-            <div className="size-6 flex items-center justify-center bg-sky-100 rounded-full text-sky-500 [&>svg]:size-3">
+            <div className="size-6 flex items-center justify-center bg-zinc-100 rounded-full text-zinc-500 [&>svg]:size-3">
               <CardIcon />
             </div>
             <div className="text-sm text-zinc-600">Visa · · · · 0512</div>
@@ -71,7 +71,7 @@ export const PurchaseTickets = ({
               your purchase to complete your booking.
             </p>
             <button
-              className="p-2 text-center rounded-full cursor-pointer bg-sky-500 text-sky-50 hover:bg-sky-600 transition-colors"
+              className="p-2 text-center rounded-full cursor-pointer bg-zinc-900 text-zinc-50 hover:bg-zinc-600 transition-colors"
               onClick={async () => {
                 const { status, display } = await requestCode()
                 setCurrentStatus(status)
@@ -97,7 +97,7 @@ export const PurchaseTickets = ({
               />
             </div>
             <button
-              className="p-2 text-center rounded-full cursor-pointer bg-sky-500 text-sky-50 hover:bg-sky-600 transition-colors"
+              className="p-2 text-center rounded-full cursor-pointer bg-zinc-900 text-zinc-50 hover:bg-zinc-600 transition-colors"
               onClick={async () => {
                 const { status, display } = await validateCode()
 
@@ -130,7 +130,7 @@ export const PurchaseTickets = ({
         {suggestions.map(suggestion => (
           <button
             key={suggestion}
-            className="flex items-center gap-2 px-3 py-2 text-sm transition-colors bg-sky-50 hover:bg-sky-100 rounded-xl cursor-pointer"
+            className="flex items-center gap-2 px-3 py-2 text-sm transition-colors bg-zinc-50 hover:bg-zinc-100 rounded-xl cursor-pointer"
             onClick={async () => {
               const response = await submitUserMessage(suggestion)
               setMessages((currentMessages: any[]) => [

@@ -33,7 +33,7 @@ export const BoardingPass = ({
   return (
     <div className="grid gap-4 p-4 sm:p-6 border border-zinc-200 rounded-2xl bg-white">
       <div className="flex gap-4 items-start">
-        <div className="w-10 sm:w-12 shrink-0 aspect-square rounded-lg bg-sky-50 overflow-hidden">
+        <div className="w-10 sm:w-12 shrink-0 aspect-square rounded-lg bg-zinc-50 overflow-hidden">
           <img
             src="https://www.gstatic.com/flights/airline_logos/70px/UA.png"
             className="object-cover aspect-square"
@@ -51,7 +51,7 @@ export const BoardingPass = ({
           <div className="text-2xl font-mono">{summary.gate}</div>
         </div>
       </div>
-      <div className="grid gap-1 p-4 rounded-xl bg-sky-50">
+      <div className="grid gap-1 p-4 rounded-xl bg-zinc-50">
         <div className="font-medium text-lg">Rauch / Guillermo</div>
         <div className="flex text-sm justify-between">
           <div>{summary.departure}</div>
@@ -60,19 +60,19 @@ export const BoardingPass = ({
         </div>
       </div>
       <div className="flex flex-col gap-2 md:flex-row">
-        <div className="px-4 py-3 rounded-xl bg-sky-50 grid gap-1">
+        <div className="px-4 py-3 rounded-xl bg-zinc-50 grid gap-1">
           <div className="text-xs text-zinc-600 uppercase">Seat</div>
           <div className="text-2xl font-mono leading-none">{summary.seat}</div>
         </div>
-        <div className="px-4 py-3 rounded-xl bg-sky-50 flex-1 grid gap-1">
+        <div className="px-4 py-3 rounded-xl bg-zinc-50 flex-1 grid gap-1">
           <div className="text-xs text-zinc-600 uppercase">Class</div>
           <div className="text-xl leading-none">BUSINESS</div>
         </div>
-        <div className="px-4 py-3 rounded-xl bg-sky-50 grid gap-1">
+        <div className="px-4 py-3 rounded-xl bg-zinc-50 grid gap-1">
           <div className="text-xs text-zinc-600 uppercase">Departs</div>
           <div className="text-xl leading-none">{summary.departureTime}</div>
         </div>
-        <div className="px-4 py-3 rounded-xl bg-sky-50 grid gap-1">
+        <div className="px-4 py-3 rounded-xl bg-zinc-50 grid gap-1">
           <div className="text-xs text-zinc-600 uppercase">Arrival</div>
           <div className="text-xl leading-none">{summary.arrivalTime}</div>
         </div>
