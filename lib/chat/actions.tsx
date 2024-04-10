@@ -52,15 +52,16 @@ async function describeImage(imageBase64: string) {
     </BotCard>
   )
   ;(async () => {
-    let text = ''
+    try {
+      let text = ''
 
-    // attachment as video for demo purposes,
-    // add your implementation here to support
-    // video as input for prompts.
-    if (imageBase64 === '') {
-      await new Promise(resolve => setTimeout(resolve, 5000))
+      // attachment as video for demo purposes,
+      // add your implementation here to support
+      // video as input for prompts.
+      if (imageBase64 === '') {
+        await new Promise(resolve => setTimeout(resolve, 5000))
 
-      text = `
+        text = `
       The books in this image are:
 
       1. The Little Prince by Antoine de Saint-Exupéry
@@ -74,38 +75,47 @@ async function describeImage(imageBase64: string) {
       9. 1984 by George Orwell
       10. Animal Farm by George Orwell
       `
-    } else {
-      const imageData = imageBase64.split(',')[1]
+      } else {
+        const imageData = imageBase64.split(',')[1]
 
-      throw new Error('Rate limit exceeded. Please try again later.')
-
-      const model = genAI.getGenerativeModel({ model: 'gemini-pro-vision' })
-      const prompt = 'List the books in this image.'
-      const image = {
-        inlineData: {
-          data: imageData,
-          mimeType: 'image/png'
+        const model = genAI.getGenerativeModel({ model: 'gemini-pro-vision' })
+        const prompt = 'List the books in this image.'
+        const image = {
+          inlineData: {
+            data: imageData,
+            mimeType: 'image/png'
+          }
         }
+
+        const result = await model.generateContent([prompt, image])
+        text = result.response.text()
+        console.log(text)
       }
 
-      const result = await model.generateContent([prompt, image])
-      text = result.response.text()
-      console.log(text)
+      spinnerStream.done(null)
+      messageStream.done(null)
+
+      uiStream.done(
+        <BotCard>
+          <Video />
+        </BotCard>
+      )
+
+      aiState.done({
+        ...aiState.get(),
+        interactions: [text]
+      })
+    } catch (e) {
+      console.error(e)
+
+      const error = new Error(
+        'Oops, the AI got rate limited. Please try again later.'
+      )
+      uiStream.error(error)
+      spinnerStream.error(error)
+      messageStream.error(error)
+      aiState.done()
     }
-
-    spinnerStream.done(null)
-    messageStream.done(null)
-
-    uiStream.done(
-      <BotCard>
-        <Video />
-      </BotCard>
-    )
-
-    aiState.done({
-      ...aiState.get(),
-      interactions: [text]
-    })
   })()
 
   return {
@@ -447,15 +457,19 @@ async function submitUserMessage(content: string) {
         }
       }
 
+      uiStream.done()
       textStream.done()
       messageStream.done()
-      uiStream.done()
     } catch (e) {
       console.error(e)
-      const error = new Error('An error occurred. Please try again later.')
+
+      const error = new Error(
+        'Oops, the AI got rate limited. Please try again later.'
+      )
+      uiStream.error(error)
       textStream.error(error)
       messageStream.error(error)
-      uiStream.error(error)
+      aiState.done()
     }
   })()
 
