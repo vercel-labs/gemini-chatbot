@@ -12,10 +12,8 @@ import {
   createStreamableValue
 } from 'ai/rsc'
 
-import { BotCard, BotMessage, Stock, Purchase } from '@/components/stocks'
+import { BotCard, BotMessage } from '@/components/stocks'
 
-import { Events } from '@/components/stocks/events'
-import { Stocks } from '@/components/stocks/stocks'
 import { nanoid, sleep } from '@/lib/utils'
 import { saveChat } from '@/app/actions'
 import { SpinnerMessage, UserMessage } from '@/components/stocks/message'
@@ -56,7 +54,9 @@ async function describeImage(imageBase64: string) {
   ;(async () => {
     let text = ''
 
-    // if attachment is video for demo purposes
+    // attachment as video for demo purposes,
+    // add your implementation here to support
+    // video as input for prompts.
     if (imageBase64 === '') {
       await new Promise(resolve => setTimeout(resolve, 5000))
 
@@ -289,7 +289,13 @@ async function submitUserMessage(content: string) {
               {
                 id: nanoid(),
                 role: 'assistant',
-                content: `Here's a list of holiday destinations based on the books you've read. Choose one to proceed to booking a flight. \n\n ${args.destinations.join(', ')}.`
+                content: `Here's a list of holiday destinations based on the books you've read. Choose one to proceed to booking a flight. \n\n ${args.destinations.join(', ')}.`,
+                display: {
+                  name: 'listDestinations',
+                  props: {
+                    destinations
+                  }
+                }
               }
             ]
           })
@@ -303,7 +309,13 @@ async function submitUserMessage(content: string) {
                 id: nanoid(),
                 role: 'assistant',
                 content:
-                  "Here's a list of flights for you. Choose one and we can proceed to pick a seat."
+                  "Here's a list of flights for you. Choose one and we can proceed to pick a seat.",
+                display: {
+                  name: 'showFlights',
+                  props: {
+                    summary: args
+                  }
+                }
               }
             ]
           })
@@ -323,7 +335,13 @@ async function submitUserMessage(content: string) {
                 id: nanoid(),
                 role: 'assistant',
                 content:
-                  "Here's a list of available seats for you to choose from. Select one to proceed to payment."
+                  "Here's a list of available seats for you to choose from. Select one to proceed to payment.",
+                display: {
+                  name: 'showSeatPicker',
+                  props: {
+                    summary: args
+                  }
+                }
               }
             ]
           })
@@ -343,7 +361,11 @@ async function submitUserMessage(content: string) {
                 id: nanoid(),
                 role: 'assistant',
                 content:
-                  "Here's a list of hotels for you to choose from. Select one to proceed to payment."
+                  "Here's a list of hotels for you to choose from. Select one to proceed to payment.",
+                display: {
+                  name: 'showHotels',
+                  props: {}
+                }
               }
             ]
           })
@@ -374,7 +396,13 @@ async function submitUserMessage(content: string) {
                 id: nanoid(),
                 role: 'assistant',
                 content:
-                  "Here's your boarding pass. Please have it ready for your flight."
+                  "Here's your boarding pass. Please have it ready for your flight.",
+                display: {
+                  name: 'showBoardingPass',
+                  props: {
+                    summary: args
+                  }
+                }
               }
             ]
           })
@@ -397,7 +425,13 @@ async function submitUserMessage(content: string) {
                 Departing: ${args.departingCity} at ${args.departingTime} from ${args.departingAirport} (${args.departingAirportCode})
                 `
               }
-            ]
+            ],
+            display: {
+              name: 'showFlights',
+              props: {
+                summary: args
+              }
+            }
           })
 
           uiStream.update(
@@ -512,6 +546,10 @@ export type Message = {
   content: string
   id?: string
   name?: string
+  display?: {
+    name: string
+    props: Record<string, any>
+  }
 }
 
 export type AIState = {
@@ -587,24 +625,34 @@ export const getUIStateFromAIState = (aiState: Chat) => {
     .map((message, index) => ({
       id: `${aiState.chatId}-${index}`,
       display:
-        message.role === 'function' ? (
-          message.name === 'listStocks' ? (
+        message.role === 'assistant' ? (
+          message.display?.name === 'showFlights' ? (
             <BotCard>
-              <Stocks props={JSON.parse(message.content)} />
+              <ListFlights summary={message.display.props.summary} />
             </BotCard>
-          ) : message.name === 'showStockPrice' ? (
+          ) : message.display?.name === 'showSeatPicker' ? (
             <BotCard>
-              <Stock props={JSON.parse(message.content)} />
+              <SelectSeats summary={message.display.props.summary} />
             </BotCard>
-          ) : message.name === 'showStockPurchase' ? (
+          ) : message.display?.name === 'showHotels' ? (
             <BotCard>
-              <Purchase props={JSON.parse(message.content)} />
+              <ListHotels />
             </BotCard>
-          ) : message.name === 'getEvents' ? (
+          ) : message.content === 'The purchase has completed successfully.' ? (
             <BotCard>
-              <Events props={JSON.parse(message.content)} />
+              <PurchaseTickets status="expired" />
             </BotCard>
-          ) : null
+          ) : message.display?.name === 'showBoardingPass' ? (
+            <BotCard>
+              <BoardingPass summary={message.display.props.summary} />
+            </BotCard>
+          ) : message.display?.name === 'listDestinations' ? (
+            <BotCard>
+              <Destinations destinations={message.display.props.destinations} />
+            </BotCard>
+          ) : (
+            <BotMessage content={message.content} />
+          )
         ) : message.role === 'user' ? (
           <UserMessage showAvatar>{message.content}</UserMessage>
         ) : (
