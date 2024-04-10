@@ -1,5 +1,6 @@
 import { Ratelimit } from '@upstash/ratelimit'
 import { kv } from '@vercel/kv'
+import { redirect } from 'next/navigation'
 import { headers } from 'next/headers'
 
 const geminiRatelimit = new Ratelimit({
@@ -16,6 +17,6 @@ function getIP() {
 export async function rateLimit() {
   const limit = await geminiRatelimit.limit(getIP())
   if (!limit.success) {
-    throw new Error('Rate limited.')
+    redirect('/waiting-room')
   }
 }
