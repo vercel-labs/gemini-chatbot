@@ -1,4 +1,4 @@
-'use client' // Error components must be Client Components
+'use client'
 
 export default function Error({ error }: { error: Error }) {
   return (
@@ -6,7 +6,9 @@ export default function Error({ error }: { error: Error }) {
       <h1 className="text-lg font-semibold mb-2">
         Oops, something went wrong!
       </h1>
-      <p>{error.message}</p>
+      <p>
+        {error.message || 'The AI got rate limited, please try again later.'}
+      </p>
     </div>
   )
 }
