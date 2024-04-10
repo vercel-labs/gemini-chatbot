@@ -119,7 +119,7 @@ export function ChatPanel({
           </div>
         ) : null}
 
-        <div className="space-y-4 py-2">
+        <div className="space-y-4 pb-2 bg-[#f9f9f9] dark:bg-[#18181a]">
           <PromptForm input={input} setInput={setInput} />
           <FooterText className="hidden sm:block" />
         </div>
