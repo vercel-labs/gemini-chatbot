@@ -254,7 +254,6 @@ async function submitUserMessage(content: string) {
       if (type === 'text-delta') {
         const { textDelta } = delta
         textContent += textDelta
-        spinnerStream.done(null)
         messageStream.update(<BotMessage content={textContent} />)
 
         aiState.update({
@@ -274,7 +273,6 @@ async function submitUserMessage(content: string) {
         if (toolName === 'listDestinations') {
           const { destinations } = args
 
-          spinnerStream.done(null)
           uiStream.done(
             <BotCard>
               <Destinations destinations={destinations} />
@@ -308,7 +306,6 @@ async function submitUserMessage(content: string) {
             ]
           })
 
-          spinnerStream.done(null)
           uiStream.done(
             <BotCard>
               <ListFlights summary={args} />
@@ -329,7 +326,6 @@ async function submitUserMessage(content: string) {
             ]
           })
 
-          spinnerStream.done(null)
           uiStream.done(
             <BotCard>
               <SelectSeats summary={args} />
@@ -350,7 +346,6 @@ async function submitUserMessage(content: string) {
             ]
           })
 
-          spinnerStream.done(null)
           uiStream.done(
             <BotCard>
               <ListHotels />
@@ -362,7 +357,6 @@ async function submitUserMessage(content: string) {
             interactions: []
           })
 
-          spinnerStream.done(null)
           uiStream.done(
             <BotCard>
               <PurchaseTickets />
@@ -383,7 +377,6 @@ async function submitUserMessage(content: string) {
             ]
           })
 
-          spinnerStream.done(null)
           uiStream.done(
             <BotCard>
               <BoardingPass summary={args} />
@@ -405,7 +398,6 @@ async function submitUserMessage(content: string) {
             ]
           })
 
-          spinnerStream.done(null)
           uiStream.done(
             <BotCard>
               <FlightStatus summary={args} />
@@ -417,6 +409,7 @@ async function submitUserMessage(content: string) {
 
     textStream.done()
     messageStream.done()
+    spinnerStream.done(null)
   })()
 
   return {
