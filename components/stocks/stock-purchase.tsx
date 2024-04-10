@@ -79,7 +79,7 @@ export function Purchase({
               onChange={onSliderChange}
               min="10"
               max="1000"
-              className="h-1 w-full cursor-pointer appearance-none rounded-lg bg-zinc-600 accent-green-500 dark:bg-zinc-700"
+              className="h-1 w-full cursor-pointer appearance-none rounded-xl bg-zinc-600 accent-green-500 dark:bg-zinc-700"
             />
             <span className="absolute bottom-1 start-0 text-xs text-zinc-400">
               10
@@ -118,7 +118,7 @@ export function Purchase({
           </div>
 
           <button
-            className="mt-6 w-full rounded-lg bg-green-400 px-4 py-2 font-bold text-zinc-900 hover:bg-green-500"
+            className="mt-6 w-full rounded-xl bg-green-400 px-4 py-2 font-bold text-zinc-900 hover:bg-green-500"
             onClick={async () => {
               const response = await confirmPurchase(symbol, price, value)
               setPurchasingUI(response.purchasingUI)

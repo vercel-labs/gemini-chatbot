@@ -20,7 +20,7 @@ export function Stocks({ props: stocks }: { props: Stock[] }) {
         {stocks.map(stock => (
           <button
             key={stock.symbol}
-            className="flex cursor-pointer flex-row gap-2 rounded-lg bg-zinc-800 p-2 text-left hover:bg-zinc-700 sm:w-52"
+            className="flex cursor-pointer flex-row gap-2 rounded-xl bg-zinc-800 p-2 text-left hover:bg-zinc-700 sm:w-52"
             onClick={async () => {
               const response = await submitUserMessage(`View ${stock.symbol}`)
               setMessages(currentMessages => [...currentMessages, response])
@@ -29,7 +29,7 @@ export function Stocks({ props: stocks }: { props: Stock[] }) {
             <div
               className={`text-xl ${
                 stock.delta > 0 ? 'text-green-600' : 'text-red-600'
-              } flex w-11 flex-row justify-center rounded-md bg-white/10 p-2`}
+              } flex w-11 flex-row justify-center rounded-lg bg-white/10 p-2`}
             >
               {stock.delta > 0 ? '↑' : '↓'}
             </div>

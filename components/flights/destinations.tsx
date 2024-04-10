@@ -15,7 +15,7 @@ export const Destinations = ({ destinations }: { destinations: string[] }) => {
       <div className="flex flex-col gap-1">
         {destinations.map(destination => (
           <div
-            className="bg-white rounded-lg p-2 tezt-`inc-800 dark:text-zinc-200 cursor-pointer hover:bg-zinc-200 dark:bg-zinc-950 border"
+            className="bg-white rounded-xl p-2 tezt-`inc-800 dark:text-zinc-200 cursor-pointer hover:bg-zinc-200 dark:bg-zinc-950 border"
             key={destination}
             onClick={async () => {
               const response = await submitUserMessage(

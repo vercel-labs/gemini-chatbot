@@ -126,7 +126,7 @@ export function Stock({ props: { symbol, price, delta } }: { props: Stock }) {
       >
         {priceAtTime.x > 0 ? (
           <div
-            className="pointer-events-none absolute z-10 flex w-fit select-none gap-2 rounded-md bg-zinc-800 p-2"
+            className="pointer-events-none absolute z-10 flex w-fit select-none gap-2 rounded-lg bg-zinc-800 p-2"
             style={{
               left: priceAtTime.x - 124 / 2,
               top: 30
@@ -141,7 +141,7 @@ export function Stock({ props: { symbol, price, delta } }: { props: Stock }) {
 
         {startHighlight ? (
           <div
-            className="pointer-events-none absolute h-32 w-5 select-none rounded-md border border-zinc-500 bg-zinc-500/20"
+            className="pointer-events-none absolute h-32 w-5 select-none rounded-lg border border-zinc-500 bg-zinc-500/20"
             style={{
               left: startHighlight,
               width: endHighlight
