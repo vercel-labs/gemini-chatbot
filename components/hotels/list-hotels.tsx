@@ -21,7 +21,7 @@ export const ListHotels = ({
       id: 1,
       name: 'The St. Regis Rome',
       description: 'Renowned luxury hotel with a lavish spa',
-      price: 101
+      price: 450
     },
     {
       id: 2,
