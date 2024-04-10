@@ -211,7 +211,7 @@ async function submitUserMessage(content: string) {
         },
         showFlightStatus: {
           description:
-            'Get the current status of flight by flight number and date.',
+            'Get the current status of imaginary flight by flight number and date.',
           parameters: z.object({
             flightCode: z.string(),
             date: z.string(),
