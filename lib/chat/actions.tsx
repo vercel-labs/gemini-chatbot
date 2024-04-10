@@ -248,6 +248,7 @@ async function submitUserMessage(content: string) {
 
     let textContent = ''
     spinnerStream.done(null)
+    uiStream.done()
 
     for await (const delta of result.fullStream) {
       const { type } = delta
