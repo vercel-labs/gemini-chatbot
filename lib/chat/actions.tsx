@@ -109,7 +109,7 @@ async function describeImage(imageBase64: string) {
       console.error(e)
 
       const error = new Error(
-        'Oops, the AI got rate limited. Please try again later.'
+        'The AI got rate limited, please try again later.'
       )
       uiStream.error(error)
       spinnerStream.error(error)
@@ -464,7 +464,7 @@ async function submitUserMessage(content: string) {
       console.error(e)
 
       const error = new Error(
-        'Oops, the AI got rate limited. Please try again later.'
+        'The AI got rate limited, please try again later.'
       )
       uiStream.error(error)
       textStream.error(error)
