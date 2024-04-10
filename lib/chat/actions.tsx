@@ -54,7 +54,9 @@ async function describeImage(imageBase64: string) {
   ;(async () => {
     let text = ''
 
-    // if attachment is video for demo purposes
+    // attachment as video for demo purposes,
+    // add your implementation here to support
+    // video as input for prompts.
     if (imageBase64 === '') {
       await new Promise(resolve => setTimeout(resolve, 5000))
 
@@ -287,15 +289,15 @@ async function submitUserMessage(content: string) {
               {
                 id: nanoid(),
                 role: 'assistant',
-                content: `Here's a list of holiday destinations based on the books you've read. Choose one to proceed to booking a flight. \n\n ${args.destinations.join(', ')}.`
+                content: `Here's a list of holiday destinations based on the books you've read. Choose one to proceed to booking a flight. \n\n ${args.destinations.join(', ')}.`,
+                display: {
+                  name: 'listDestinations',
+                  props: {
+                    destinations
+                  }
+                }
               }
-            ],
-            display: {
-              name: 'listDestinations',
-              props: {
-                destinations
-              }
-            }
+            ]
           })
         } else if (toolName === 'showFlights') {
           aiState.done({
@@ -643,6 +645,10 @@ export const getUIStateFromAIState = (aiState: Chat) => {
           ) : message.display?.name === 'showBoardingPass' ? (
             <BotCard>
               <BoardingPass summary={message.display.props.summary} />
+            </BotCard>
+          ) : message.display?.name === 'listDestinations' ? (
+            <BotCard>
+              <Destinations destinations={message.display.props.destinations} />
             </BotCard>
           ) : (
             <BotMessage content={message.content} />
