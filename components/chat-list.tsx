@@ -49,7 +49,7 @@ export function ChatList({ messages, session, isShared }: ChatList) {
           {message.spinner}
           {message.display}
           {message.attachments}
-          {index < messages.length - 1 && <Separator className="my-4" />}
+          {index < messages.length - 1 && <div className="my-4 py-0.5" />}
         </div>
       ))}
     </div>
