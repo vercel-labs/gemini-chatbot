@@ -11,6 +11,7 @@ import { useAIState, useActions, useUIState } from 'ai/rsc'
 import type { AI } from '@/lib/chat/actions'
 import { nanoid } from 'nanoid'
 import { UserMessage } from './stocks/message'
+import { cn } from '@/lib/utils'
 
 export interface ChatPanelProps {
   id?: string
@@ -48,21 +49,22 @@ export function ChatPanel({
   ]
 
   return (
-    <div className="from-muted/30 to-muted/30 animate-in dark:from-background/10 dark:to-background/80 fixed inset-x-0 bottom-0 w-full duration-300 ease-in-out peer-[[data-state=open]]:group-[]:lg:pl-[250px] peer-[[data-state=open]]:group-[]:xl:pl-[300px] dark:from-10%">
+    <div className="fixed inset-x-0 bg-white/90 bottom-0 w-full duration-300 ease-in-out peer-[[data-state=open]]:group-[]:lg:pl-[250px] peer-[[data-state=open]]:group-[]:xl:pl-[300px] dark:from-10%">
       {/* <ButtonScrollToBottom
         isAtBottom={isAtBottom}
         scrollToBottom={scrollToBottom}
       /> */}
 
       <div className="mx-auto sm:max-w-2xl sm:px-4">
-        <div className="mb-4 grid grid-cols-2 gap-4 px-4 sm:px-0">
+        <div className="mb-4 grid sm:grid-cols-2 gap-2 sm:gap-4 px-4 sm:px-0">
           {messages.length === 0 &&
             exampleMessages.map((example, index) => (
               <div
                 key={example.heading}
-                className={`cursor-pointer rounded-xl border bg-white p-4 hover:bg-zinc-50 dark:bg-zinc-950 dark:hover:bg-zinc-900 ${
+                className={cn(
+                  'cursor-pointer bg-zinc-50 text-zinc-950 rounded-2xl p-4 sm:p-6 hover:bg-zinc-100 transition-colors',
                   index > 1 && 'hidden md:block'
-                }`}
+                )}
                 onClick={async () => {
                   setMessages(currentMessages => [
                     ...currentMessages,
@@ -82,8 +84,8 @@ export function ChatPanel({
                   ])
                 }}
               >
-                <div className="text-sm font-semibold">{example.heading}</div>
-                <div className="text-sm text-zinc-600">
+                <div className="font-medium">{example.heading}</div>
+                <div className="text-sm text-zinc-800">
                   {example.subheading}
                 </div>
               </div>
@@ -119,7 +121,7 @@ export function ChatPanel({
           </div>
         ) : null}
 
-        <div className="space-y-4 pb-2 bg-[#f9f9f9] dark:bg-[#18181a]">
+        <div className="grid gap-4 sm:pb-4">
           <PromptForm input={input} setInput={setInput} />
           <FooterText className="hidden sm:block" />
         </div>

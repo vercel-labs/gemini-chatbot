@@ -62,34 +62,27 @@ export const ListFlights = ({
   ]
 
   return (
-    <div
-      className={`flex w-full flex-col gap-2 rounded-xl border bg-white p-4 font-medium text-zinc-900 dark:bg-zinc-950 dark:text-zinc-200`}
-    >
-      <div className="flex flex-row justify-between border-b pb-2">
-        <div className="flex flex-row gap-4">
-          <div>
-            <div className="text-xs text-zinc-500">DEPARTURE</div>
-            <div className="text-sm md:text-lg">{departingCity}</div>
-          </div>
-          <div>
-            <div className="text-xs text-zinc-500">ARRIVAL</div>
-            <div className="text-sm md:text-lg">{arrivalCity}</div>
-          </div>
+    <div className="grid gap-2 rounded-2xl border border-zinc-200 bg-white p-2 sm:p-4">
+      <div className="grid gap-2 sm:flex sm:flex-row justify-between border-b p-2">
+        <div className="sm:basis-1/4">
+          <div className="text-xs text-zinc-600">Departure</div>
+          <div className="font-medium">{departingCity}</div>
         </div>
-        <div className="flex flex-row gap-4">
-          <div>
-            <div className="text-right text-xs text-zinc-500">DATE</div>
-            <div className="text-sm md:text-lg">{date}</div>
-          </div>
+        <div className="sm:basis-1/4">
+          <div className="text-xs text-zinc-600">Arrival</div>
+          <div className="font-medium">{arrivalCity}</div>
+        </div>
+        <div className="sm:basis-1/2">
+          <div className="sm:text-right text-xs text-zinc-600">Date</div>
+          <div className="sm:text-right font-medium">{date}</div>
         </div>
       </div>
-
-      <div>
+      <div className="grid gap-3">
         {flights &&
           flights.map(flight => (
             <div
               key={flight.id}
-              className="flex cursor-pointer flex-row justify-between rounded-xl p-2 hover:bg-zinc-100 dark:hover:bg-zinc-900"
+              className="flex cursor-pointer flex-row items-start sm:items-center gap-4 rounded-xl p-2 hover:bg-zinc-50"
               onClick={async () => {
                 const response = await submitUserMessage(
                   `The user has selected flight ${flight.airlines}, departing at ${flight.departureTime} and arriving at ${flight.arrivalTime} for $${flight.price}. Now proceeding to select seats.`
@@ -100,37 +93,35 @@ export const ListFlights = ({
                 ])
               }}
             >
-              <div className="flex flex-row items-center gap-2 md:w-60">
-                <div className="size-8 md:size-12">
-                  <img
-                    className="rounded-lg border"
-                    src={
-                      'https://www.gstatic.com/flights/airline_logos/70px/UA.png'
-                    }
-                  />
-                </div>
-                <div className="flex-col text-sm md:text-base">
-                  <div>
+              <div className="w-10 sm:w-12 shrink-0 aspect-square rounded-lg bg-zinc-50 overflow-hidden">
+                <img
+                  src="https://www.gstatic.com/flights/airline_logos/70px/UA.png"
+                  className="object-cover aspect-square"
+                  alt="airline logo"
+                />
+              </div>
+              <div className="grid gap-4 sm:grid-cols-4 items-start sm:gap-6 flex-1">
+                <div className="col-span-2">
+                  <div className="font-medium">
                     {flight.departureTime} - {flight.arrivalTime}
                   </div>
-                  <div className="text-sm text-zinc-500 md:text-base">
-                    {flight.airlines}
+                  <div className="text-sm text-zinc-600">{flight.airlines}</div>
+                </div>
+                <div>
+                  <div className="font-medium">
+                    {flight.id === 2 ? '10hr 50min' : '10hr 45min'}
+                  </div>
+                  <div className="text-sm text-zinc-600">
+                    {departingAirport} - {arrivalAirport}
                   </div>
                 </div>
-              </div>
-              <div className="hidden flex-col md:flex">
-                <div>{flight.id === 2 ? '10hr 50min' : '10hr 45min'}</div>
-                <div className="text-sm text-zinc-500 md:text-base">
-                  {departingAirport}-{arrivalAirport}
-                </div>
-              </div>
-
-              <div>
-                <div className="text-right text-sm text-emerald-700 md:text-base">
-                  ${flight.price}
-                </div>
-                <div className="text-sm text-zinc-500 md:text-base">
-                  One Way
+                <div>
+                  <div className="sm:text-right font-medium font-mono">
+                    ${flight.price}
+                  </div>
+                  <div className="sm:text-right text-xs text-zinc-600">
+                    One Way
+                  </div>
                 </div>
               </div>
             </div>
