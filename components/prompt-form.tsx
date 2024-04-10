@@ -101,13 +101,13 @@ export function PromptForm({
           }
         }}
       />
-      <div className="relative flex max-h-60 w-full grow flex-col overflow-hidden bg-background px-8 sm:rounded-lg sm:border sm:px-12">
+      <div className="relative border-t flex max-h-60 w-full sm:shadow-lg grow flex-col overflow-hidden bg-background px-12 sm:rounded-xl sm:border sm:px-12">
         {/* <Tooltip>
           <TooltipTrigger asChild> */}
         <Button
           variant="outline"
           size="icon"
-          className="absolute left-0 top-[14px] size-8 rounded-full bg-background p-0 sm:left-4"
+          className="absolute left-4 top-[14px] size-8 rounded-full bg-background p-0 sm:left-4"
           onClick={() => {
             fileRef.current?.click()
           }}
@@ -133,7 +133,7 @@ export function PromptForm({
           value={input}
           onChange={e => setInput(e.target.value)}
         />
-        <div className="absolute right-0 top-[13px] sm:right-4">
+        <div className="absolute right-4 top-[13px] sm:right-4">
           <Tooltip>
             <TooltipTrigger asChild>
               <Button type="submit" size="icon" disabled={input === ''}>
