@@ -67,7 +67,7 @@ export const FlightStatus = ({
     <div className="grid gap-4">
       <div className="grid gap-4 p-4 sm:p-6 border border-zinc-200 rounded-2xl bg-white">
         <div className="flex items-center gap-4">
-          <div className="w-10 sm:w-12 shrink-0 aspect-square rounded-lg bg-sky-50 overflow-hidden">
+          <div className="w-10 sm:w-12 shrink-0 aspect-square rounded-lg bg-zinc-50 overflow-hidden">
             <img
               src="https://www.gstatic.com/flights/airline_logos/70px/UA.png"
               className="object-cover aspect-square"
@@ -132,7 +132,7 @@ export const FlightStatus = ({
         {suggestions.map(suggestion => (
           <div
             key={suggestion}
-            className="flex items-center gap-2 px-3 py-2 text-sm transition-colors bg-sky-50 hover:bg-sky-100 rounded-xl cursor-pointer"
+            className="flex items-center gap-2 px-3 py-2 text-sm transition-colors bg-zinc-50 hover:bg-zinc-100 rounded-xl cursor-pointer"
             onClick={async () => {
               const response = await submitUserMessage(suggestion)
               setMessages((currentMessages: any[]) => [

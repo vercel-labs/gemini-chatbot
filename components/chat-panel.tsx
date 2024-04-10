@@ -62,7 +62,7 @@ export function ChatPanel({
               <div
                 key={example.heading}
                 className={cn(
-                  'cursor-pointer bg-sky-50 text-sky-950 rounded-2xl p-4 sm:p-6 hover:bg-sky-100 transition-colors',
+                  'cursor-pointer bg-zinc-50 text-zinc-950 rounded-2xl p-4 sm:p-6 hover:bg-zinc-100 transition-colors',
                   index > 1 && 'hidden md:block'
                 )}
                 onClick={async () => {
@@ -85,7 +85,9 @@ export function ChatPanel({
                 }}
               >
                 <div className="font-medium">{example.heading}</div>
-                <div className="text-sm text-sky-800">{example.subheading}</div>
+                <div className="text-sm text-zinc-800">
+                  {example.subheading}
+                </div>
               </div>
             ))}
         </div>
