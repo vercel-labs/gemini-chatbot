@@ -74,7 +74,7 @@ export const BoardingPass = ({
         </div>
         <div className="px-4 py-3 rounded-xl bg-sky-50 grid gap-1">
           <div className="text-xs text-zinc-600 uppercase">Arrival</div>
-          <div className="text-lg leading-none">{summary.arrivalTime}</div>
+          <div className="text-xl leading-none">{summary.arrivalTime}</div>
         </div>
       </div>
       <div className="hidden sm:flex">
