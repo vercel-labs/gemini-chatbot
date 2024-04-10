@@ -248,7 +248,6 @@ async function submitUserMessage(content: string) {
 
     let textContent = ''
     spinnerStream.done(null)
-    uiStream.done()
 
     for await (const delta of result.fullStream) {
       const { type } = delta
@@ -276,7 +275,7 @@ async function submitUserMessage(content: string) {
         if (toolName === 'listDestinations') {
           const { destinations } = args
 
-          uiStream.done(
+          uiStream.update(
             <BotCard>
               <Destinations destinations={destinations} />
             </BotCard>
@@ -309,7 +308,7 @@ async function submitUserMessage(content: string) {
             ]
           })
 
-          uiStream.done(
+          uiStream.update(
             <BotCard>
               <ListFlights summary={args} />
             </BotCard>
@@ -329,7 +328,7 @@ async function submitUserMessage(content: string) {
             ]
           })
 
-          uiStream.done(
+          uiStream.update(
             <BotCard>
               <SelectSeats summary={args} />
             </BotCard>
@@ -349,7 +348,7 @@ async function submitUserMessage(content: string) {
             ]
           })
 
-          uiStream.done(
+          uiStream.update(
             <BotCard>
               <ListHotels />
             </BotCard>
@@ -360,7 +359,7 @@ async function submitUserMessage(content: string) {
             interactions: []
           })
 
-          uiStream.done(
+          uiStream.update(
             <BotCard>
               <PurchaseTickets />
             </BotCard>
@@ -380,7 +379,7 @@ async function submitUserMessage(content: string) {
             ]
           })
 
-          uiStream.done(
+          uiStream.update(
             <BotCard>
               <BoardingPass summary={args} />
             </BotCard>
@@ -401,7 +400,7 @@ async function submitUserMessage(content: string) {
             ]
           })
 
-          uiStream.done(
+          uiStream.update(
             <BotCard>
               <FlightStatus summary={args} />
             </BotCard>
@@ -412,6 +411,7 @@ async function submitUserMessage(content: string) {
 
     textStream.done()
     messageStream.done()
+    uiStream.done()
   })()
 
   return {
