@@ -12,7 +12,7 @@ export function Events({ props: events }: { props: Event[] }) {
       {events.map(event => (
         <div
           key={event.date}
-          className="flex shrink-0 flex-col gap-1 rounded-lg bg-zinc-800 p-4"
+          className="flex shrink-0 flex-col gap-1 rounded-xl bg-zinc-800 p-4"
         >
           <div className="text-sm text-zinc-400">
             {format(parseISO(event.date), 'dd LLL, yyyy')}

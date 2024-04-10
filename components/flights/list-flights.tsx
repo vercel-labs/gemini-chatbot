@@ -63,7 +63,7 @@ export const ListFlights = ({
 
   return (
     <div
-      className={`flex w-full flex-col gap-2 rounded-lg border bg-white p-4 font-medium text-zinc-900 dark:bg-zinc-950 dark:text-zinc-200`}
+      className={`flex w-full flex-col gap-2 rounded-xl border bg-white p-4 font-medium text-zinc-900 dark:bg-zinc-950 dark:text-zinc-200`}
     >
       <div className="flex flex-row justify-between border-b pb-2">
         <div className="flex flex-row gap-4">
@@ -89,7 +89,7 @@ export const ListFlights = ({
           flights.map(flight => (
             <div
               key={flight.id}
-              className="flex cursor-pointer flex-row justify-between rounded-lg p-2 hover:bg-zinc-100 dark:hover:bg-zinc-900"
+              className="flex cursor-pointer flex-row justify-between rounded-xl p-2 hover:bg-zinc-100 dark:hover:bg-zinc-900"
               onClick={async () => {
                 const response = await submitUserMessage(
                   `The user has selected flight ${flight.airlines}, departing at ${flight.departureTime} and arriving at ${flight.arrivalTime} for $${flight.price}. Now proceeding to select seats.`
@@ -103,7 +103,7 @@ export const ListFlights = ({
               <div className="flex flex-row items-center gap-2 md:w-60">
                 <div className="size-8 md:size-12">
                   <img
-                    className="rounded-md border"
+                    className="rounded-lg border"
                     src={
                       'https://www.gstatic.com/flights/airline_logos/70px/UA.png'
                     }

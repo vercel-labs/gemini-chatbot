@@ -31,7 +31,7 @@ export const BoardingPass = ({
 }: BoardingPassProps) => {
   return (
     <div
-      className={`flex flex-col items-center gap-2 rounded-lg border bg-white p-4 font-medium text-zinc-950`}
+      className={`flex flex-col items-center gap-2 rounded-xl border bg-white p-4 font-medium text-zinc-950`}
     >
       <div className="flex flex-col w-full gap-2">
         <div className="flex flex-col justify-between pb-3 border-b border-zinc-900 md:flex-row md:items-center">
@@ -43,7 +43,7 @@ export const BoardingPass = ({
           <div className="text-lg leading-5">Gate {summary.gate}</div>
         </div>
 
-        <div className="flex flex-col p-2 rounded-lg bg-zinc-100">
+        <div className="flex flex-col p-2 rounded-xl bg-zinc-100">
           <div className="">Rauch / Guillermo</div>
           <div className="flex flex-col justify-between md:flex-row">
             <div className="">{summary.departure}</div>
@@ -55,19 +55,19 @@ export const BoardingPass = ({
         </div>
 
         <div className="flex flex-col gap-2 md:flex-row">
-          <div className="p-2 rounded-lg bg-zinc-100">
+          <div className="p-2 rounded-xl bg-zinc-100">
             <div className="text-sm">SEAT</div>
             <div className="text-lg">{summary.seat}</div>
           </div>
-          <div className="flex-1 p-2 rounded-lg bg-zinc-100">
+          <div className="flex-1 p-2 rounded-xl bg-zinc-100">
             <div className="text-sm">CLASS</div>
             <div className="text-lg">BUSINESS</div>
           </div>
-          <div className="p-2 rounded-lg bg-zinc-100">
+          <div className="p-2 rounded-xl bg-zinc-100">
             <div className="text-sm">DEPARTS</div>
             <div className="text-lg">{summary.departureTime}</div>
           </div>
-          <div className="p-2 rounded-lg bg-zinc-100">
+          <div className="p-2 rounded-xl bg-zinc-100">
             <div className="text-sm">ARRIVAL</div>
             <div className="text-lg">{summary.arrivalTime}</div>
           </div>
