@@ -1,15 +1,7 @@
-import { Separator } from '@/components/ui/separator'
 import { UIState } from '@/lib/chat/actions'
 import { Session } from '@/lib/types'
-import Link from 'next/link'
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
-import { PurchaseTickets } from './flights/purchase-ticket'
-import { BotCard } from './stocks'
-import { ListHotels } from './hotels/list-hotels'
-import { ListFlights } from './flights/list-flights'
-import { SelectSeats } from './flights/select-seats'
-import { BoardingPass } from './flights/boarding-pass'
-import { FlightStatus } from './flights/flight-status'
+import Link from 'next/link'
 
 export interface ChatList {
   messages: UIState
