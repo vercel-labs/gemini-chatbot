@@ -9,14 +9,5 @@ module.exports = {
         pathname: '**'
       }
     ]
-  },
-  redirects: async () => {
-    return [
-      {
-        source: '/',
-        destination: 'https://vercel.com/templates/next.js/gemini-ai-chatbot',
-        permanent: false
-      }
-    ]
   }
 }
