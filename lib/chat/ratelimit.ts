@@ -5,7 +5,7 @@ import { headers } from 'next/headers'
 
 const geminiRatelimit = new Ratelimit({
   redis: kv,
-  limiter: Ratelimit.slidingWindow(10, '1 m'),
+  limiter: Ratelimit.slidingWindow(60, '1 m'),
   analytics: true,
   prefix: 'gemini_ratelimit'
 })
