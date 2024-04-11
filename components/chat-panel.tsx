@@ -12,6 +12,7 @@ import type { AI } from '@/lib/chat/actions'
 import { nanoid } from 'nanoid'
 import { UserMessage } from './stocks/message'
 import { cn } from '@/lib/utils'
+import { toast } from 'sonner'
 
 export interface ChatPanelProps {
   id?: string
@@ -74,14 +75,32 @@ export function ChatPanel({
                     }
                   ])
 
-                  const responseMessage = await submitUserMessage(
-                    example.message
-                  )
+                  try {
+                    const responseMessage = await submitUserMessage(
+                      example.message
+                    )
 
-                  setMessages(currentMessages => [
-                    ...currentMessages,
-                    responseMessage
-                  ])
+                    setMessages(currentMessages => [
+                      ...currentMessages,
+                      responseMessage
+                    ])
+                  } catch {
+                    toast(
+                      <div className="text-red-600">
+                        You have reached your message limit! Please try again
+                        later, or{' '}
+                        <a
+                          className="underline"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          href="https://vercel.com/templates/next.js/gemini-ai-chatbot"
+                        >
+                          deploy your own version
+                        </a>
+                        .
+                      </div>
+                    )
+                  }
                 }}
               >
                 <div className="font-medium">{example.heading}</div>
