@@ -162,21 +162,9 @@ async function submitUserMessage(content: string) {
   ;(async () => {
     try {
       const result = await experimental_streamText({
-        model: google.generativeAI('models/gemini-1.0-pro-001'),
+        model: google.generativeAI('models/gemini-1.5-flash'),
         temperature: 0,
         tools: {
-          listDestinations: {
-            description: 'List destination cities, max 5.',
-            parameters: z.object({
-              destinations: z.array(
-                z
-                  .string()
-                  .describe(
-                    'List of destination cities. Include rome as one of the cities.'
-                  )
-              )
-            })
-          },
           showFlights: {
             description:
               "List available flights in the UI. List 3 that match user's query.",
@@ -190,6 +178,18 @@ async function submitUserMessage(content: string) {
                 .describe(
                   "Date of the user's flight, example format: 6 April, 1998"
                 )
+            })
+          },
+          listDestinations: {
+            description: 'List destinations to travel cities, max 5.',
+            parameters: z.object({
+              destinations: z.array(
+                z
+                  .string()
+                  .describe(
+                    'List of destination cities. Include rome as one of the cities.'
+                  )
+              )
             })
           },
           showSeatPicker: {
