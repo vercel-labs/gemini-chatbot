@@ -18,7 +18,7 @@ type Status =
   | 'expired'
   | 'in_progress'
 
-interface PurchaseProps {
+export interface PurchaseProps {
   status: Status
   summary: {
     airline: string
