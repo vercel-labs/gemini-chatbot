@@ -13,38 +13,33 @@ import {
 } from 'ai/rsc'
 
 import { BotCard, BotMessage } from '@/components/stocks'
-
 import { nanoid, sleep } from '@/lib/utils'
 import { saveChat } from '@/app/actions'
-import { SpinnerMessage, UserMessage } from '@/components/stocks/message'
+import {
+  SpinnerMessage,
+  UserMessage,
+  SystemMessage
+} from '@/components/stocks/message'
 import { Chat } from '../types'
 import { auth } from '@/auth'
-import { FlightStatus } from '@/components/flights/flight-status'
-import { SelectSeats } from '@/components/flights/select-seats'
-import { ListFlights } from '@/components/flights/list-flights'
-import { BoardingPass } from '@/components/flights/boarding-pass'
 import { PurchaseTickets } from '@/components/flights/purchase-ticket'
 import { CheckIcon, SpinnerIcon } from '@/components/ui/icons'
 import { format } from 'date-fns'
-import { experimental_streamText } from 'ai'
-import { google } from 'ai/google'
-import { GoogleGenerativeAI } from '@google/generative-ai'
-import { z } from 'zod'
-import { ListHotels } from '@/components/hotels/list-hotels'
-import { Destinations } from '@/components/flights/destinations'
+import { streamText } from 'ai'
+import { anthropic } from '@ai-sdk/anthropic'
 import { Video } from '@/components/media/video'
 import { rateLimit } from './ratelimit'
+import * as tools from './tools'
+import type { Message, AIState, UIState, AIProvider } from './types'
 
-const genAI = new GoogleGenerativeAI(
-  process.env.GOOGLE_GENERATIVE_AI_API_KEY || ''
-)
+const model = anthropic('claude-3-haiku-20240307')
 
 async function describeImage(imageBase64: string) {
   'use server'
 
   await rateLimit()
 
-  const aiState = getMutableAIState()
+  const aiState = getMutableAIState<AIProvider>()
   const spinnerStream = createStreamableUI(null)
   const messageStream = createStreamableUI(null)
   const uiStream = createStreamableUI()
@@ -129,366 +124,192 @@ async function describeImage(imageBase64: string) {
   }
 }
 
+const processAIState = async (
+  aiState: MutableAIState<AIProvider>,
+  streams: ReturnType<typeof createStreams>
+) => {
+  try {
+    await processLLMRequest(aiState, streams)
+  } catch (error) {
+    console.error('Error in LLM request:', error)
+
+    // Inform the user about the error
+    streams.uiStream.update(
+      <>
+        <SystemMessage>
+          Please, allow me just one more second while I try again...
+        </SystemMessage>{' '}
+        <SpinnerMessage />
+      </>
+    )
+
+    // Retry the LLM request with error information
+    try {
+      await processLLMRequest(aiState, streams, error)
+    } catch (retryError) {
+      console.error('Error in retry attempt:', retryError)
+      streams.uiStream.error(retryError)
+      streams.textStream.error(retryError)
+      streams.messageStream.error(retryError)
+    }
+  } finally {
+    streams.spinnerStream.done(null)
+    streams.uiStream.done()
+    streams.textStream.done()
+    streams.messageStream.done()
+    aiState.done()
+  }
+}
+
 async function submitUserMessage(content: string) {
   'use server'
 
   await rateLimit()
 
-  const aiState = getMutableAIState()
+  const streams = createStreams()
+  const aiState = getMutableAIState<AIProvider>()
 
+  appendMessageToAIState(aiState, {
+    role: 'user',
+    content: [aiState.get().interactions.join('\n\n'), content]
+      .filter(Boolean)
+      .join('\n\n')
+  })
+
+  // Intentionally not awaiting this:
+  processAIState(aiState, streams)
+
+  return {
+    id: nanoid(),
+    attachments: streams.uiStream.value,
+    spinner: streams.spinnerStream.value,
+    display: streams.messageStream.value
+  }
+}
+
+const appendMessageToAIState = (
+  aiState: MutableAIState<AIProvider>,
+  newMessage: Message
+) =>
   aiState.update({
     ...aiState.get(),
     messages: [
       ...aiState.get().messages,
       {
         id: nanoid(),
-        role: 'user',
-        content: `${aiState.get().interactions.join('\n\n')}\n\n${content}`
+        ...newMessage
       }
     ]
   })
+
+const createStreams = () => ({
+  textStream: createStreamableValue(''),
+  spinnerStream: createStreamableUI(<SpinnerMessage />),
+  messageStream: createStreamableUI(null),
+  uiStream: createStreamableUI()
+})
+
+async function processLLMRequest(
+  aiState: MutableAIState<AIProvider>,
+  streams: ReturnType<typeof createStreams>,
+  previousError?: Error
+) {
+  const prompt = `\
+    You are a friendly assistant that helps the user with booking flights to destinations that are based on a list of books. You can give travel recommendations based on the books, and will continue to help the user book a flight to their destination.
+  
+    Here's the flow: 
+      1. List holiday destinations based on a collection of books.
+      2. List flights to destination.
+      3. Choose a flight.
+      4. Choose a seat.
+      5. Choose hotel
+      6. Purchase booking.
+      7. Show boarding pass.
+      8. Show flight status.
+  `
 
   const history = aiState.get().messages.map(message => ({
     role: message.role,
     content: message.content
   }))
-  // console.log(history)
 
-  const textStream = createStreamableValue('')
-  const spinnerStream = createStreamableUI(<SpinnerMessage />)
-  const messageStream = createStreamableUI(null)
-  const uiStream = createStreamableUI()
+  history.unshift({ role: 'system', content: prompt.trim() })
 
-  ;(async () => {
-    try {
-      const result = await experimental_streamText({
-        model: google.generativeAI('models/gemini-1.5-flash'),
-        temperature: 0,
-        tools: {
-          showFlights: {
-            description:
-              "List available flights in the UI. List 3 that match user's query.",
-            parameters: z.object({
-              departingCity: z.string(),
-              arrivalCity: z.string(),
-              departingAirport: z.string().describe('Departing airport code'),
-              arrivalAirport: z.string().describe('Arrival airport code'),
-              date: z
-                .string()
-                .describe(
-                  "Date of the user's flight, example format: 6 April, 1998"
-                )
-            })
-          },
-          listDestinations: {
-            description: 'List destinations to travel cities, max 5.',
-            parameters: z.object({
-              destinations: z.array(
-                z
-                  .string()
-                  .describe(
-                    'List of destination cities. Include rome as one of the cities.'
-                  )
-              )
-            })
-          },
-          showSeatPicker: {
-            description:
-              'Show the UI to choose or change seat for the selected flight.',
-            parameters: z.object({
-              departingCity: z.string(),
-              arrivalCity: z.string(),
-              flightCode: z.string(),
-              date: z.string()
-            })
-          },
-          showHotels: {
-            description: 'Show the UI to choose a hotel for the trip.',
-            parameters: z.object({})
-          },
-          checkoutBooking: {
-            description:
-              'Show the UI to purchase/checkout a flight and hotel booking.',
-            parameters: z.object({})
-          },
-          showBoardingPass: {
-            description: "Show user's imaginary boarding pass.",
-            parameters: z.object({
-              airline: z.string(),
-              arrival: z.string(),
-              departure: z.string(),
-              departureTime: z.string(),
-              arrivalTime: z.string(),
-              price: z.number(),
-              seat: z.string(),
-              date: z
-                .string()
-                .describe('Date of the flight, example format: 6 April, 1998'),
-              gate: z.string()
-            })
-          },
-          showFlightStatus: {
-            description:
-              'Get the current status of imaginary flight by flight number and date.',
-            parameters: z.object({
-              flightCode: z.string(),
-              date: z.string(),
-              departingCity: z.string(),
-              departingAirport: z.string(),
-              departingAirportCode: z.string(),
-              departingTime: z.string(),
-              arrivalCity: z.string(),
-              arrivalAirport: z.string(),
-              arrivalAirportCode: z.string(),
-              arrivalTime: z.string()
-            })
-          }
-        },
-        system: `\
-      You are a friendly assistant that helps the user with booking flights to destinations that are based on a list of books. You can you give travel recommendations based on the books, and will continue to help the user book a flight to their destination.
-  
-      The date today is ${format(new Date(), 'd LLLL, yyyy')}. 
-      The user's current location is San Francisco, CA, so the departure city will be San Francisco and airport will be San Francisco International Airport (SFO). The user would like to book the flight out on May 12, 2024.
-
-      List United Airlines flights only.
-      
-      Here's the flow: 
-        1. List holiday destinations based on a collection of books.
-        2. List flights to destination.
-        3. Choose a flight.
-        4. Choose a seat.
-        5. Choose hotel
-        6. Purchase booking.
-        7. Show boarding pass.
-      `,
-        messages: [...history]
+  if (previousError) {
+    if (previousError.toolName) {
+      history.push({
+        role: 'assistant',
+        content: `Call '${previousError.toolName}' with arguments: ${previousError.toolArgs || {}}`
       })
-
-      let textContent = ''
-      spinnerStream.done(null)
-
-      for await (const delta of result.fullStream) {
-        const { type } = delta
-
-        if (type === 'text-delta') {
-          const { textDelta } = delta
-
-          textContent += textDelta
-          messageStream.update(<BotMessage content={textContent} />)
-
-          aiState.update({
-            ...aiState.get(),
-            messages: [
-              ...aiState.get().messages,
-              {
-                id: nanoid(),
-                role: 'assistant',
-                content: textContent
-              }
-            ]
-          })
-        } else if (type === 'tool-call') {
-          const { toolName, args } = delta
-
-          if (toolName === 'listDestinations') {
-            const { destinations } = args
-
-            uiStream.update(
-              <BotCard>
-                <Destinations destinations={destinations} />
-              </BotCard>
-            )
-
-            aiState.done({
-              ...aiState.get(),
-              interactions: [],
-              messages: [
-                ...aiState.get().messages,
-                {
-                  id: nanoid(),
-                  role: 'assistant',
-                  content: `Here's a list of holiday destinations based on the books you've read. Choose one to proceed to booking a flight. \n\n ${args.destinations.join(', ')}.`,
-                  display: {
-                    name: 'listDestinations',
-                    props: {
-                      destinations
-                    }
-                  }
-                }
-              ]
-            })
-          } else if (toolName === 'showFlights') {
-            aiState.done({
-              ...aiState.get(),
-              interactions: [],
-              messages: [
-                ...aiState.get().messages,
-                {
-                  id: nanoid(),
-                  role: 'assistant',
-                  content:
-                    "Here's a list of flights for you. Choose one and we can proceed to pick a seat.",
-                  display: {
-                    name: 'showFlights',
-                    props: {
-                      summary: args
-                    }
-                  }
-                }
-              ]
-            })
-
-            uiStream.update(
-              <BotCard>
-                <ListFlights summary={args} />
-              </BotCard>
-            )
-          } else if (toolName === 'showSeatPicker') {
-            aiState.done({
-              ...aiState.get(),
-              interactions: [],
-              messages: [
-                ...aiState.get().messages,
-                {
-                  id: nanoid(),
-                  role: 'assistant',
-                  content:
-                    "Here's a list of available seats for you to choose from. Select one to proceed to payment.",
-                  display: {
-                    name: 'showSeatPicker',
-                    props: {
-                      summary: args
-                    }
-                  }
-                }
-              ]
-            })
-
-            uiStream.update(
-              <BotCard>
-                <SelectSeats summary={args} />
-              </BotCard>
-            )
-          } else if (toolName === 'showHotels') {
-            aiState.done({
-              ...aiState.get(),
-              interactions: [],
-              messages: [
-                ...aiState.get().messages,
-                {
-                  id: nanoid(),
-                  role: 'assistant',
-                  content:
-                    "Here's a list of hotels for you to choose from. Select one to proceed to payment.",
-                  display: {
-                    name: 'showHotels',
-                    props: {}
-                  }
-                }
-              ]
-            })
-
-            uiStream.update(
-              <BotCard>
-                <ListHotels />
-              </BotCard>
-            )
-          } else if (toolName === 'checkoutBooking') {
-            aiState.done({
-              ...aiState.get(),
-              interactions: []
-            })
-
-            uiStream.update(
-              <BotCard>
-                <PurchaseTickets />
-              </BotCard>
-            )
-          } else if (toolName === 'showBoardingPass') {
-            aiState.done({
-              ...aiState.get(),
-              interactions: [],
-              messages: [
-                ...aiState.get().messages,
-                {
-                  id: nanoid(),
-                  role: 'assistant',
-                  content:
-                    "Here's your boarding pass. Please have it ready for your flight.",
-                  display: {
-                    name: 'showBoardingPass',
-                    props: {
-                      summary: args
-                    }
-                  }
-                }
-              ]
-            })
-
-            uiStream.update(
-              <BotCard>
-                <BoardingPass summary={args} />
-              </BotCard>
-            )
-          } else if (toolName === 'showFlightStatus') {
-            aiState.update({
-              ...aiState.get(),
-              interactions: [],
-              messages: [
-                ...aiState.get().messages,
-                {
-                  id: nanoid(),
-                  role: 'assistant',
-                  content: `The flight status of ${args.flightCode} is as follows:
-                Departing: ${args.departingCity} at ${args.departingTime} from ${args.departingAirport} (${args.departingAirportCode})
-                `
-                }
-              ],
-              display: {
-                name: 'showFlights',
-                props: {
-                  summary: args
-                }
-              }
-            })
-
-            uiStream.update(
-              <BotCard>
-                <FlightStatus summary={args} />
-              </BotCard>
-            )
-          }
-        }
-      }
-
-      uiStream.done()
-      textStream.done()
-      messageStream.done()
-    } catch (e) {
-      console.error(e)
-
-      const error = new Error(
-        'The AI got rate limited, please try again later.'
-      )
-      uiStream.error(error)
-      textStream.error(error)
-      messageStream.error(error)
-      aiState.done()
     }
-  })()
 
-  return {
-    id: nanoid(),
-    attachments: uiStream.value,
-    spinner: spinnerStream.value,
-    display: messageStream.value
+    history.push({ role: 'user', content: previousError.message })
+    history.push({ role: 'user', content: 'Do not apologize for errors' })
+  }
+
+  const result = await streamText({
+    model,
+    temperature: 0,
+    tools: Object.fromEntries(
+      Object.entries(tools).map(([k, v]) => [k, v.definition])
+    ),
+    messages: [...history]
+  })
+
+  await handleLLMStream(result, aiState, streams)
+}
+
+async function handleLLMStream(
+  result: any,
+  aiState: MutableAIState<AIProvider>,
+  streams: ReturnType<typeof createStreams>
+) {
+  let textContent = ''
+
+  streams.spinnerStream.update(null)
+
+  for await (const delta of result.fullStream) {
+    switch (delta.type) {
+      case 'text-delta':
+        const { textDelta } = delta
+        textContent += textDelta
+        streams.messageStream.update(<BotMessage content={textContent} />)
+        break
+
+      case 'tool-call':
+        const { toolName, args } = delta
+
+        if (tools[toolName] === undefined) {
+          throw new Error(`No tool '${toolName}' found.`)
+        }
+
+        tools[toolName].call(args, aiState, streams.uiStream)
+        break
+
+      case 'finish':
+        console.log(`Finished as`, JSON.stringify(delta))
+
+        if (textContent) {
+          appendMessageToAIState(aiState, {
+            role: 'assistant',
+            content: textContent
+          })
+        }
+        break
+
+      case 'error':
+        throw delta.error
+
+      default:
+        throw new Error(`Unknown stream type: ${delta.type}`)
+    }
   }
 }
 
 export async function requestCode() {
   'use server'
 
-  const aiState = getMutableAIState()
+  const aiState = getMutableAIState<AIProvider>()
 
   aiState.done({
     ...aiState.get(),
@@ -522,7 +343,7 @@ export async function requestCode() {
 export async function validateCode() {
   'use server'
 
-  const aiState = getMutableAIState()
+  const aiState = getMutableAIState<AIProvider>()
 
   const status = createStreamableValue('in_progress')
   const ui = createStreamableUI(
@@ -570,46 +391,24 @@ export async function validateCode() {
   }
 }
 
-export type Message = {
-  role: 'user' | 'assistant' | 'system' | 'function' | 'data' | 'tool'
-  content: string
-  id?: string
-  name?: string
-  display?: {
-    name: string
-    props: Record<string, any>
-  }
-}
+const actions = {
+  submitUserMessage,
+  requestCode,
+  validateCode,
+  describeImage
+} as const
 
-export type AIState = {
-  chatId: string
-  interactions?: string[]
-  messages: Message[]
-}
-
-export type UIState = {
-  id: string
-  display: React.ReactNode
-  spinner?: React.ReactNode
-  attachments?: React.ReactNode
-}[]
-
-export const AI = createAI<AIState, UIState>({
-  actions: {
-    submitUserMessage,
-    requestCode,
-    validateCode,
-    describeImage
-  },
+export const AI = createAI<AIState, UIState, typeof actions>({
+  actions,
   initialUIState: [],
   initialAIState: { chatId: nanoid(), interactions: [], messages: [] },
-  unstable_onGetUIState: async () => {
+  onGetUIState: async () => {
     'use server'
 
     const session = await auth()
 
     if (session && session.user) {
-      const aiState = getAIState()
+      const aiState = getAIState<AIProvider>()
 
       if (aiState) {
         const uiState = getUIStateFromAIState(aiState)
@@ -619,7 +418,7 @@ export const AI = createAI<AIState, UIState>({
       return
     }
   },
-  unstable_onSetAIState: async ({ state }) => {
+  onSetAIState: async ({ state }) => {
     'use server'
 
     const session = await auth()
@@ -655,29 +454,13 @@ export const getUIStateFromAIState = (aiState: Chat) => {
       id: `${aiState.chatId}-${index}`,
       display:
         message.role === 'assistant' ? (
-          message.display?.name === 'showFlights' ? (
-            <BotCard>
-              <ListFlights summary={message.display.props.summary} />
-            </BotCard>
-          ) : message.display?.name === 'showSeatPicker' ? (
-            <BotCard>
-              <SelectSeats summary={message.display.props.summary} />
-            </BotCard>
-          ) : message.display?.name === 'showHotels' ? (
-            <BotCard>
-              <ListHotels />
-            </BotCard>
+          tools[message.display?.name as string] !== undefined ? (
+            tools[message.display?.name as keyof typeof tools].UIFromAI(
+              message.display.props
+            )
           ) : message.content === 'The purchase has completed successfully.' ? (
             <BotCard>
               <PurchaseTickets status="expired" />
-            </BotCard>
-          ) : message.display?.name === 'showBoardingPass' ? (
-            <BotCard>
-              <BoardingPass summary={message.display.props.summary} />
-            </BotCard>
-          ) : message.display?.name === 'listDestinations' ? (
-            <BotCard>
-              <Destinations destinations={message.display.props.destinations} />
             </BotCard>
           ) : (
             <BotMessage content={message.content} />
