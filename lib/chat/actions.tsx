@@ -26,8 +26,8 @@ import { BoardingPass } from '@/components/flights/boarding-pass'
 import { PurchaseTickets } from '@/components/flights/purchase-ticket'
 import { CheckIcon, SpinnerIcon } from '@/components/ui/icons'
 import { format } from 'date-fns'
-import { experimental_streamText } from 'ai'
-import { google } from 'ai/google'
+import { streamText } from 'ai'
+import { google } from '@ai-sdk/google'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { z } from 'zod'
 import { ListHotels } from '@/components/hotels/list-hotels'
@@ -161,8 +161,8 @@ async function submitUserMessage(content: string) {
 
   ;(async () => {
     try {
-      const result = await experimental_streamText({
-        model: google.generativeAI('models/gemini-1.5-flash'),
+      const result = await streamText({
+        model: google('models/gemini-1.5-flash'),
         temperature: 0,
         tools: {
           showFlights: {
@@ -204,12 +204,12 @@ async function submitUserMessage(content: string) {
           },
           showHotels: {
             description: 'Show the UI to choose a hotel for the trip.',
-            parameters: z.object({})
+            parameters: z.object({ city: z.string() })
           },
           checkoutBooking: {
             description:
               'Show the UI to purchase/checkout a flight and hotel booking.',
-            parameters: z.object({})
+            parameters: z.object({ shouldConfirm: z.boolean() })
           },
           showBoardingPass: {
             description: "Show user's imaginary boarding pass.",
