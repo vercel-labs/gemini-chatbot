@@ -124,7 +124,7 @@ export function PromptForm({
         <Button
           variant="outline"
           size="icon"
-          className="absolute left-4 top-[14px] size-8 rounded-full bg-background p-0 sm:left-4"
+          className="absolute left-4 top-1/2 -translate-y-1/2 size-8 rounded-full bg-background p-0 sm:left-4"
           onClick={() => {
             fileRef.current?.click()
           }}
@@ -150,7 +150,7 @@ export function PromptForm({
           value={input}
           onChange={e => setInput(e.target.value)}
         />
-        <div className="absolute right-4 top-[13px] sm:right-4">
+        <div className="absolute right-4 top-1/2 -translate-y-1/2 sm:right-4">
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
