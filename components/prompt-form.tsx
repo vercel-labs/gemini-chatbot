@@ -118,7 +118,7 @@ export function PromptForm({
           }
         }}
       />
-      <div className="relative flex max-h-60 w-full grow flex-col overflow-hidden bg-zinc-100 px-12 sm:rounded-full sm:px-12">
+      <div className="relative flex max-h-60 w-full grow flex-col overflow-hidden bg-zinc-100 px-12 sm:rounded-[31px] sm:px-12">
         {/* <Tooltip>
           <TooltipTrigger asChild> */}
         <Button
