@@ -38,16 +38,16 @@ export function ChatPanel({
 
   const exampleMessages = [
     {
-      heading: 'List flights flying from',
-      subheading: 'San Francisco to Rome today',
-      message: `List flights flying from San Francisco to Rome today`
+      heading: 'Summarize document',
+      subheading: 'Provide a brief summary of the given document',
+      message: 'Can you summarize the contents of this document?'
     },
     {
-      heading: 'What is the status',
-      subheading: 'of flight BA142?',
-      message: 'What is the status of flight BA142?'
+      heading: 'Key points extraction',
+      subheading: 'Highlight the main points',
+      message: 'What are the key points of this document?'
     }
-  ]
+  ];  
 
   return (
     <div className="fixed inset-x-0 bg-white/90 bottom-0 w-full duration-300 ease-in-out peer-[[data-state=open]]:group-[]:lg:pl-[250px] peer-[[data-state=open]]:group-[]:xl:pl-[300px] dark:from-10%">
