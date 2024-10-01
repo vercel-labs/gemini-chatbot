@@ -276,7 +276,7 @@ async function submitUserMessage(content: string) {
           textContent += textDelta
           messageStream.update(<BotMessage content={textContent} />)
 
-          aiState.update({
+          aiState.done({
             ...aiState.get(),
             messages: [
               ...aiState.get().messages,
