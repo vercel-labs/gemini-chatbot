@@ -1,66 +1,38 @@
-import { GeistSans } from 'geist/font/sans'
-import { GeistMono } from 'geist/font/mono'
-import { Analytics } from '@vercel/analytics/react'
-import '@/app/globals.css'
-import { cn } from '@/lib/utils'
-import { TailwindIndicator } from '@/components/tailwind-indicator'
-import { Providers } from '@/components/providers'
-import { Header } from '@/components/header'
-import { Toaster } from '@/components/ui/sonner'
-import { KasadaClient } from '@/lib/kasada/kasada-client'
+import { Navbar } from "@/components/navbar";
+import { Metadata } from "next";
+import { Toaster } from "sonner";
+import "./globals.css";
+import { ThemeProvider } from "@/components/theme-provider";
+import { GeistSans } from "geist/font/sans";
 
-export const metadata = {
-  metadataBase: new URL('https://gemini.vercel.ai'),
-  title: {
-    default: 'Next.js Gemini Chatbot',
-    template: `%s - Next.js Gemini Chatbot`
-  },
+export const metadata: Metadata = {
+  metadataBase: new URL(
+    "https://ai-sdk-preview-internal-knowledge-base.vercel.app",
+  ),
+  title: "Chatbot",
   description:
-    'Build your own generative UI chatbot using the Vercel AI SDK and Google Gemini',
-  icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon-16x16.png',
-    apple: '/apple-touch-icon.png'
-  }
-}
+    "Internal Knowledge Base using Retrieval Augmented Generation and Middleware",
+};
 
-export const viewport = {
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: 'white' },
-    { media: '(prefers-color-scheme: dark)', color: 'black' }
-  ]
-}
-
-interface RootLayoutProps {
-  children: React.ReactNode
-}
-
-export default function RootLayout({ children }: RootLayoutProps) {
+export default async function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn(
-          'font-sans antialiased',
-          GeistSans.variable,
-          GeistMono.variable
-        )}
-      >
-        <KasadaClient />
-        <Toaster position="top-center" />
-        <Providers
+    <html lang="en">
+      <body className={`${GeistSans.className}`}>
+        <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex flex-col min-h-screen">
-            <Header />
-            <main className="flex flex-col flex-1">{children}</main>
-          </div>
-          <TailwindIndicator />
-        </Providers>
-        <Analytics />
+          <Toaster position="top-center" />
+          <Navbar />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
-  )
+  );
 }
