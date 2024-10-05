@@ -7,12 +7,9 @@ import { GeistSans } from "geist/font/sans";
 import { KasadaClient } from "@/utils/kasada/kasada-client";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    "https://ai-sdk-preview-internal-knowledge-base.vercel.app",
-  ),
-  title: "Chatbot",
-  description:
-    "Internal Knowledge Base using Retrieval Augmented Generation and Middleware",
+  metadataBase: new URL("https://gemini.vercel.ai"),
+  title: "Gemini Chatbot",
+  description: "Next.js chatbot template using the AI SDK and Gemini.",
 };
 
 export default async function RootLayout({
