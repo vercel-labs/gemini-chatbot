@@ -1,7 +1,7 @@
 "use client";
 
 import cx from "classnames";
-import { addHours, format, isWithinInterval } from "date-fns";
+import { format, isWithinInterval } from "date-fns";
 import { useEffect, useState } from "react";
 
 interface WeatherAtLocation {
