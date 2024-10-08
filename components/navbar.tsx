@@ -1,5 +1,9 @@
 import Link from "next/link";
+
+import { auth, signOut } from "@/app/(auth)/auth";
+
 import { History } from "./history";
+import { VercelIcon } from "./icons";
 import { Button } from "./shadcn/button";
 import {
   DropdownMenu,
@@ -7,18 +11,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./shadcn/dropdown-menu";
-import { getUserFromSession, signOut } from "@/app/(auth)/actions";
 import { ThemeToggle } from "./theme-toggle";
-import { VercelIcon } from "./icons";
 
 export const Navbar = async () => {
-  let user = await getUserFromSession();
+  const session = await auth();
 
   return (
     <>
       <div className="bg-background absolute top-0 left-0 w-dvw border-b py-2 px-3 justify-between flex flex-row items-center z-30">
         <div className="flex flex-row gap-3 items-center">
-          <History user={user} />
+          <History user={session?.user} />
           <div className="flex flex-row gap-2 items-center">
             <div className="text-sm dark:text-zinc-300">Chatbot</div>
           </div>
@@ -27,8 +29,9 @@ export const Navbar = async () => {
         <div className="flex flex-row gap-3 items-center">
           <Button className="py-1.5 px-2 h-fit font-normal" asChild>
             <Link
-              href="https://vercel.com/templates/next.js/gemini-ai-chatbot"
-              target="_noblank"
+              href="https://vercel.com/templates/next.js/nextjs-ai-chatbot"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               <div className="flex flex-row gap-2 items-center">
                 <VercelIcon size={14} />
@@ -37,14 +40,14 @@ export const Navbar = async () => {
             </Link>
           </Button>
 
-          {user ? (
+          {session ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   className="py-1.5 px-2 h-fit font-normal"
-                  variant="outline"
+                  variant="secondary"
                 >
-                  {user.email}
+                  {session.user?.email}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
@@ -56,7 +59,9 @@ export const Navbar = async () => {
                     className="w-full"
                     action={async () => {
                       "use server";
-                      await signOut();
+                      await signOut({
+                        redirectTo: "/",
+                      });
                     }}
                   >
                     <button
@@ -70,7 +75,7 @@ export const Navbar = async () => {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button className="py-1.5 px-2 h-fit border font-normal" asChild>
+            <Button className="py-1.5 px-2 h-fit font-normal" asChild>
               <Link href="/login">Login</Link>
             </Button>
           )}
