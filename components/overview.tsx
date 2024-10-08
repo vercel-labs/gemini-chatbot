@@ -13,21 +13,19 @@ export const Overview = () => {
       exit={{ opacity: 0, scale: 0.98 }}
       transition={{ delay: 0.5 }}
     >
-      <div className="border rounded-lg p-6 flex flex-col gap-4 text-zinc-500 text-sm dark:text-zinc-400 dark:border-zinc-700">
+      <div className="border-none bg-muted/50 rounded-2xl p-6 flex flex-col gap-4 text-zinc-500 text-sm dark:text-zinc-400 dark:border-zinc-700">
         <p className="flex flex-row justify-center gap-4 items-center text-zinc-900 dark:text-zinc-50">
           <VercelIcon />
           <span>+</span>
           <MessageIcon />
-          <span>+</span>
-          <LogoGoogle />
         </p>
         <p>
           This is an open source Chatbot template powered by the Google Gemini
           model built with Next.js and the AI SDK by Vercel. It uses the{" "}
-          <code className="rounded-md bg-muted px-1 py-0.5">streamText</code>{" "}
+          <code className="rounded-md bg-muted px-1.5 py-0.5">streamText</code>{" "}
           function in the server and the{" "}
-          <code className="rounded-md bg-muted px-1 py-0.5">useChat</code> hook
-          on the client to create a seamless chat experience.
+          <code className="rounded-md bg-muted px-1.5 py-0.5">useChat</code>{" "}
+          hook on the client to create a seamless chat experience.
         </p>
         <p>
           {" "}

@@ -21,7 +21,7 @@ export function Form({
         <Input
           id="email"
           name="email"
-          className="bg-muted text-md md:text-sm"
+          className="bg-muted text-md md:text-sm border-none"
           type="email"
           placeholder="user@acme.com"
           autoComplete="email"
@@ -38,7 +38,7 @@ export function Form({
         <Input
           id="password"
           name="password"
-          className="bg-muted text-md md:text-sm"
+          className="bg-muted text-md md:text-sm border-none"
           type="password"
           required
         />
