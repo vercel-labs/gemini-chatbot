@@ -213,11 +213,14 @@ export function MultimodalInput({
         className="min-h-[24px] overflow-hidden resize-none rounded-lg text-base bg-muted border-none"
         rows={3}
         onKeyDown={(event) => {
-          if (isLoading) {
-            toast.error("Please wait for the model to finish its response!");
-          } else if (event.key === "Enter" && !event.shiftKey) {
+          if (event.key === "Enter" && !event.shiftKey) {
             event.preventDefault();
-            submitForm();
+
+            if (isLoading) {
+              toast.error("Please wait for the model to finish its response!");
+            } else {
+              submitForm();
+            }
           }
         }}
       />
