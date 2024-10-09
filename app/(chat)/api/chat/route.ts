@@ -209,7 +209,7 @@ export async function POST(request: Request) {
       },
     },
     onFinish: async ({ responseMessages }) => {
-      if (session.user && session.user.id) {
+      if (session && session.user && session.user.id) {
         await saveChat({
           id,
           messages: [...coreMessages, ...responseMessages],
