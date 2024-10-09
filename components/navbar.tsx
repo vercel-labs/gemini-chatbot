@@ -38,7 +38,6 @@ export const Navbar = async () => {
           </div>
         </div>
 
-<<<<<<< Updated upstream
         {session ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -58,24 +57,6 @@ export const Navbar = async () => {
                   className="w-full"
                   action={async () => {
                     "use server";
-=======
-        <div className="flex flex-row gap-3 items-center">
-          <Button
-            className="hidden md:block py-1.5 px-2 h-fit font-normal dark:bg-zinc-100 dark:hover:bg-zinc-200 bg-zinc-950 hover:bg-zinc-900"
-            asChild
-          >
-            <Link
-              href="https://vercel.com/templates/next.js/gemini-ai-chatbot"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <div className="flex flex-row gap-2 items-center">
-                <VercelIcon size={14} />
-                Deploy with Vercel
-              </div>
-            </Link>
-          </Button>
->>>>>>> Stashed changes
 
                     await signOut({
                       redirectTo: "/",
@@ -86,7 +67,6 @@ export const Navbar = async () => {
                     type="submit"
                     className="w-full text-left px-1 py-0.5 text-red-500"
                   >
-<<<<<<< Updated upstream
                     Sign out
                   </button>
                 </form>
@@ -94,31 +74,10 @@ export const Navbar = async () => {
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
-          <Button className="py-1.5 px-2 h-fit font-normal" asChild>
+          <Button className="py-1.5 px-2 h-fit font-normal text-white" asChild>
             <Link href="/login">Login</Link>
           </Button>
         )}
-=======
-                    <button
-                      type="submit"
-                      className="w-full text-left px-1 py-0.5 text-red-500"
-                    >
-                      Sign out
-                    </button>
-                  </form>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <Button
-              className="py-1.5 px-2 h-fit font-normal text-white"
-              asChild
-            >
-              <Link href="/login">Login</Link>
-            </Button>
-          )}
-        </div>
->>>>>>> Stashed changes
       </div>
     </>
   );
