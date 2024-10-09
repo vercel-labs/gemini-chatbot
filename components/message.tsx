@@ -63,7 +63,9 @@ export const Message = ({
                     ) : toolName === "selectSeats" ? (
                       <SelectSeats availability={result} />
                     ) : toolName === "createReservation" ? (
-                      <CreateReservation reservation={result} />
+                      result.includes("error") ? null : (
+                        <CreateReservation reservation={result} />
+                      )
                     ) : toolName === "authorizePayment" ? (
                       <AuthorizePayment intent={result} />
                     ) : toolName === "displayBoardingPass" ? (

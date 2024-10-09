@@ -145,7 +145,7 @@ export async function POST(request: Request) {
             return { id, ...props, totalPriceInUSD };
           } else {
             return {
-              error: "User is not authorized to perform this action!",
+              error: "User is not signed in to perform this action!",
             };
           }
         },
