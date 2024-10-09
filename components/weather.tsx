@@ -269,7 +269,7 @@ export function Weather({
               },
             )}
           />
-          <div className="text-4xl font-medium text-blue-50">
+          <div className="text-2xl sm:text-3xl font-medium text-blue-50">
             {weatherAtLocation.current.temperature_2m}
             {weatherAtLocation.current_units.temperature_2m}
           </div>

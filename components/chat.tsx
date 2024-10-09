@@ -26,6 +26,7 @@ export function Chat({
     useChat({
       body: { id, selectedFilePathnames },
       initialMessages,
+      maxSteps: 10,
       onFinish: () => {
         if (user) {
           window.history.replaceState({}, "", `/${id}`);

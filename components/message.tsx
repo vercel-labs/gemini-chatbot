@@ -4,10 +4,17 @@ import { Attachment, ToolInvocation } from "ai";
 import { motion } from "framer-motion";
 import { ReactNode } from "react";
 
+import { AuthorizePayment } from "./flights/authorize-payment";
+import { DisplayBoardingPass } from "./flights/boarding-pass";
+import { CreateReservation } from "./flights/create-reservation";
+import { FlightStatus } from "./flights/flight-status";
+import { ListFlights } from "./flights/list-flights";
+import { SelectSeats } from "./flights/select-seats";
 import { BotIcon, UserIcon } from "./icons";
 import { Markdown } from "./markdown";
 import { PreviewAttachment } from "./preview-attachment";
 import { Weather } from "./weather";
+import { VerifyPayment } from "./flights/verify-payment";
 
 export const Message = ({
   role,
@@ -31,9 +38,9 @@ export const Message = ({
       </div>
 
       <div className="flex flex-col gap-2 w-full">
-        {content && (
+        {content && typeof content === "string" && (
           <div className="text-zinc-800 dark:text-zinc-300 flex flex-col gap-4">
-            <Markdown>{content as string}</Markdown>
+            <Markdown>{content}</Markdown>
           </div>
         )}
 
@@ -49,13 +56,45 @@ export const Message = ({
                   <div key={toolCallId}>
                     {toolName === "getWeather" ? (
                       <Weather weatherAtLocation={result} />
-                    ) : null}
+                    ) : toolName === "displayFlightStatus" ? (
+                      <FlightStatus flightStatus={result} />
+                    ) : toolName === "searchFlights" ? (
+                      <ListFlights results={result} />
+                    ) : toolName === "selectSeats" ? (
+                      <SelectSeats availability={result} />
+                    ) : toolName === "createReservation" ? (
+                      result.includes("error") ? null : (
+                        <CreateReservation reservation={result} />
+                      )
+                    ) : toolName === "authorizePayment" ? (
+                      <AuthorizePayment intent={result} />
+                    ) : toolName === "displayBoardingPass" ? (
+                      <DisplayBoardingPass boardingPass={result} />
+                    ) : toolName === "verifyPayment" ? (
+                      <VerifyPayment result={result} />
+                    ) : (
+                      <div>{JSON.stringify(result, null, 2)}</div>
+                    )}
                   </div>
                 );
               } else {
                 return (
                   <div key={toolCallId} className="skeleton">
-                    {toolName === "getWeather" ? <Weather /> : null}
+                    {toolName === "getWeather" ? (
+                      <Weather />
+                    ) : toolName === "displayFlightStatus" ? (
+                      <FlightStatus />
+                    ) : toolName === "searchFlights" ? (
+                      <ListFlights />
+                    ) : toolName === "selectSeats" ? (
+                      <SelectSeats />
+                    ) : toolName === "createReservation" ? (
+                      <CreateReservation />
+                    ) : toolName === "authorizePayment" ? (
+                      <AuthorizePayment />
+                    ) : toolName === "displayBoardingPass" ? (
+                      <DisplayBoardingPass />
+                    ) : null}
                   </div>
                 );
               }

@@ -103,8 +103,16 @@
 }
 
 .skeleton {
-    *[class^="text-"] {
-        color: transparent;
-        @apply rounded-md bg-foreground/20 select-none;
+    *[class^="text"] {
+        color: transparent !important;
+        @apply rounded-sm bg-foreground/20 select-none animate-pulse;
+    }
+
+    *[class^="no-skeleton"] {
+        opacity: 0 !important;
+    }
+
+    input {
+        opacity: 0 !important;
     }
 }

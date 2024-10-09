@@ -7,9 +7,9 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { KasadaClient } from "@/utils/kasada/kasada-client";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://chat.vercel.ai"),
-  title: "Next.js Chatbot Template",
-  description: "Next.js chatbot template using the AI SDK.",
+  metadataBase: new URL("https://gemini.vercel.ai"),
+  title: "Next.js Gemini Chatbot",
+  description: "Next.js chatbot template using the AI SDK and Gemini.",
 };
 
 export default async function RootLayout({
@@ -19,7 +19,7 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body className="antialiased">
         <KasadaClient />
         <ThemeProvider
           attribute="class"

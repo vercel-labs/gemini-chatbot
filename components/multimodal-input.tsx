@@ -20,14 +20,14 @@ import { Textarea } from "./shadcn/textarea";
 
 const suggestedActions = [
   {
-    title: "What is",
-    label: "the meaning of life?",
-    action: "what is the meaning of life?",
+    title: "Help me book a flight",
+    label: "from San Francisco to London",
+    action: "help me book a flight from San Francisco to London",
   },
   {
-    title: "Why do",
-    label: "developers use Next.js?",
-    action: "why do developers use Next.js?",
+    title: "What is the status",
+    label: "of flight BA142 flying tmrw?",
+    action: "what is the status of flight BA142 flying tmrw?",
   },
 ];
 
@@ -71,7 +71,7 @@ export function MultimodalInput({
   const adjustHeight = () => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight + 2}px`;
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight + 0}px`;
     }
   };
 

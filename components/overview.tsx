@@ -22,9 +22,13 @@ export const Overview = () => {
         <p>
           This is an open source Chatbot template powered by the Google Gemini
           model built with Next.js and the AI SDK by Vercel. It uses the{" "}
-          <code className="rounded-md bg-muted px-1.5 py-0.5">streamText</code>{" "}
+          <code className="rounded-sm bg-muted-foreground/15 px-1.5 py-0.5">
+            streamText
+          </code>{" "}
           function in the server and the{" "}
-          <code className="rounded-md bg-muted px-1.5 py-0.5">useChat</code>{" "}
+          <code className="rounded-sm bg-muted-foreground/15 px-1.5 py-0.5">
+            useChat
+          </code>{" "}
           hook on the client to create a seamless chat experience.
         </p>
         <p>

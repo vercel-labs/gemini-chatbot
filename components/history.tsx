@@ -126,7 +126,7 @@ export const History = ({ user }: { user: User | undefined }) => {
           <div className="mt-10 flex flex-col">
             {user && (
               <Button
-                className="font-normal text-sm flex flex-row justify-between"
+                className="font-normal text-sm flex flex-row justify-between text-white"
                 asChild
               >
                 <Link href="/">
