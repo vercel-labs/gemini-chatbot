@@ -63,7 +63,7 @@ export const Message = ({
                     ) : toolName === "selectSeats" ? (
                       <SelectSeats availability={result} />
                     ) : toolName === "createReservation" ? (
-                      result.includes("error") ? null : (
+                      Object.keys(result).includes("error") ? null : (
                         <CreateReservation reservation={result} />
                       )
                     ) : toolName === "authorizePayment" ? (
