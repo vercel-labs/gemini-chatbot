@@ -32,6 +32,7 @@
     "drizzle-orm": "^0.34.0",
     "framer-motion": "^11.3.19",
     "geist": "^1.3.1",
+    "input-otp": "^1.2.4",
     "lucide-react": "^0.446.0",
     "next": "15.0.0-canary.152",
     "next-auth": "5.0.0-beta.22",

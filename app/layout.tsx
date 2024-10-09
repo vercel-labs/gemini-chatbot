@@ -7,7 +7,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://gemini.vercel.ai"),
-  title: "Gemini Chatbot",
+  title: "Next.js Gemini Chatbot",
   description: "Next.js chatbot template using the AI SDK and Gemini.",
 };
 
@@ -18,7 +18,7 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body className="antialiased">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

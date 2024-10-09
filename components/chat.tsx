@@ -23,6 +23,7 @@ export function Chat({
     useChat({
       body: { id, selectedFilePathnames },
       initialMessages,
+      maxSteps: 10,
       onFinish: () => {
         window.history.replaceState({}, "", `/${id}`);
       },
