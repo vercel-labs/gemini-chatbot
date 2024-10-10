@@ -1,143 +1,123 @@
-/* eslint-disable jsx-a11y/alt-text */
-/* eslint-disable @next/next/no-img-element */
-'use client'
+import cx from "classnames";
 
-import { useAIState, useActions, useUIState } from 'ai/rsc'
-import { useState } from 'react'
-import { SparklesIcon } from '../ui/icons'
-
-interface SelectSeatsProps {
-  summary: {
-    departingCity: string
-    arrivalCity: string
-    flightCode: string
-    date: string
-  }
+interface Seat {
+  seatNumber: string;
+  priceInUSD: number;
+  isAvailable: boolean;
 }
 
-export const suggestions = [
-  'Proceed to checkout',
-  'List hotels and make a reservation'
-]
+const SAMPLE: { seats: Seat[][] } = {
+  seats: [
+    [
+      { seatNumber: "1A", priceInUSD: 150, isAvailable: false },
+      { seatNumber: "1B", priceInUSD: 150, isAvailable: false },
+      { seatNumber: "1C", priceInUSD: 150, isAvailable: false },
+      { seatNumber: "1D", priceInUSD: 150, isAvailable: false },
+      { seatNumber: "1E", priceInUSD: 150, isAvailable: false },
+      { seatNumber: "1F", priceInUSD: 150, isAvailable: false },
+    ],
+    [
+      { seatNumber: "2A", priceInUSD: 150, isAvailable: false },
+      { seatNumber: "2B", priceInUSD: 150, isAvailable: false },
+      { seatNumber: "2C", priceInUSD: 150, isAvailable: false },
+      { seatNumber: "2D", priceInUSD: 150, isAvailable: false },
+      { seatNumber: "2E", priceInUSD: 150, isAvailable: false },
+      { seatNumber: "2F", priceInUSD: 150, isAvailable: false },
+    ],
+    [
+      { seatNumber: "3A", priceInUSD: 150, isAvailable: false },
+      { seatNumber: "3B", priceInUSD: 150, isAvailable: false },
+      { seatNumber: "3C", priceInUSD: 150, isAvailable: false },
+      { seatNumber: "3D", priceInUSD: 150, isAvailable: false },
+      { seatNumber: "3E", priceInUSD: 150, isAvailable: false },
+      { seatNumber: "3F", priceInUSD: 150, isAvailable: false },
+    ],
+    [
+      { seatNumber: "4A", priceInUSD: 150, isAvailable: false },
+      { seatNumber: "4B", priceInUSD: 150, isAvailable: false },
+      { seatNumber: "4C", priceInUSD: 150, isAvailable: false },
+      { seatNumber: "4D", priceInUSD: 150, isAvailable: false },
+      { seatNumber: "4E", priceInUSD: 150, isAvailable: false },
+      { seatNumber: "4F", priceInUSD: 150, isAvailable: false },
+    ],
+    [
+      { seatNumber: "5A", priceInUSD: 150, isAvailable: false },
+      { seatNumber: "5B", priceInUSD: 150, isAvailable: false },
+      { seatNumber: "5C", priceInUSD: 150, isAvailable: false },
+      { seatNumber: "5D", priceInUSD: 150, isAvailable: false },
+      { seatNumber: "5E", priceInUSD: 150, isAvailable: false },
+      { seatNumber: "5F", priceInUSD: 150, isAvailable: false },
+    ],
+  ],
+};
 
-export const SelectSeats = ({
-  summary = {
-    departingCity: 'New York City',
-    arrivalCity: 'San Francisco',
-    flightCode: 'CA123',
-    date: '23 March 2024'
-  }
-}: SelectSeatsProps) => {
-  const availableSeats = ['3B', '2D']
-  const [aiState, setAIState] = useAIState()
-  const [selectedSeat, setSelectedSeat] = useState('')
-  const { departingCity, arrivalCity, flightCode, date } = summary
-  const [_, setMessages] = useUIState()
-  const { submitUserMessage } = useActions()
-
+export function SelectSeats({ availability = SAMPLE }) {
   return (
-    <div className="grid gap-4">
-      <p>
-        Great! Here are the available seats for your flight. Please select a
-        seat to continue.
-      </p>
-      <div className="grid gap-4 p-4 sm:p-6 border border-zinc-200 rounded-2xl bg-white">
-        <div className="flex items-center gap-4">
-          <div className="w-10 sm:w-12 shrink-0 aspect-square rounded-lg bg-zinc-50 overflow-hidden">
-            <img
-              src="https://www.gstatic.com/flights/airline_logos/70px/UA.png"
-              className="object-cover aspect-square"
-              alt="airline logo"
-            />
+    <div className="flex flex-col gap-2 bg-muted rounded-lg">
+      <div className="flex flex-col gap-4 scale-75">
+        <div className="flex flex-row w-full justify-between text-muted-foreground">
+          <div className="flex flex-row">
+            <div className="w-[45px] sm:w-[54px] text-center">A</div>
+            <div className="w-[45px] sm:w-[54px] text-center">B</div>
+            <div className="w-[45px] sm:w-[54px] text-center">C</div>
           </div>
-          <div>
-            <div className="font-medium">
-              {date} · {flightCode}
-            </div>
-            <div className="text-sm text-zinc-600">
-              {departingCity} to {arrivalCity}
-            </div>
+          <div className="flex flex-row">
+            <div className="w-[45px] sm:w-[54px] text-center">D</div>
+            <div className="w-[45px] sm:w-[54px] text-center">E</div>
+            <div className="w-[45px] sm:w-[54px] text-center">F</div>
           </div>
         </div>
-        <div className="relative flex w-ful p-4 sm:p-6 justify-center rounded-xl sm:rounded-lg bg-zinc-50">
-          <div className="flex flex-col gap-4 p-4 border border-zinc-200 rounded-lg bg-zinc-50">
-            {[4, 3, 2, 1].map((row, rowIndex) => (
-              <div key={`row-${rowIndex}`} className="flex flex-row gap-3">
-                {['A', 'B', 0, 'C', 'D'].map((seat, seatIndex) => (
-                  <div
-                    key={`seat-${seatIndex}`}
-                    className={`align-center relative flex size-6 flex-row items-center justify-center rounded ${
-                      seatIndex === 2
-                        ? 'transparent'
-                        : selectedSeat === `${row}${seat}`
-                          ? 'cursor-pointer border-x border-b border-emerald-500 bg-emerald-300'
-                          : availableSeats.includes(`${row}${seat}`)
-                            ? 'cursor-pointer border-x border-b border-sky-500 bg-sky-200'
-                            : 'cursor-not-allowed border-x border-b border-zinc-300 bg-zinc-200'
-                    }`}
-                    onClick={() => {
-                      setSelectedSeat(`${row}${seat}`)
 
-                      setAIState({
-                        ...aiState,
-                        interactions: [
-                          `great, I have selected seat ${row}${seat}`
-                        ]
-                      })
-                    }}
-                  >
-                    {seatIndex === 2 ? (
-                      <div className="w-6 text-sm text-center tabular-nums text-zinc-500">
-                        {row}
-                      </div>
-                    ) : (
-                      <div
-                        className={`absolute top-0 h-2 w-7 rounded border ${
-                          selectedSeat === `${row}${seat}`
-                            ? 'border-emerald-500 bg-emerald-300'
-                            : availableSeats.includes(`${row}${seat}`)
-                              ? 'border-sky-500 bg-sky-300'
-                              : 'border-zinc-300 bg-zinc-200'
-                        }`}
-                      />
-                    )}
+        {availability.seats.map((row, index) => (
+          <div key={`row-${index}`} className="flex flex-row gap-4">
+            {row.map((seat, seatIndex) => (
+              <>
+                {seatIndex === 3 ? (
+                  <div className="flex flex-row items-center justify-center w-full text-muted-foreground">
+                    {index + 1}
                   </div>
-                ))}
-              </div>
-            ))}
-            <div className="flex gap-3">
-              {['A', 'B', '', 'C', 'D'].map((seat, index) => (
+                ) : null}
                 <div
-                  key={index}
-                  className="w-6 text-sm text-center shrink-0 text-zinc-500"
+                  key={seat.seatNumber}
+                  className={cx(
+                    "relative size-8 sm:size-10 flex-shrink-0 flex rounded-sm flex-row items-center justify-center",
+                    {
+                      "bg-blue-500": seat.isAvailable,
+                      "bg-gray-500": !seat.isAvailable,
+                    },
+                  )}
                 >
-                  {seat}
+                  <div className="text-xs text-white">${seat.priceInUSD}</div>
+                  <div
+                    className={cx(
+                      "absolute -top-1 h-2 w-full scale-125 rounded-sm",
+                      {
+                        "bg-blue-600": seat.isAvailable,
+                        "bg-zinc-600": !seat.isAvailable,
+                      },
+                    )}
+                  />
                 </div>
-              ))}
-            </div>
+              </>
+            ))}
+          </div>
+        ))}
+      </div>
+
+      <div className="flex flex-row gap-4 justify-center pb-6">
+        <div className="flex flex-row items-center gap-2">
+          <div className="w-4 h-4 bg-blue-500 rounded-sm" />
+          <div className="text text-muted-foreground font-medium text-sm">
+            Available
+          </div>
+        </div>
+        <div className="flex flex-row items-center gap-2">
+          <div className="w-4 h-4 bg-gray-500 rounded-sm" />
+          <div className="text text-muted-foreground font-medium text-sm">
+            Unavailable
           </div>
         </div>
       </div>
-      {selectedSeat !== '' && (
-        <div className="flex flex-col sm:flex-row items-start gap-2">
-          {suggestions.map(suggestion => (
-            <button
-              key={suggestion}
-              className="flex items-center gap-2 px-3 py-2 text-sm transition-colors bg-zinc-50 hover:bg-zinc-100 rounded-xl cursor-pointer"
-              onClick={async () => {
-                const response = await submitUserMessage(suggestion, [])
-                setMessages((currentMessages: any[]) => [
-                  ...currentMessages,
-                  response
-                ])
-              }}
-            >
-              <SparklesIcon />
-              {suggestion}
-            </button>
-          ))}
-        </div>
-      )}
     </div>
-  )
+  );
 }
