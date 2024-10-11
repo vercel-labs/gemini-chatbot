@@ -1,66 +1,113 @@
-import { type Metadata } from 'next'
-import { notFound, redirect } from 'next/navigation'
+import {
+  CoreMessage,
+  CoreToolMessage,
+  generateId,
+  Message,
+  ToolInvocation,
+} from "ai";
+import { notFound } from "next/navigation";
 
-import { auth } from '@/auth'
-import { getChat, getMissingKeys } from '@/app/actions'
-import { Chat } from '@/components/chat'
-import { AI } from '@/lib/chat/actions'
-import { Session } from '@/lib/types'
+import { auth } from "@/app/(auth)/auth";
+import { Chat as PreviewChat } from "@/components/custom/chat";
+import { getChatById } from "@/db/queries";
+import { Chat } from "@/db/schema";
 
-export interface ChatPageProps {
-  params: {
-    id: string
-  }
+function addToolMessageToChat({
+  toolMessage,
+  messages,
+}: {
+  toolMessage: CoreToolMessage;
+  messages: Array<Message>;
+}): Array<Message> {
+  return messages.map((message) => {
+    if (message.toolInvocations) {
+      return {
+        ...message,
+        toolInvocations: message.toolInvocations.map((toolInvocation) => {
+          const toolResult = toolMessage.content.find(
+            (tool) => tool.toolCallId === toolInvocation.toolCallId,
+          );
+
+          if (toolResult) {
+            return {
+              ...toolInvocation,
+              state: "result",
+              result: toolResult.result,
+            };
+          }
+
+          return toolInvocation;
+        }),
+      };
+    }
+
+    return message;
+  });
 }
 
-export async function generateMetadata({
-  params
-}: ChatPageProps): Promise<Metadata> {
-  const session = await auth()
+function convertToUIMessages(messages: Array<CoreMessage>): Array<Message> {
+  return messages.reduce((chatMessages: Array<Message>, message) => {
+    if (message.role === "tool") {
+      return addToolMessageToChat({
+        toolMessage: message as CoreToolMessage,
+        messages: chatMessages,
+      });
+    }
 
-  if (!session?.user) {
-    return {}
-  }
+    let textContent = "";
+    let toolInvocations: Array<ToolInvocation> = [];
 
-  const chat = await getChat(params.id, session.user.id)
-  return {
-    title: chat?.title.toString().slice(0, 50) ?? 'Chat'
-  }
+    if (typeof message.content === "string") {
+      textContent = message.content;
+    } else if (Array.isArray(message.content)) {
+      for (const content of message.content) {
+        if (content.type === "text") {
+          textContent += content.text;
+        } else if (content.type === "tool-call") {
+          toolInvocations.push({
+            state: "call",
+            toolCallId: content.toolCallId,
+            toolName: content.toolName,
+            args: content.args,
+          });
+        }
+      }
+    }
+
+    chatMessages.push({
+      id: generateId(),
+      role: message.role,
+      content: textContent,
+      toolInvocations,
+    });
+
+    return chatMessages;
+  }, []);
 }
 
-export default async function ChatPage({ params }: ChatPageProps) {
-  const session = (await auth()) as Session
-  const missingKeys = await getMissingKeys()
+export default async function Page({ params }: { params: any }) {
+  const { id } = params;
+  const chatFromDb = await getChatById({ id });
 
-  if (!session?.user) {
-    redirect(`/login?next=/chat/${params.id}`)
+  if (!chatFromDb) {
+    notFound();
   }
 
-  const userId = session.user.id as string
-  const chat = await getChat(params.id, userId)
+  // type casting and converting messages to UI messages
+  const chat: Chat = {
+    ...chatFromDb,
+    messages: convertToUIMessages(chatFromDb.messages as Array<CoreMessage>),
+  };
 
-  if (!chat) {
-    redirect('/')
+  const session = await auth();
+
+  if (!session || !session.user) {
+    return notFound();
   }
 
-  if (chat?.userId !== session?.user?.id) {
-    notFound()
+  if (session.user.id !== chat.userId) {
+    return notFound();
   }
 
-  return (
-    <AI
-      initialAIState={{
-        chatId: chat.id,
-        messages: chat.messages,
-        interactions: []
-      }}
-    >
-      <Chat
-        id={chat.id}
-        session={session}
-        initialMessages={chat.messages}
-        missingKeys={missingKeys}
-      />
-    </AI>
-  )
+  return <PreviewChat id={chat.id} initialMessages={chat.messages} />;
 }

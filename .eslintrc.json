@@ -1,26 +1,37 @@
 {
-  "$schema": "https://json.schemastore.org/eslintrc",
-  "root": true,
   "extends": [
     "next/core-web-vitals",
-    "prettier",
-    "plugin:tailwindcss/recommended"
+    "plugin:import/recommended",
+    "plugin:import/typescript"
   ],
-  "plugins": ["tailwindcss"],
+  "plugins": ["import"],
   "rules": {
-    "tailwindcss/no-custom-classname": "off",
-    "tailwindcss/classnames-order": "off"
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          ["parent", "sibling"],
+          "index",
+          "object",
+          "type"
+        ],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }
+    ]
   },
   "settings": {
-    "tailwindcss": {
-      "callees": ["cn", "cva"],
-      "config": "tailwind.config.js"
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true
+      }
     }
   },
-  "overrides": [
-    {
-      "files": ["*.ts", "*.tsx"],
-      "parser": "@typescript-eslint/parser"
-    }
-  ]
+  "ignorePatterns": ["**/components/ui/**"]
 }
