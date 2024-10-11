@@ -88,7 +88,9 @@ export async function generateSampleSeatSelection({
     schema: z.array(
       z.object({
         seatNumber: z.string().describe("Seat identifier, e.g., 12A, 15C"),
-        priceInUSD: z.number().describe("Seat price in US dollars"),
+        priceInUSD: z
+          .number()
+          .describe("Seat price in US dollars, less than $99"),
         isAvailable: z
           .boolean()
           .describe("Whether the seat is available for booking"),
