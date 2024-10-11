@@ -5,10 +5,10 @@ import { useState } from "react";
 import { toast } from "sonner";
 import useSWR from "swr";
 
-import { fetcher } from "@/utils/functions";
+import { fetcher } from "@/lib/utils";
 
-import { CheckCircle, InfoIcon } from "../icons";
-import { Input } from "../shadcn/input";
+import { CheckCircle, InfoIcon } from "../custom/icons";
+import { Input } from "../ui/input";
 
 export function AuthorizePayment({
   intent = { reservationId: "sample-uuid" },

@@ -16,7 +16,7 @@ import {
   getReservationById,
   saveChat,
 } from "@/db/queries";
-import { generateUUID } from "@/utils/functions";
+import { generateUUID } from "@/lib/utils";
 
 export async function POST(request: Request) {
   const { id, messages }: { id: string; messages: Array<Message> } =
@@ -210,11 +210,15 @@ export async function POST(request: Request) {
     },
     onFinish: async ({ responseMessages }) => {
       if (session && session.user && session.user.id) {
-        await saveChat({
-          id,
-          messages: [...coreMessages, ...responseMessages],
-          userId: session.user.id,
-        });
+        try {
+          await saveChat({
+            id,
+            messages: [...coreMessages, ...responseMessages],
+            userId: session.user.id,
+          });
+        } catch (error) {
+          console.error("Failed to save chat");
+        }
       }
     },
     experimental_telemetry: {

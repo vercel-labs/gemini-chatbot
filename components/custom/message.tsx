@@ -4,17 +4,17 @@ import { Attachment, ToolInvocation } from "ai";
 import { motion } from "framer-motion";
 import { ReactNode } from "react";
 
-import { AuthorizePayment } from "./flights/authorize-payment";
-import { DisplayBoardingPass } from "./flights/boarding-pass";
-import { CreateReservation } from "./flights/create-reservation";
-import { FlightStatus } from "./flights/flight-status";
-import { ListFlights } from "./flights/list-flights";
-import { SelectSeats } from "./flights/select-seats";
-import { VerifyPayment } from "./flights/verify-payment";
 import { BotIcon, UserIcon } from "./icons";
 import { Markdown } from "./markdown";
 import { PreviewAttachment } from "./preview-attachment";
 import { Weather } from "./weather";
+import { AuthorizePayment } from "../flights/authorize-payment";
+import { DisplayBoardingPass } from "../flights/boarding-pass";
+import { CreateReservation } from "../flights/create-reservation";
+import { FlightStatus } from "../flights/flight-status";
+import { ListFlights } from "../flights/list-flights";
+import { SelectSeats } from "../flights/select-seats";
+import { VerifyPayment } from "../flights/verify-payment";
 
 export const Message = ({
   role,

@@ -5,8 +5,8 @@ import { useChat } from "ai/react";
 import { User } from "next-auth";
 import { useState } from "react";
 
-import { Message as PreviewMessage } from "@/components/message";
-import { useScrollToBottom } from "@/components/use-scroll-to-bottom";
+import { Message as PreviewMessage } from "@/components/custom/message";
+import { useScrollToBottom } from "@/components/custom/use-scroll-to-bottom";
 
 import { MultimodalInput } from "./multimodal-input";
 import { Overview } from "./overview";
@@ -20,16 +20,14 @@ export function Chat({
   initialMessages: Array<Message>;
   user: User | undefined;
 }) {
-  const [selectedFilePathnames] = useState<Array<string>>([]);
-
   const { messages, handleSubmit, input, setInput, append, isLoading, stop } =
     useChat({
-      body: { id, selectedFilePathnames },
+      body: { id },
       initialMessages,
       maxSteps: 10,
       onFinish: () => {
         if (user) {
-          window.history.replaceState({}, "", `/${id}`);
+          window.history.replaceState({}, "", `/chat/${id}`);
         }
       },
     });
