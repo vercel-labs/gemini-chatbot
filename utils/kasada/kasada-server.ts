@@ -184,7 +184,7 @@ export async function kasadaHandler(
         ip: request.ip || "unknown",
       }),
     );
-    const blockResponse = new Response(undefined, {
+    const blockResponse = new Response("Too many requests", {
       status: 429,
     });
 
