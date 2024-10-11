@@ -1,151 +1,100 @@
-'use client'
+import { differenceInHours, format } from "date-fns";
 
-/* eslint-disable jsx-a11y/alt-text */
-/* eslint-disable @next/next/no-img-element */
-import { useActions, useUIState } from 'ai/rsc'
-import {
-  ArrowDownRight,
-  ArrowUpRight,
-  CheckIcon,
-  IconCheck,
-  IconStop,
-  SparklesIcon
-} from '@/components/ui/icons'
+import { ArrowUpRightSmallIcon } from "../custom/icons";
 
-export interface StatusProps {
-  summary: {
-    departingCity: string
-    departingAirport: string
-    departingAirportCode: string
-    departingTime: string
-    arrivalCity: string
-    arrivalAirport: string
-    arrivalAirportCode: string
-    arrivalTime: string
-    flightCode: string
-    date: string
-  }
-}
+const SAMPLE = {
+  flightNumber: "BA142",
+  departure: {
+    cityName: "London",
+    airportCode: "LHR",
+    airportName: "London Heathrow Airport",
+    timestamp: "2024-10-08T18:30:00Z",
+    terminal: "5",
+    gate: "A10",
+  },
+  arrival: {
+    cityName: "New York",
+    airportCode: "JFK",
+    airportName: "John F. Kennedy International Airport",
+    timestamp: "2024-10-09T07:30:00Z",
+    terminal: "7",
+    gate: "B22",
+  },
+  totalDistanceInMiles: 3450,
+};
 
-export const suggestions = [
-  'Change my seat',
-  'Change my flight',
-  'Show boarding pass'
-]
-
-export const FlightStatus = ({
-  summary = {
-    departingCity: 'Miami',
-    departingAirport: 'Miami Intl',
-    departingAirportCode: 'MIA',
-    departingTime: '11:45 PM',
-    arrivalCity: 'San Francisco',
-    arrivalAirport: 'San Francisco Intl',
-    arrivalAirportCode: 'SFO',
-    arrivalTime: '4:20 PM',
-    flightCode: 'XY 2421',
-    date: 'Mon, 16 Sep'
-  }
-}: StatusProps) => {
-  const {
-    departingCity,
-    departingAirport,
-    departingAirportCode,
-    departingTime,
-    arrivalCity,
-    arrivalAirport,
-    arrivalAirportCode,
-    arrivalTime,
-    flightCode,
-    date
-  } = summary
-
-  const { submitUserMessage } = useActions()
-  const [_, setMessages] = useUIState()
-
+export function Row({ row = SAMPLE.arrival, type = "arrival" }) {
   return (
-    <div className="grid gap-4">
-      <div className="grid gap-4 p-4 sm:p-6 border border-zinc-200 rounded-2xl bg-white">
-        <div className="flex items-center gap-4">
-          <div className="w-10 sm:w-12 shrink-0 aspect-square rounded-lg bg-zinc-50 overflow-hidden">
-            <img
-              src="https://www.gstatic.com/flights/airline_logos/70px/UA.png"
-              className="object-cover aspect-square"
-              alt="airline logo"
-            />
-          </div>
-          <div>
-            <div className="font-medium">
-              {date} · {flightCode}
+    <div className="flex flex-row justify-between">
+      <div className="flex flex-row">
+        <div className="flex flex-col gap-1">
+          <div className="flex flex-row gap-2 items-center">
+            <div className="bg-foreground text-background rounded-full size-fit">
+              {type === "arrival" ? (
+                <div className="rotate-90">
+                  <ArrowUpRightSmallIcon size={16} />
+                </div>
+              ) : (
+                <ArrowUpRightSmallIcon size={16} />
+              )}
             </div>
-            <div className="text-sm text-zinc-600">
-              {departingCity} to {arrivalCity}
+            <div className="text-sm sm:text-base text-muted-foreground">
+              {row.airportCode}
             </div>
-          </div>
-        </div>
-        <div className="grid items-center gap-8 relative">
-          <div className="w-px h-full absolute top-1 left-[1.1rem] sm:left-[1.45rem] bg-zinc-200" />
-          <div className="flex w-full relative gap-4 pl-2 sm:pl-3.5 items-start">
-            <div className="rounded-full bg-zinc-200 p-1 text-zinc-500 [&>svg]:size-2.5 size-5 flex items-center justify-center shrink-0 translate-y-1">
-              <ArrowUpRight />
-            </div>
-            <div>
-              <div className="text-2xl font-medium">{departingAirportCode}</div>
-              <div>{departingAirport}</div>
-              <div className="text-sm text-zinc-600">Terminal N · GATE D43</div>
-            </div>
-            <div className="ml-auto font-mono">
-              <div className="text-lg md:text-xl">{departingTime}</div>
-              <div className="text-sm text-zinc-600">in 6h 50m</div>
-              <div className="text-red-600 text-sm font-medium">
-                2h 15m late
-              </div>
+            <div>·</div>
+            <div className="text-sm sm:text-base truncate max-w-32 sm:max-w-64 text-muted-foreground">
+              {row.airportName}
             </div>
           </div>
-          <div className="flex w-full relative gap-4 pl-2 sm:pl-3.5 min-h-10 items-center">
-            <div className="rounded-full bg-zinc-200 p-1 text-zinc-500 [&>svg]:size-2.5 size-5 flex items-center justify-center shrink-0">
-              <IconCheck />
-            </div>
-            <div className="text-sm sm:text-base text-zinc-600">
-              Total 11h 30m · 5, 563mi · Overnight
-            </div>
-          </div>
-          <div className="flex w-full relative gap-4 pl-2 sm:pl-3.5 items-start">
-            <div className="rounded-full bg-zinc-200 p-1 text-zinc-500 [&>svg]:size-2.5 size-5 flex items-center justify-center shrink-0 translate-y-1">
-              <ArrowDownRight />
-            </div>
-            <div>
-              <div className="text-2xl font-medium">{arrivalAirportCode}</div>
-              <div>{arrivalAirport}</div>
-              <div className="text-sm text-zinc-600">Terminal 2 · GATE 59A</div>
-            </div>
-            <div className="ml-auto font-mono">
-              <div className="text-lg md:text-xl">{arrivalTime}</div>
-              <div className="text-red-600 text-sm font-medium">
-                2h 15m late
-              </div>
-            </div>
+
+          <div className="text-2xl sm:text-3xl font-medium">
+            {format(new Date(row.timestamp), "h:mm a")}
           </div>
         </div>
       </div>
-      <div className="flex flex-col sm:flex-row items-start gap-2">
-        {suggestions.map(suggestion => (
-          <div
-            key={suggestion}
-            className="flex items-center gap-2 px-3 py-2 text-sm transition-colors bg-zinc-50 hover:bg-zinc-100 rounded-xl cursor-pointer"
-            onClick={async () => {
-              const response = await submitUserMessage(suggestion)
-              setMessages((currentMessages: any[]) => [
-                ...currentMessages,
-                response
-              ])
-            }}
-          >
-            <SparklesIcon />
-            {suggestion}
-          </div>
-        ))}
+
+      <div className="flex flex-col gap-1 items-end justify-center mt-auto">
+        <div className="text-sm sm:text-sm bg-amber-400 rounded-md w-fit px-2 text-amber-900">
+          {row.gate}
+        </div>
+        <div className="text-sm text-muted-foreground">
+          Terminal {row.terminal}
+        </div>
       </div>
     </div>
-  )
+  );
+}
+
+export function FlightStatus({ flightStatus = SAMPLE }) {
+  return (
+    <div className="flex flex-col gap-2 bg-muted rounded-lg p-4">
+      <div className="flex flex-col gap-1 text-sm">
+        <div className="text-muted-foreground">{flightStatus.flightNumber}</div>
+        <div className="text-lg font-medium">
+          {flightStatus.departure.cityName} to {flightStatus.arrival.cityName}
+        </div>
+      </div>
+
+      <div className="h-[1px] flex-grow bg-muted-foreground/20" />
+
+      <Row row={flightStatus.arrival} type="departure" />
+
+      <div className="flex flex-row gap-2 items-center">
+        <div className="text-xs text-muted-foreground ">
+          {differenceInHours(
+            new Date(flightStatus.arrival.timestamp),
+            new Date(flightStatus.departure.timestamp),
+          )}{" "}
+          hours
+        </div>
+        <div>·</div>
+        <div className="text-xs text-muted-foreground">
+          {flightStatus.totalDistanceInMiles} mi
+        </div>
+        <div className="h-[1px] flex-grow bg-muted-foreground/20 ml-2" />
+      </div>
+
+      <Row row={flightStatus.departure} type="arrival" />
+    </div>
+  );
 }
