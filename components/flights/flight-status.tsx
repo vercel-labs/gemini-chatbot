@@ -1,6 +1,6 @@
 import { differenceInHours, format } from "date-fns";
 
-import { ArrowUpRightSmallIcon } from "../icons";
+import { ArrowUpRightSmallIcon } from "../custom/icons";
 
 const SAMPLE = {
   flightNumber: "BA142",
