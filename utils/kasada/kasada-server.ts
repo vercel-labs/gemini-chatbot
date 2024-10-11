@@ -1,5 +1,5 @@
-import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 import { track } from "@vercel/analytics/server";
+import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 
 // You can get this endpoint name from the application details on the Kasada Portal.
 const kasadaAPIHostname = "vercel-endpoint.kasadapolyform.io";
