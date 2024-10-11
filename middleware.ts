@@ -6,7 +6,7 @@ import { authConfig } from "@/app/(auth)/auth.config";
 
 import { kasadaHandler } from "./utils/kasada/kasada-server";
 
-const MAX_REQUESTS = 25;
+const MAX_REQUESTS = 100;
 
 export const { auth } = NextAuth(authConfig);
 
