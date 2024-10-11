@@ -1,9 +1,11 @@
-import { drizzle } from "drizzle-orm/postgres-js";
-import { desc, eq } from "drizzle-orm";
-import postgres from "postgres";
+import "server-only";
+
 import { genSaltSync, hashSync } from "bcrypt-ts";
+import { desc, eq } from "drizzle-orm";
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
+
 import { user, chat, User, reservation } from "./schema";
-import { generateUUID } from "@/utils/functions";
 
 // Optionally, if not using email/pass login, you can
 // use the Drizzle adapter for Auth.js / NextAuth
