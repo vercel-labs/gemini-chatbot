@@ -4,7 +4,7 @@ import { Attachment, ToolInvocation } from "ai";
 import { motion } from "framer-motion";
 import { ReactNode } from "react";
 
-import { BotIcon, UserIcon } from "./icons";
+import { BotIcon, InfoIcon, UserIcon } from "./icons";
 import { Markdown } from "./markdown";
 import { PreviewAttachment } from "./preview-attachment";
 import { Weather } from "./weather";
@@ -63,7 +63,16 @@ export const Message = ({
                     ) : toolName === "selectSeats" ? (
                       <SelectSeats availability={result} />
                     ) : toolName === "createReservation" ? (
-                      Object.keys(result).includes("error") ? null : (
+                      Object.keys(result).includes("error") ? (
+                        <div className="bg-red-500 p-4 rounded-lg gap-4 flex flex-row justify-between items-center">
+                          <div className="dark:text-red-950 text-red-50 font-medium">
+                            Not Logged In
+                          </div>
+                          <div className="dark:text-red-950 text-red-50">
+                            <InfoIcon size={20} />
+                          </div>
+                        </div>
+                      ) : (
                         <CreateReservation reservation={result} />
                       )
                     ) : toolName === "authorizePayment" ? (
