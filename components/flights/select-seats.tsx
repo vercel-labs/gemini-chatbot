@@ -1,3 +1,6 @@
+"use client";
+
+import { useChat } from "ai/react";
 import cx from "classnames";
 
 interface Seat {
@@ -51,7 +54,19 @@ const SAMPLE: { seats: Seat[][] } = {
   ],
 };
 
-export function SelectSeats({ availability = SAMPLE }) {
+export function SelectSeats({
+  chatId,
+  availability = SAMPLE,
+}: {
+  chatId: string;
+  availability?: typeof SAMPLE;
+}) {
+  const { append } = useChat({
+    id: chatId,
+    body: { id: chatId },
+    maxSteps: 5,
+  });
+
   return (
     <div className="flex flex-col gap-2 bg-muted rounded-lg">
       <div className="flex flex-col gap-4 scale-75">
@@ -79,11 +94,17 @@ export function SelectSeats({ availability = SAMPLE }) {
                 ) : null}
                 <div
                   key={seat.seatNumber}
+                  onClick={() => {
+                    append({
+                      role: "user",
+                      content: `I'd like to go with seat ${seat.seatNumber}`,
+                    });
+                  }}
                   className={cx(
-                    "relative size-8 sm:size-10 flex-shrink-0 flex rounded-sm flex-row items-center justify-center",
+                    "cursor-pointer group relative size-8 sm:size-10 flex-shrink-0 flex rounded-sm flex-row items-center justify-center",
                     {
-                      "bg-blue-500": seat.isAvailable,
-                      "bg-gray-500": !seat.isAvailable,
+                      "bg-blue-500 hover:bg-pink-500": seat.isAvailable,
+                      "bg-gray-500 cursor-not-allowed": !seat.isAvailable,
                     },
                   )}
                 >
@@ -92,8 +113,8 @@ export function SelectSeats({ availability = SAMPLE }) {
                     className={cx(
                       "absolute -top-1 h-2 w-full scale-125 rounded-sm",
                       {
-                        "bg-blue-600": seat.isAvailable,
-                        "bg-zinc-600": !seat.isAvailable,
+                        "bg-blue-600 group-hover:bg-pink-600": seat.isAvailable,
+                        "bg-zinc-600 cursor-not-allowed": !seat.isAvailable,
                       },
                     )}
                   />

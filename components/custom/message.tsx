@@ -17,11 +17,13 @@ import { SelectSeats } from "../flights/select-seats";
 import { VerifyPayment } from "../flights/verify-payment";
 
 export const Message = ({
+  chatId,
   role,
   content,
   toolInvocations,
   attachments,
 }: {
+  chatId: string;
   role: string;
   content: string | ReactNode;
   toolInvocations: Array<ToolInvocation> | undefined;
@@ -59,9 +61,9 @@ export const Message = ({
                     ) : toolName === "displayFlightStatus" ? (
                       <FlightStatus flightStatus={result} />
                     ) : toolName === "searchFlights" ? (
-                      <ListFlights results={result} />
+                      <ListFlights chatId={chatId} results={result} />
                     ) : toolName === "selectSeats" ? (
-                      <SelectSeats availability={result} />
+                      <SelectSeats chatId={chatId} availability={result} />
                     ) : toolName === "createReservation" ? (
                       Object.keys(result).includes("error") ? null : (
                         <CreateReservation reservation={result} />
@@ -85,9 +87,9 @@ export const Message = ({
                     ) : toolName === "displayFlightStatus" ? (
                       <FlightStatus />
                     ) : toolName === "searchFlights" ? (
-                      <ListFlights />
+                      <ListFlights chatId={chatId} />
                     ) : toolName === "selectSeats" ? (
-                      <SelectSeats />
+                      <SelectSeats chatId={chatId} />
                     ) : toolName === "createReservation" ? (
                       <CreateReservation />
                     ) : toolName === "authorizePayment" ? (
