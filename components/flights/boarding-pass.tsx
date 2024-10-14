@@ -53,7 +53,7 @@ export function DisplayBoardingPass({ boardingPass = SAMPLE }) {
         </div>
       </div>
 
-      <div className="h-[1px] flex-grow bg-yellow-600/20" />
+      <div className="h-px grow bg-yellow-600/20" />
 
       <div className="flex flex-row justify-between">
         <div className="flex flex-col gap-0.5">
