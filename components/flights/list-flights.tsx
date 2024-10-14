@@ -1,3 +1,6 @@
+"use client";
+
+import { useChat } from "ai/react";
 import { differenceInHours, format } from "date-fns";
 
 const SAMPLE = {
@@ -70,16 +73,34 @@ const SAMPLE = {
   ],
 };
 
-export function ListFlights({ results = SAMPLE }) {
+export function ListFlights({
+  chatId,
+  results = SAMPLE,
+}: {
+  chatId: string;
+  results?: typeof SAMPLE;
+}) {
+  const { append } = useChat({
+    id: chatId,
+    body: { id: chatId },
+    maxSteps: 5,
+  });
+
   return (
     <div className="rounded-lg bg-muted px-4 py-1.5 flex flex-col">
       {results.flights.map((flight) => (
         <div
           key={flight.id}
-          className="flex flex-row border-b dark:border-zinc-700 py-2 last-of-type:border-none"
+          className="cursor-pointer flex flex-row border-b dark:border-zinc-700 py-2 last-of-type:border-none group"
+          onClick={() => {
+            append({
+              role: "user",
+              content: `I would like to book the ${flight.airlines} one!`,
+            });
+          }}
         >
           <div className="flex flex-col w-full gap-0.5 justify-between">
-            <div className="flex flex-row gap-0.5 text-base sm:text-base font-medium">
+            <div className="flex flex-row gap-0.5 text-base sm:text-base font-medium group-hover:underline">
               <div className="text">
                 {format(new Date(flight.departure.timestamp), "h:mm a")}
               </div>

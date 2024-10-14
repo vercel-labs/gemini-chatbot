@@ -37,8 +37,10 @@ export function DisplayBoardingPass({ boardingPass = SAMPLE }) {
           </div>
         </div>
 
-        <div className="text-amber-800 absolute w-full flex flex-row justify-center">
-          <PlaneTakeoffIcon />
+        <div className="absolute w-full flex flex-row justify-center">
+          <div className="text-amber-800">
+            <PlaneTakeoffIcon />
+          </div>
         </div>
 
         <div className="flex flex-col gap-0.5">
