@@ -89,6 +89,7 @@ export function MultimodalInput({
     });
 
     setAttachments([]);
+    textareaRef.current?.focus();
   }, [attachments, handleSubmit, setAttachments]);
 
   const uploadFile = async (file: File) => {
@@ -242,7 +243,8 @@ export function MultimodalInput({
         <Button
           className="rounded-full p-1.5 h-fit absolute bottom-2 right-2 m-0.5 text-white"
           onClick={(event) => {
-            handleSubmit(event);
+            event.preventDefault();
+            submitForm();
           }}
           disabled={input.length === 0 || uploadQueue.length > 0}
         >
