@@ -23,6 +23,7 @@ export function Chat({
 }) {
   const { messages, handleSubmit, input, setInput, append, isLoading, stop } =
     useChat({
+      id,
       body: { id },
       initialMessages,
       maxSteps: 10,
@@ -55,6 +56,7 @@ export function Chat({
           {messages.map((message) => (
             <PreviewMessage
               key={message.id}
+              chatId={id}
               role={message.role}
               content={message.content}
               attachments={message.experimental_attachments}
