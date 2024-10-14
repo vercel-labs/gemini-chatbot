@@ -75,7 +75,7 @@ export function FlightStatus({ flightStatus = SAMPLE }) {
         </div>
       </div>
 
-      <div className="h-[1px] flex-grow bg-muted-foreground/20" />
+      <div className="h-px grow bg-muted-foreground/20" />
 
       <Row row={flightStatus.arrival} type="departure" />
 
@@ -91,7 +91,7 @@ export function FlightStatus({ flightStatus = SAMPLE }) {
         <div className="text-xs text-muted-foreground">
           {flightStatus.totalDistanceInMiles} mi
         </div>
-        <div className="h-[1px] flex-grow bg-muted-foreground/20 ml-2" />
+        <div className="h-px grow bg-muted-foreground/20 ml-2" />
       </div>
 
       <Row row={flightStatus.departure} type="arrival" />

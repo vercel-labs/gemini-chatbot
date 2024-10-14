@@ -115,4 +115,12 @@
     input {
         opacity: 0 !important;
     }
+
+    .skeleton-bg {
+        @apply bg-foreground/10;
+    }
+
+    .skeleton-div {
+        @apply bg-foreground/20 animate-pulse;
+    }
 }
