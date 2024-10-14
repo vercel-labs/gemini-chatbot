@@ -15,6 +15,7 @@ import { toast } from "sonner";
 
 import { ArrowUpIcon, PaperclipIcon, StopIcon } from "./icons";
 import { PreviewAttachment } from "./preview-attachment";
+import useWindowSize from "./use-window-size";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 
@@ -61,6 +62,7 @@ export function MultimodalInput({
   ) => void;
 }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const { width } = useWindowSize();
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -89,8 +91,11 @@ export function MultimodalInput({
     });
 
     setAttachments([]);
-    textareaRef.current?.focus();
-  }, [attachments, handleSubmit, setAttachments]);
+
+    if (width > 768) {
+      textareaRef.current?.focus();
+    }
+  }, [attachments, handleSubmit, setAttachments, width]);
 
   const uploadFile = async (file: File) => {
     const formData = new FormData();
