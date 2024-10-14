@@ -197,6 +197,10 @@ const SAMPLE = {
   },
 };
 
+function n(num: number): number {
+  return Math.ceil(num);
+}
+
 export function Weather({
   weatherAtLocation = SAMPLE,
 }: {
@@ -247,7 +251,7 @@ export function Weather({
   return (
     <div
       className={cx(
-        "flex flex-col gap-4 rounded-2xl p-4",
+        "flex flex-col gap-4 rounded-2xl p-4 skeleton-bg",
         {
           "bg-blue-400": isDay,
         },
@@ -260,7 +264,7 @@ export function Weather({
         <div className="flex flex-row gap-2 items-center">
           <div
             className={cx(
-              "size-10 rounded-full",
+              "size-10 rounded-full skeleton-div",
               {
                 "bg-yellow-300": isDay,
               },
@@ -269,13 +273,13 @@ export function Weather({
               },
             )}
           />
-          <div className="text-2xl sm:text-3xl font-medium text-blue-50">
-            {weatherAtLocation.current.temperature_2m}
+          <div className="text-4xl font-medium text-blue-50">
+            {n(weatherAtLocation.current.temperature_2m)}
             {weatherAtLocation.current_units.temperature_2m}
           </div>
         </div>
 
-        <div className="text-blue-50">{`H:${currentHigh}° L:${currentLow}°`}</div>
+        <div className="text-blue-50">{`H:${n(currentHigh)}° L:${n(currentLow)}°`}</div>
       </div>
 
       <div className="flex flex-row justify-between">
@@ -286,7 +290,7 @@ export function Weather({
             </div>
             <div
               className={cx(
-                "size-6 rounded-full",
+                "size-6 rounded-full skeleton-div",
                 {
                   "bg-yellow-300": isDay,
                 },
@@ -296,7 +300,7 @@ export function Weather({
               )}
             />
             <div className="text-blue-50 text-sm">
-              {displayTemperatures[index]}
+              {n(displayTemperatures[index])}
               {weatherAtLocation.hourly_units.temperature_2m}
             </div>
           </div>
