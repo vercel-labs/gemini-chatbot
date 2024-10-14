@@ -2,7 +2,6 @@
 
 import { useChat } from "ai/react";
 import { differenceInHours, format } from "date-fns";
-import { useId } from "react";
 
 const SAMPLE = {
   flights: [
