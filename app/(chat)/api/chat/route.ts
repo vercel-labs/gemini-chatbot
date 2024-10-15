@@ -43,6 +43,7 @@ export async function POST(request: Request) {
         - ask follow up questions to nudge user into the optimal flow
         - ask for any details you don't know, like name of passenger, etc.'
         - C and D are aisle seats, A and F are window seats, B and E are middle seats
+        - assume the most popular airports for the origin and destination
         - here's the optimal flow
           - search for flights
           - choose flight
