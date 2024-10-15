@@ -1,7 +1,6 @@
 "use client";
 
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
-import { CoreMessage } from "ai";
 import cx from "classnames";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
@@ -11,7 +10,7 @@ import { toast } from "sonner";
 import useSWR from "swr";
 
 import { Chat } from "@/db/schema";
-import { fetcher } from "@/lib/utils";
+import { fetcher, getTitleFromChat } from "@/lib/utils";
 
 import {
   InfoIcon,
@@ -44,26 +43,6 @@ import {
   SheetHeader,
   SheetTitle,
 } from "../ui/sheet";
-
-function getTitleFromMessages(messages: Array<CoreMessage>) {
-  const firstMessage = messages[0];
-
-  if (!firstMessage) {
-    return "Untitled";
-  }
-
-  const firstMessageContent = firstMessage.content;
-
-  if (typeof firstMessageContent === "string") {
-    return firstMessageContent;
-  } else {
-    const textContent = firstMessageContent.filter(
-      (part) => part.type === "text",
-    );
-
-    return textContent.map((part) => part.text).join(" ");
-  }
-}
 
 export const History = ({ user }: { user: User | undefined }) => {
   const { id } = useParams();
@@ -204,8 +183,7 @@ export const History = ({ user }: { user: User | undefined }) => {
                         href={`/chat/${chat.id}`}
                         className="text-ellipsis overflow-hidden text-left py-2 pl-2 rounded-lg outline-zinc-900"
                       >
-                        {/* {chat.messages[0].content as string} */}
-                        {getTitleFromMessages(chat.messages)}
+                        {getTitleFromChat(chat)}
                       </Link>
                     </Button>
 

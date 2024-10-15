@@ -55,7 +55,7 @@ export const Message = ({
                 const { result } = toolInvocation;
 
                 return (
-                  <div key={toolCallId}>
+                  <div key={toolCallId} className="skeleton">
                     {toolName === "getWeather" ? (
                       <Weather weatherAtLocation={result} />
                     ) : toolName === "displayFlightStatus" ? (
