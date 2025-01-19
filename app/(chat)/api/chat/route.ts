@@ -65,7 +65,6 @@ export async function POST(request: Request) {
             `https://nominatim.openstreetmap.org/search?city=${encodeURIComponent(city)}&format=json&limit=1`
           );
           const geoData = await geoResponse.json();
-          console.log(geoData);
           if (!geoData.length) {
             throw new Error("City not found");
           }
@@ -75,7 +74,6 @@ export async function POST(request: Request) {
           const response = await fetch(
             `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m&hourly=temperature_2m&daily=sunrise,sunset&timezone=auto`,
           );
-          console.log(response);
 
           const weatherData = await response.json();
           return weatherData;
