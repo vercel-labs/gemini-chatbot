@@ -58,13 +58,24 @@ export async function POST(request: Request) {
       getWeather: {
         description: "Get the current weather at a location",
         parameters: z.object({
-          latitude: z.number().describe("Latitude coordinate"),
-          longitude: z.number().describe("Longitude coordinate"),
+          city: z.string().describe("Name of the city"),
         }),
-        execute: async ({ latitude, longitude }) => {
-          const response = await fetch(
-            `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m&hourly=temperature_2m&daily=sunrise,sunset&timezone=auto`,
+        execute: async ({ city }) => {
+          const geoResponse = await fetch(
+            `https://nominatim.openstreetmap.org/search?city=${encodeURIComponent(city)}&format=json&limit=1`
           );
+          const geoData = await geoResponse.json();
+          console.log(geoData);
+          if (!geoData.length) {
+            throw new Error("City not found");
+          }
+
+          const { lat, lon } = geoData[0]; // Extract latitude and longitude
+          
+          const response = await fetch(
+            `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m&hourly=temperature_2m&daily=sunrise,sunset&timezone=auto`,
+          );
+          console.log(response);
 
           const weatherData = await response.json();
           return weatherData;
