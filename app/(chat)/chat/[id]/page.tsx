@@ -1,18 +1,19 @@
-import { CoreMessage } from "ai";
-import { notFound } from "next/navigation";
+import { CoreMessage } from 'ai';
+import { notFound } from 'next/navigation';
 
-import { auth } from "@/app/(auth)/auth";
-import { Chat as PreviewChat } from "@/components/custom/chat";
-import { getChatById } from "@/db/queries";
-import { Chat } from "@/db/schema";
-import { convertToUIMessages } from "@/lib/utils";
+import { auth } from '@/app/(auth)/auth';
+import { Chat as PreviewChat } from '@/components/custom/chat';
+import { getChatById } from '@/db/queries';
+import { Chat } from '@/db/schema';
+import { convertToUIMessages } from '@/lib/utils';
 
 export default async function Page({ params }: { params: any }) {
   const { id } = params;
+  console.log(id);
   const chatFromDb = await getChatById({ id });
 
   if (!chatFromDb) {
-    notFound();
+    return <PreviewChat key={id} id={id} initialMessages={[]} />;
   }
 
   // type casting and converting messages to UI messages
