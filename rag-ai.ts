@@ -8,6 +8,8 @@ import { Client } from 'pg';
 const PROJECT_ID = 'YOUR_PROJECT_ID';
 const LOCATION = 'YOUR_LOCATION';
 const TEXT_MODEL_NAME = 'text-multilingual-embedding-002';
+const RETRIEVAL_DOCUMENT_TASK_TYP = 'RETRIEVAL_DOCUMENT';
+const RETRIEVAL_QUERY_TASK_TYPE = 'RETRIEVAL_QUERY';
 const IMAGE_MODEL_NAME = 'multimodalembedding';
 const ALLOYDB_CONNECTION_STRING = 'YOUR_ALLOYDB_CONNECTION_STRING';
 const FOLDER_PATH = './your_document_folder';

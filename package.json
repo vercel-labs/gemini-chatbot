@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ai-sdk/google": "^0.0.51",
+    "@google-cloud/aiplatform": "^3.34.0",
     "@google-cloud/vertexai": "^1.9.3",
     "@radix-ui/react-alert-dialog": "^1.1.2",
     "@radix-ui/react-dialog": "^1.1.2",
