@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ai-sdk/google": "^0.0.51",
+    "@google-cloud/vertexai": "^1.9.3",
     "@radix-ui/react-alert-dialog": "^1.1.2",
     "@radix-ui/react-dialog": "^1.1.2",
     "@radix-ui/react-dropdown-menu": "^2.1.1",
@@ -38,6 +39,7 @@
     "next": "15.0.0-canary.152",
     "next-auth": "5.0.0-beta.22",
     "next-themes": "^0.3.0",
+    "pg": "^8.13.3",
     "postgres": "^3.4.4",
     "react": "19.0.0-rc-7771d3a7-20240827",
     "react-dom": "19.0.0-rc-7771d3a7-20240827",
