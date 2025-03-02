@@ -1,6 +1,6 @@
 // firebase.ts
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
 // Import other Firebase services as needed (Firestore, etc.)
 
 
@@ -37,7 +37,6 @@ export async function signInWithGoogle() {
   }
 }
 
-
 export async function signOutUser() {
     try {
         await signOut(auth);
@@ -47,6 +46,44 @@ export async function signOutUser() {
         console.error("Sign-out error:", error);
         // Handle sign-out error
     }
+}
+
+export async function createUserWithEmailAndPasswordFunc(email: string, password: string) {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      console.log("User created:", user);
+      return user;
+    } catch (error) {
+      console.error("Error creating user:", error);
+      throw error;
+    }
+  }
+
+
+export async function signInWithEmailAndPasswordFunc(email: string, password: string) {
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+    console.log("Signed in with email:", user);
+    return user;
+  } catch (error) {
+    console.error("Error signing in:", error);
+    throw error;
+  }
+}
+
+export async function sendPasswordResetEmailFunc(email: string) {
+  try {
+    await sendPasswordResetEmail(auth, email);
+    console.log("Password reset email sent successfully!");
+    // Optionally, redirect the user or display a success message.
+    return true; // Indicate success
+  } catch (error) {
+    console.error("Error sending password reset email:", error);
+    // Handle errors appropriately (e.g., display an error message)
+    return false; // Indicate failure
+  }
 }
 
 
