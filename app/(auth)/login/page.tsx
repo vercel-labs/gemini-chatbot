@@ -1,10 +1,11 @@
 'use client'
 
 
+import { Label } from '@radix-ui/react-label';
+import { Button, Flex } from '@radix-ui/themes';
 import { useState } from 'react';
 
-import { Button } from '../../../components/ui/button';
-import { Label } from '../../../components/ui/label';
+
 import { signInWithEmailAndPasswordFunc, createUserWithEmailAndPasswordFunc, signInWithGoogle, signOutUser, sendPasswordResetEmailFunc } from '../../../lib/firebase/firebase';
 
 
@@ -83,7 +84,7 @@ export default function Login() {
   };
 
     return (
-      <div>
+      <Flex direction="column" gap={2} align="center">
         {user ? (
             <>
             <p>Welcome, {user.displayName}! (UID: {user.uid})</p>
@@ -125,6 +126,6 @@ export default function Login() {
       )}
         </>
         )}
-      </div>
+      </Flex>
     );
   }

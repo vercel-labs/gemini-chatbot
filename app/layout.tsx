@@ -1,3 +1,4 @@
+import { Theme } from "@radix-ui/themes";
 import { Metadata } from "next";
 import { Toaster } from "sonner";
 
@@ -5,6 +6,9 @@ import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/custom/theme-provider";
 
 import "./globals.css";
+
+import "@radix-ui/themes/styles.css";
+
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://gemini.vercel.ai"),
@@ -20,14 +24,17 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        <ThemeProvider
+        {/* <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
-				>
+				> */}
+				<Theme>
+					   {children}
+				</Theme>
 
-									   {children}
+
 
 
 
@@ -36,7 +43,7 @@ export default async function RootLayout({
           {/* <Toaster position="top-center" />  */}
           {/* <Navbar /> */}
 
-        </ThemeProvider>
+        {/* </ThemeProvider> */}
       </body>
     </html>
   );
