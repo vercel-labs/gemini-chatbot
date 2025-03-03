@@ -4,7 +4,7 @@ import { experimental_wrapLanguageModel as wrapLanguageModel } from "ai";
 import { customMiddleware } from "./custom-middleware";
 
 export const geminiProModel = wrapLanguageModel({
-  model: google("gemini-1.5-pro-002"),
+  model: google('gemini-2.0-flash'),
   middleware: customMiddleware,
 });
 
