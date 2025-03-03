@@ -1,39 +1,37 @@
+import { FirebaseAdapter } from "@next-auth/firebase-adapter";
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth"; // Import Firebase Authentication functions
 import { NextAuthConfig } from "next-auth";
 
-export const authConfig = {
+
+export const authConfig: NextAuthConfig = {
+
   pages: {
     signIn: "/login",
-    newUser: "/",
+    //newUser: "/", //Consider removing this if Firebase handles user creation
   },
-  providers: [
-    // added later in auth.ts since it requires bcrypt which is only compatible with Node.js
-    // while this file is also used in non-Node.js environments
-  ],
-  callbacks: {
-    authorized({ auth, request: { nextUrl } }) {
-      let isLoggedIn = !!auth?.user;
-      let isOnChat = nextUrl.pathname.startsWith("/");
-      let isOnRegister = nextUrl.pathname.startsWith("/register");
-      let isOnLogin = nextUrl.pathname.startsWith("/login");
+  providers: [], //Providers will be added dynamically in auth.ts
+  // callbacks: {
+	// 	authorized: async ( { auth, request: { nextUrl } } ) => {
+  //     const isLoggedIn = !!auth?.user;
+  //     const isOnLogin = nextUrl.pathname.startsWith("/login");
+  //     const isOnRegister = nextUrl.pathname.startsWith("/register"); //Handle registration differently (optional)
+  //     const isOnProtectedRoute = nextUrl.pathname.startsWith("/"); //Path to protected routes
 
-      if (isLoggedIn && (isOnLogin || isOnRegister)) {
-        return Response.redirect(new URL("/", nextUrl));
-      }
+  //     if (isLoggedIn && (isOnLogin || isOnRegister)) {
+  //       return Response.redirect(new URL("/", nextUrl));
+  //     }
+  //     if (!isLoggedIn && isOnProtectedRoute) {
+  //       return Response.redirect(new URL("/login", nextUrl));
+  //     }
 
-      if (isOnRegister || isOnLogin) {
-        return true; // Always allow access to register and login pages
-      }
+  //     //Handle other routes as needed
 
-      if (isOnChat) {
-        if (isLoggedIn) return true;
-        return false; // Redirect unauthenticated users to login page
-      }
-
-      if (isLoggedIn) {
-        return Response.redirect(new URL("/", nextUrl));
-      }
-
-      return true;
-    },
+  //     return true;
+  //   },
+  // },
+  session: {
+    strategy: 'jwt'
   },
-} satisfies NextAuthConfig;
+  secret: process.env.NEXTAUTH_SECRET,
+};

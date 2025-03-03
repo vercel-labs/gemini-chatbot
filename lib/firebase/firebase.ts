@@ -1,10 +1,13 @@
 // firebase.ts
 import { initializeApp } from "firebase/app";
 import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
+import { cert } from "firebase-admin/app"
+
+import { firebaseAuth } from '../../app/(auth)/auth';
 // Import other Firebase services as needed (Firestore, etc.)
 
 
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
@@ -14,17 +17,25 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app); // Get the authentication instance
 
 // Example: Google Sign-In Provider (add more providers as needed)
 export const googleProvider = new GoogleAuthProvider();
 
+export const firestore = initFirestore({
+  credential: cert({
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+    privateKey: process.env.FIREBASE_PRIVATE_KEY,
+  }),
+})
+
 
 // Example functions (move these to a more appropriate location in your app)
 export async function signInWithGoogle() {
   try {
-    const result = await signInWithPopup(auth, googleProvider);
+    const result = await signInWithPopup(firebaseAuth, googleProvider);
     const user = result.user;
     console.log("Signed in with Google:", user);
     // Handle successful sign-in
@@ -39,7 +50,7 @@ export async function signInWithGoogle() {
 
 export async function signOutUser() {
     try {
-        await signOut(auth);
+        await signOut(firebaseAuth);
         console.log("Signed out successfully!");
         // Handle successful sign-out, e.g., redirect to login page
     } catch (error) {
@@ -50,7 +61,7 @@ export async function signOutUser() {
 
 export async function createUserWithEmailAndPasswordFunc(email: string, password: string) {
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(firebaseAuth, email, password);
       const user = userCredential.user;
       console.log("User created:", user);
       return user;
@@ -63,7 +74,7 @@ export async function createUserWithEmailAndPasswordFunc(email: string, password
 
 export async function signInWithEmailAndPasswordFunc(email: string, password: string) {
   try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const userCredential = await signInWithEmailAndPassword(firebaseAuth, email, password);
     const user = userCredential.user;
     console.log("Signed in with email:", user);
     return user;
@@ -75,7 +86,7 @@ export async function signInWithEmailAndPasswordFunc(email: string, password: st
 
 export async function sendPasswordResetEmailFunc(email: string) {
   try {
-    await sendPasswordResetEmail(auth, email);
+    await sendPasswordResetEmail(firebaseAuth, email);
     console.log("Password reset email sent successfully!");
     // Optionally, redirect the user or display a success message.
     return true; // Indicate success

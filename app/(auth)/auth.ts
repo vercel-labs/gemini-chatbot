@@ -1,14 +1,14 @@
-import { compare } from "bcrypt-ts";
-import NextAuth, { User, Session } from "next-auth";
-import Credentials from "next-auth/providers/credentials";
-
-import { getUser } from "@/db/queries";
+import { getAuth, GoogleAuthProvider } from '@firebase/auth';
+import { initializeApp } from 'firebase/app';
+import NextAuth from "next-auth";
+import Credentials from 'next-auth/providers/credentials';
 
 import { authConfig } from "./auth.config";
+import { firebaseConfig, signInWithEmailAndPasswordFunc } from '../../lib/firebase/firebase';
 
-interface ExtendedSession extends Session {
-  user: User;
-}
+export const app = initializeApp(firebaseConfig);
+export const firebaseAuth = getAuth(app); // Get the authentication instance
+
 
 export const {
   handlers: { GET, POST },
@@ -18,36 +18,25 @@ export const {
 } = NextAuth({
   ...authConfig,
   providers: [
-    Credentials({
-      credentials: {},
-      async authorize({ email, password }: any) {
-        let users = await getUser(email);
-        if (users.length === 0) return null;
-        let passwordsMatch = await compare(password, users[0].password!);
-        if (passwordsMatch) return users[0] as any;
-      },
-    }),
   ],
+
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-      }
+    async session({ session, token }) {
+			session.user = token.user as any
 
-      return token;
-    },
-    async session({
-      session,
-      token,
-    }: {
-      session: ExtendedSession;
-      token: any;
-    }) {
-      if (session.user) {
-        session.user.id = token.id as string;
-      }
+			console.log('auth',session, token)
 
-      return session;
+        return session
     },
+    // async jwt({ token, user }) {
+    //   if (user) {
+    //     token.user = user;
+    //     const userData = await fetchUserData(user.uid);
+    //     token.role = userData?.role || "user";
+    //     token.company = userData?.company;
+    //   }
+    //   return token;
+    // },
   },
 });
+

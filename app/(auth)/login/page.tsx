@@ -84,7 +84,7 @@ export default function Login() {
   };
 
     return (
-      <Flex direction="column" gap={2} align="center">
+      <Flex direction="column" gap={'2'} align="center">
         {user ? (
             <>
             <p>Welcome, {user.displayName}! (UID: {user.uid})</p>
