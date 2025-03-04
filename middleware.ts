@@ -1,53 +1,43 @@
 // middleware.ts
-// import { getAppCheck } from 'firebase-admin/app-check';
-import { initializeApp } from 'firebase-admin';
-import { App, applicationDefault, cert } from 'firebase-admin/app';
 import { getAppCheck } from 'firebase-admin/app-check';
-import { Auth, getAuth } from 'firebase-admin/auth';
 import { cookies } from 'next/headers';
 import { NextResponse, type NextRequest } from 'next/server';
 
-// Initialize Firebase Admin SDK ONLY ONCE at the top level of your api route
-let firebaseApp: App | null = null;
+import getFirebaseAppServerSide from './lib/firebase/get-firebase-app-server-side';
 
-if (!firebaseApp) {
-  firebaseApp = initializeApp({
-    credential: applicationDefault(),
-    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID, // Make sure this is also set in environment variables.
-  });
-}
+const { auth, firebaseApp } = getFirebaseAppServerSide();
 
-const auth = getAuth(firebaseApp);
-
-const appCheck = getAppCheck(firebaseApp);
+const appCheck = firebaseApp ? getAppCheck(firebaseApp) : null;
 
 export async function middleware(req: NextRequest) {
-  const cookieStore = await cookies();
-  console.log('cookieStore', cookieStore);
-  // const url = req.nextUrl.pathname;
-  // const publicPaths = ['/login', '/', '/demo'];
+  const url = req.nextUrl.pathname;
+  console.log('url', url);
+  const publicPaths = ['/login', '/', '/demo'];
 
-  // if (publicPaths.some((path) => url.startsWith(path))) {
-  //   return NextResponse.next();
-  // }
+  if (publicPaths.some((path) => url === path)) {
+    return NextResponse.next();
+  }
 
-  // try {
-  //   const idToken = req.cookies.get('token')?.value;
-  //   const appCheckToken = req.cookies.get('appCheckToken')?.value;
+  try {
+    const cookieStore = await cookies(); // Use cookies() directly
+    console.log('cookieStore', cookieStore);
+    const idToken = cookieStore.get('token')?.value;
+    const appCheckToken = cookieStore.get('appCheckToken')?.value;
 
-  //   if (!idToken || !appCheckToken) {
-  //     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  //   }
+    if (!idToken || !appCheckToken) {
+      const loginUrl = new URL('/login', req.url);
+      return NextResponse.redirect(loginUrl);
+      // return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
-  //   await auth.verifyIdToken(idToken);
-  //   await appCheck.verifyToken(appCheckToken);
+    await auth.verifyIdToken(idToken);
+    await appCheck?.verifyToken(appCheckToken);
 
-  //   return NextResponse.next(); // User is authorized, cookies are already set.
-  // } catch (error: any) {
-  //   console.error('Middleware authorization error:', error);
-  //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  // }
-  return NextResponse.next();
+    return NextResponse.next(); // User is authorized, cookies are already set.
+  } catch (error: any) {
+    console.error('Middleware authorization error:', error);
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
 }
 
 export const config = {

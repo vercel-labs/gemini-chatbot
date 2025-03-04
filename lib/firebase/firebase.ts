@@ -24,7 +24,7 @@ export const firebaseConfig = {
 let app: FirebaseApp; //Declare a variable to hold the app instance.
 let authInstance: Auth; //Declare a variable to hold the auth instance.
 
-const initializeFirebase = () => {
+export const getFirebaseAppClientSide = () => {
   if (!app) {
     app = initializeApp(firebaseConfig);
     authInstance = getAuth(app);
@@ -32,7 +32,8 @@ const initializeFirebase = () => {
   return { app, authInstance };
 };
 
-const { app: firebaseApp, authInstance: firebaseAuth } = initializeFirebase();
+const { app: firebaseApp, authInstance: firebaseAuth } =
+  getFirebaseAppClientSide();
 
 const postToken = async (token: string) => {
   try {

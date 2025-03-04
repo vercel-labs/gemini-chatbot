@@ -2,7 +2,7 @@
 
 import { Label } from '@radix-ui/react-label';
 import { Button, Flex } from '@radix-ui/themes';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import {
@@ -90,10 +90,10 @@ export default function Login() {
   };
 
   useEffect(() => {
-    if (!user) {
-      router.push('/login');
+    if (user) {
+      router.push('/'); // Redirect to home page
     }
-  }, [user, router]);
+  });
 
   return (
     <Flex direction="column" gap={'2'} align="center">

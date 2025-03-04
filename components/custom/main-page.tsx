@@ -1,10 +1,12 @@
 'use client';
-
 import Link from 'next/link';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
-import { generateUUID } from '../../lib/utils';
+import { getFirebaseAppClientSide } from '../../lib/firebase/firebase';
 
 const MainPage = () => {
+  const { authInstance } = getFirebaseAppClientSide();
+  const [user, error] = useAuthState(authInstance);
 
   return (
     <div className="flex justify-center items-center pb-4 md:pb-8 h-dvh bg-background flex-col">
@@ -22,6 +24,14 @@ const MainPage = () => {
           className="font-semibold text-gray-800 hover:underline dark:text-zinc-200"
         >
           Demo
+        </Link>
+      </div>
+      <div className="p-4">
+        <Link
+          href="/auth-demo"
+          className="font-semibold text-gray-800 hover:underline dark:text-zinc-200"
+        >
+          Auth Demo
         </Link>
       </div>
     </div>
