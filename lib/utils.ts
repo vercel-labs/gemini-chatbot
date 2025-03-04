@@ -149,3 +149,20 @@ export const postToken = async (token: string) => {
     body: JSON.stringify({ idToken: token }),
   });
 };
+
+export const handleLogout = async () => {
+  try {
+    const response = await fetch('/api/auth', {
+      method: 'DELETE',
+    });
+
+    if (response.ok) {
+      console.log('Logout successful');
+      // Redirect or update UI
+    } else {
+      console.error('Logout failed');
+    }
+  } catch (error) {
+    console.error('Logout error:', error);
+  }
+};

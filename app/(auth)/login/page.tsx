@@ -93,10 +93,10 @@ export default function Login() {
 
   useEffect(() => {
     if (user) {
+      router.push('/'); // Redirect to home page
       user.getIdToken().then((token) => {
         postToken(token);
       });
-      router.push('/'); // Redirect to home page
     }
   });
 

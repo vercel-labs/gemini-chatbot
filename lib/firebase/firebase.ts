@@ -12,7 +12,7 @@ import {
   signOut,
 } from 'firebase/auth';
 
-import { postToken } from '../utils';
+import { handleLogout, postToken } from '../utils';
 
 export const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -61,10 +61,7 @@ export async function signInWithGoogle() {
 export async function signOutUser() {
   try {
     await signOut(firebaseAuth);
-    console.log('Signed out successfully!');
-    // Handle successful sign-out, e.g., redirect to login page
-    document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-    // Redirect to login or home page
+    await handleLogout();
   } catch (error) {
     console.error('Sign-out error:', error);
     // Handle sign-out error
