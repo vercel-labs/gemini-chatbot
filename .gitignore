@@ -41,4 +41,4 @@ yarn-error.log*
 .env*.local
 
 #local settings
-/lib/firebase/google-service-account.json
+lib/firebase/google-service-account.json
