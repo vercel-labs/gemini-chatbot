@@ -1,15 +1,29 @@
 // middleware.ts
+// import { getAppCheck } from 'firebase-admin/app-check';
+import { initializeApp } from 'firebase-admin';
+import { App, applicationDefault, cert } from 'firebase-admin/app';
 import { getAppCheck } from 'firebase-admin/app-check';
-import { NextResponse } from 'next/server';
+import { Auth, getAuth } from 'firebase-admin/auth';
+import { cookies } from 'next/headers';
+import { NextResponse, type NextRequest } from 'next/server';
 
-import getFirebaseAppServerSide from './lib/firebase/get-firebase-app-server-side';
+// Initialize Firebase Admin SDK ONLY ONCE at the top level of your api route
+let firebaseApp: App | null = null;
 
-import type { NextRequest } from 'next/server';
+if (!firebaseApp) {
+  firebaseApp = initializeApp({
+    credential: applicationDefault(),
+    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID, // Make sure this is also set in environment variables.
+  });
+}
 
-const { firebaseApp, auth } = getFirebaseAppServerSide();
+const auth = getAuth(firebaseApp);
+
 const appCheck = getAppCheck(firebaseApp);
 
 export async function middleware(req: NextRequest) {
+  const cookieStore = await cookies();
+  console.log('cookieStore', cookieStore);
   // const url = req.nextUrl.pathname;
   // const publicPaths = ['/login', '/', '/demo'];
 
@@ -38,4 +52,5 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+  runtime: 'nodejs',
 };
