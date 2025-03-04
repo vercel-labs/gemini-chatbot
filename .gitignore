@@ -28,7 +28,6 @@ yarn-error.log*
 .env.development.local
 .env.test.local
 .env.production.local
-google-service-account
 
 # turbo
 .turbo
@@ -40,3 +39,6 @@ google-service-account
 
 .vercel
 .env*.local
+
+#local settings
+/lib/firebase/google-service-account.json
