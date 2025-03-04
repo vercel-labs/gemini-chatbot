@@ -1,5 +1,6 @@
 'use client';
 
+import { User } from '@firebase/auth';
 import { Label } from '@radix-ui/react-label';
 import { Button, Flex } from '@radix-ui/themes';
 import { useRouter } from 'next/navigation';
@@ -12,9 +13,10 @@ import {
   signOutUser,
   sendPasswordResetEmailFunc,
 } from '../../../lib/firebase/firebase';
+import { postToken } from '../../../lib/utils';
 
 export default function Login() {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isCreatingAccount, setIsCreatingAccount] = useState(false);
@@ -91,6 +93,9 @@ export default function Login() {
 
   useEffect(() => {
     if (user) {
+      user.getIdToken().then((token) => {
+        postToken(token);
+      });
       router.push('/'); // Redirect to home page
     }
   });

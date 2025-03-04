@@ -12,7 +12,7 @@ const appCheck = firebaseApp ? getAppCheck(firebaseApp) : null;
 export async function middleware(req: NextRequest) {
   const url = req.nextUrl.pathname;
   console.log('url', url);
-  const publicPaths = ['/login', '/', '/demo'];
+  const publicPaths = ['/login', '/', '/demo', '/api/auth'];
 
   if (publicPaths.some((path) => url === path)) {
     return NextResponse.next();
@@ -20,18 +20,19 @@ export async function middleware(req: NextRequest) {
 
   try {
     const cookieStore = await cookies(); // Use cookies() directly
-    console.log('cookieStore', cookieStore);
     const idToken = cookieStore.get('token')?.value;
-    const appCheckToken = cookieStore.get('appCheckToken')?.value;
 
-    if (!idToken || !appCheckToken) {
+    console.log(cookieStore.get('token')?.value);
+    console.log('token from cookie', idToken);
+
+    if (!idToken) {
       const loginUrl = new URL('/login', req.url);
       return NextResponse.redirect(loginUrl);
       // return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    await auth.verifyIdToken(idToken);
-    await appCheck?.verifyToken(appCheckToken);
+    const verification = await auth.verifyIdToken(idToken);
+    console.log('verification', verification);
 
     return NextResponse.next(); // User is authorized, cookies are already set.
   } catch (error: any) {

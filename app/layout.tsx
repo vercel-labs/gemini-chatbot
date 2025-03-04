@@ -1,19 +1,18 @@
-import { Theme } from "@radix-ui/themes";
-import { Metadata } from "next";
-import { Toaster } from "sonner";
+import { Theme } from '@radix-ui/themes';
+import { Metadata } from 'next';
+import { Toaster } from 'sonner';
 
+import { ThemeProvider } from '@/components/custom/theme-provider';
 
-import { ThemeProvider } from "@/components/custom/theme-provider";
+import './globals.css';
 
-import "./globals.css";
-
-import "@radix-ui/themes/styles.css";
-
+import '@radix-ui/themes/styles.css';
+import LoginStatus from '../components/login-satus';
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://gemini.vercel.ai"),
-  title: "Next.js Gemini Chatbot",
-  description: "Next.js chatbot template using the AI SDK and Gemini.",
+  metadataBase: new URL('https://gemini.vercel.ai'),
+  title: 'Next.js Gemini Chatbot',
+  description: 'Next.js chatbot template using the AI SDK and Gemini.',
 };
 
 export default async function RootLayout({
@@ -30,22 +29,16 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
 				> */}
-				<Theme>
-					   {children}
-				</Theme>
+        <Theme>
+          <LoginStatus />
+          {children}
+        </Theme>
 
-
-
-
-
-
-
-          {/* <Toaster position="top-center" />  */}
-          {/* <Navbar /> */}
+        {/* <Toaster position="top-center" />  */}
+        {/* <Navbar /> */}
 
         {/* </ThemeProvider> */}
       </body>
     </html>
   );
 }
-

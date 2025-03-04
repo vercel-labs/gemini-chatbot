@@ -12,6 +12,8 @@ import {
   signOut,
 } from 'firebase/auth';
 
+import { postToken } from '../utils';
+
 export const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -34,28 +36,6 @@ export const getFirebaseAppClientSide = () => {
 
 const { app: firebaseApp, authInstance: firebaseAuth } =
   getFirebaseAppClientSide();
-
-const postToken = async (token: string) => {
-  try {
-    const response = await fetch('/api/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ token }),
-    });
-
-    if (response.ok) {
-      // Login successful
-      console.log('Login successful');
-    } else {
-      console.log('Login failed');
-    }
-  } catch (err: any) {
-    console.log(err.message);
-    throw new Error(err.message);
-  }
-};
 
 // Example: Google Sign-In Provider (add more providers as needed)
 export const googleProvider = new GoogleAuthProvider();

@@ -1,39 +1,46 @@
-// pages/api/login.ts
-import { initializeApp, cert, App } from 'firebase-admin/app';
-import { getAuth } from 'firebase-admin/auth';
-import { NextApiRequest, NextApiResponse } from 'next';
+// app/api/auth/route.ts
+import { cookies } from 'next/headers';
 
 import getFirebaseAppServerSide from '../../../../lib/firebase/get-firebase-app-server-side';
 
-const { firebaseApp, auth } = getFirebaseAppServerSide();
+const { auth } = getFirebaseAppServerSide();
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
-  if (req.method === 'POST') {
-    try {
-      const { idToken } = req.body;
+export async function POST(req: Request) {
+  try {
+    const { idToken } = await req.json();
 
-      if (!idToken) {
-        return res.status(400).json({ error: 'ID token is required' });
-      }
-
-      // Verify the ID token (optional, but highly recommended)
-      await auth.verifyIdToken(idToken);
-
-      // Set the authentication cookie
-      res.setHeader('Set-Cookie', [
-        `token=${idToken}; HttpOnly; Secure; SameSite=Strict; Path=/`,
-      ]);
-
-      res.status(200).json({ message: 'Login successful' });
-    } catch (error) {
-      console.error('Login error:', error);
-      res.status(401).json({ error: 'Authentication failed' });
+    if (!idToken) {
+      return Response.json({ error: 'ID token is required' }, { status: 400 });
     }
-  } else {
-    res.setHeader('Allow', ['POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+
+    // Verify the ID token (optional, but highly recommended)
+    const x = await auth.verifyIdToken(idToken);
+
+    const cookiesStore = await cookies();
+
+    // Set the authentication cookie
+    cookiesStore.set('token', idToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV !== 'development',
+      sameSite: 'strict',
+      path: '/',
+    });
+
+    return Response.json({ message: 'Login successful' });
+  } catch (error) {
+    console.error('Login error:', error);
+    return Response.json({ error: 'Authentication failed' }, { status: 401 });
   }
+}
+
+export async function GET() {
+  return new Response('Method Not Allowed', { status: 405 });
+}
+
+export async function PUT() {
+  return new Response('Method Not Allowed', { status: 405 });
+}
+
+export async function DELETE() {
+  return new Response('Method Not Allowed', { status: 405 });
 }
