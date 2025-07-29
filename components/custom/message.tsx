@@ -82,7 +82,8 @@ export const Message = ({
                 );
               } else {
                 return (
-                  <div key={toolCallId} className="skeleton">
+                  <div key={toolCallId} className="skeleton flex flex-col gap-2 items-start">
+                    <div className="text-muted-foreground text-sm px-2 py-1 rounded bg-muted animate-pulse">Processing...</div>
                     {toolName === "getWeather" ? (
                       <Weather />
                     ) : toolName === "displayTrainStatus" ? (

@@ -149,7 +149,16 @@ export async function POST(request: Request) {
               details: { ...props, totalPriceInUSD },
             });
             console.log('[createReservation] end', { id, ...props, totalPriceInUSD });
-            return { id, ...props, totalPriceInUSD };
+            // Immediately prompt for payment after reservation creation
+            return {
+              id,
+              ...props,
+              totalPriceInUSD,
+              nextTool: {
+                name: "authorizePayment",
+                parameters: { reservationId: id },
+              },
+            };
           } else {
             console.log('[createReservation] error: not signed in');
             return {
