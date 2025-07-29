@@ -8,8 +8,8 @@ import useSWR from "swr";
 import { fetcher } from "@/lib/utils";
 
 import { CheckCircle, InfoIcon } from "../custom/icons";
-import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 
 export function AuthorizePayment({
   intent = { reservationId: "sample-uuid" },

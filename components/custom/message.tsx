@@ -8,13 +8,13 @@ import { BotIcon, UserIcon } from "./icons";
 import { Markdown } from "./markdown";
 import { PreviewAttachment } from "./preview-attachment";
 import { Weather } from "./weather";
-import { VerifyPayment } from "../trains/verify-payment";
-import { DisplayBoardingPass } from "../trains/boarding-pass";
 import { AuthorizePayment } from "../trains/authorize-payment";
+import { DisplayBoardingPass } from "../trains/boarding-pass";
 import { CreateReservation } from "../trains/create-reservation";
-import { TrainStatus } from "../trains/flight-status";
-import { ListTrains } from "../trains/list-flights";
+import { ListTrains } from "../trains/list-trains";
 import { SelectSeats } from "../trains/select-seats";
+import { TrainStatus } from "../trains/train-status";
+import { VerifyPayment } from "../trains/verify-payment";
 
 
 export const Message = ({
