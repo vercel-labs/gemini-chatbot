@@ -5,22 +5,22 @@ import { ArrowUpRightSmallIcon } from "../custom/icons";
 const SAMPLE = {
   trainNumber: "ITALO9512",
   departure: {
+    cityName: "Milan",
+    stationCode: "MILANO",
+    stationName: "Milano Centrale",
+    timestamp: "2025-07-31T14:00:00Z",
+    platform: "5",
+    gate: "G5",
+  },
+  arrival: {
     cityName: "Rome",
     stationCode: "ROMA",
     stationName: "Roma Termini",
-    timestamp: "2025-07-31T08:00:00Z",
-    platform: "12",
-    gate: "A1",
+    timestamp: "2025-07-31T18:30:00Z",
+    platform: "11",
+    gate: "G12",
   },
-  arrival: {
-    cityName: "Florence",
-    stationCode: "FI",
-    stationName: "Firenze SMN",
-    timestamp: "2025-07-31T09:30:00Z",
-    platform: "3",
-    gate: "B3",
-  },
-  totalDistanceInMiles: 144,
+  totalDistanceInMiles: 388,
 };
 
 export function Row({ row = SAMPLE.arrival, type = "arrival" }) {
