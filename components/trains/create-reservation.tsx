@@ -1,24 +1,24 @@
 import { format } from "date-fns";
 
 const SAMPLE = {
-  seats: ["4C"],
-  trainNumber: "TR413",
+  seats: ["12A"],
+  trainNumber: "ITALO9512",
   departure: {
-    cityName: "Sydney",
-    stationCode: "SYD",
-    timestamp: "2023-11-01T06:00:00",
-    platform: "1",
-    gate: "A12",
+    cityName: "Rome",
+    stationCode: "ROMA",
+    timestamp: "2025-07-31T08:00:00Z",
+    platform: "12",
+    gate: "A1",
   },
   arrival: {
-    cityName: "Chennai",
-    stationCode: "MAA",
-    timestamp: "2023-11-01T18:45:00",
+    cityName: "Florence",
+    stationCode: "FI",
+    timestamp: "2025-07-31T09:30:00Z",
     platform: "3",
-    gate: "B5",
+    gate: "B3",
   },
-  passengerName: "John Doe",
-  totalPriceInUSD: 1200,
+  passengerName: "Giulia Rossi",
+  totalPriceInUSD: 49.99,
 };
 
 export function CreateReservation({ reservation = SAMPLE }) {

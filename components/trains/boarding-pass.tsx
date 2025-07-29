@@ -2,26 +2,26 @@ import { format } from "date-fns";
 import { FlashlightIcon } from "lucide-react";
 
 const SAMPLE = {
-  reservationId: "RES123456",
-  trainNumber: "TR1",
-  seat: "1C",
+  reservationId: "RESIT20250731",
+  trainNumber: "ITALO9512",
+  seat: "12A",
   departure: {
-    cityName: "London",
-    stationCode: "LDN",
-    stationName: "London Central Station",
-    timestamp: "2023-11-01T09:00:00Z",
-    platform: "5",
-    gate: "A10",
+    cityName: "Rome",
+    stationCode: "ROMA",
+    stationName: "Roma Termini",
+    timestamp: "2025-07-31T08:00:00Z",
+    platform: "12",
+    gate: "A1",
   },
   arrival: {
-    cityName: "Manchester",
-    stationCode: "MAN",
-    stationName: "Manchester Piccadilly",
-    timestamp: "2023-11-01T12:00:00Z",
-    platform: "4",
-    gate: "B22",
+    cityName: "Florence",
+    stationCode: "FI",
+    stationName: "Firenze SMN",
+    timestamp: "2025-07-31T09:30:00Z",
+    platform: "3",
+    gate: "B3",
   },
-  passengerName: "John Doe",
+  passengerName: "Giulia Rossi",
 };
 
 export function DisplayBoardingPass({ boardingPass = SAMPLE }) {

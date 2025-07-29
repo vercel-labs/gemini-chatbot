@@ -3,24 +3,24 @@ import { differenceInHours, format } from "date-fns";
 import { ArrowUpRightSmallIcon } from "../custom/icons";
 
 const SAMPLE = {
-  trainNumber: "TR142",
+  trainNumber: "ITALO9512",
   departure: {
-    cityName: "London",
-    stationCode: "LDN",
-    stationName: "London Central Station",
-    timestamp: "2024-10-08T18:30:00Z",
-    platform: "5",
-    gate: "A10",
+    cityName: "Rome",
+    stationCode: "ROMA",
+    stationName: "Roma Termini",
+    timestamp: "2025-07-31T08:00:00Z",
+    platform: "12",
+    gate: "A1",
   },
   arrival: {
-    cityName: "Manchester",
-    stationCode: "MAN",
-    stationName: "Manchester Piccadilly",
-    timestamp: "2024-10-09T07:30:00Z",
-    platform: "7",
-    gate: "B22",
+    cityName: "Florence",
+    stationCode: "FI",
+    stationName: "Firenze SMN",
+    timestamp: "2025-07-31T09:30:00Z",
+    platform: "3",
+    gate: "B3",
   },
-  totalDistanceInMiles: 180,
+  totalDistanceInMiles: 144,
 };
 
 export function Row({ row = SAMPLE.arrival, type = "arrival" }) {

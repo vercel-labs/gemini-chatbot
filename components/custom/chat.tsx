@@ -36,12 +36,34 @@ export function Chat({
   return (
     <div className="flex flex-row justify-center pb-4 md:pb-8 h-dvh bg-background">
       <div className="flex flex-col justify-between items-center gap-4">
+        {/* Italian train route suggestions */}
+        <div className="flex flex-row gap-4 mb-4">
+          <button
+            className="bg-muted px-4 py-2 rounded-lg text-left text-muted-foreground hover:bg-zinc-800"
+            onClick={() => append({
+              role: "user",
+              content: "Book a train from Rome to Florence",
+            })}
+          >
+            <div className="font-medium">Book a train from Rome to Florence</div>
+            <div className="text-xs">from Roma Termini to Firenze SMN</div>
+          </button>
+          <button
+            className="bg-muted px-4 py-2 rounded-lg text-left text-muted-foreground hover:bg-zinc-800"
+            onClick={() => append({
+              role: "user",
+              content: "What is the status of train ITALO9512 departing tomorrow?",
+            })}
+          >
+            <div className="font-medium">What is the status</div>
+            <div className="text-xs">of train ITALO9512 departing tomorrow?</div>
+          </button>
+        </div>
+
         <div
           ref={messagesContainerRef}
           className="flex flex-col gap-4 h-full w-dvw items-center overflow-y-scroll"
         >
-          {messages.length === 0 && <Overview />}
-
           {messages.map((message) => (
             <PreviewMessage
               key={message.id}

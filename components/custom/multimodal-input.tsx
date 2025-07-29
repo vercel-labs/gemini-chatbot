@@ -21,15 +21,15 @@ import { Textarea } from "../ui/textarea";
 
 const suggestedActions = [
   {
-    title: "Book a train from Paris to Berlin",
-    label: "from Paris to Berlin",
-    action: "Help me book a train from Paris to Berlin",
+    title: "Book a train from Rome to Florence",
+    label: "from Roma Termini to Firenze SMN",
+    action: "Help me book a train from Rome to Florence",
   },
   {
     title: "What is the status",
-    label: "of train TR142 departing tomorrow?",
-    action: "What is the status of train TR142 departing tomorrow?",
-  },  
+    label: "of train ITALO9512 departing tomorrow?",
+    action: "What is the status of train ITALO9512 departing tomorrow?",
+  },
 ];
 
 export function MultimodalInput({
