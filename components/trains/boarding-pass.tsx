@@ -1,24 +1,24 @@
 import { format } from "date-fns";
-import { FlashlightIcon, PlaneTakeoffIcon } from "lucide-react";
+import { FlashlightIcon } from "lucide-react";
 
 const SAMPLE = {
   reservationId: "RES123456",
-  flightNumber: "DL1",
+  trainNumber: "TR1",
   seat: "1C",
   departure: {
     cityName: "London",
-    airportCode: "LHR",
-    airportName: "Heathrow Airport",
+    stationCode: "LDN",
+    stationName: "London Central Station",
     timestamp: "2023-11-01T09:00:00Z",
-    terminal: "5",
+    platform: "5",
     gate: "A10",
   },
   arrival: {
-    cityName: "New York City",
-    airportCode: "JFK",
-    airportName: "John F. Kennedy International Airport",
+    cityName: "Manchester",
+    stationCode: "MAN",
+    stationName: "Manchester Piccadilly",
     timestamp: "2023-11-01T12:00:00Z",
-    terminal: "4",
+    platform: "4",
     gate: "B22",
   },
   passengerName: "John Doe",
@@ -33,13 +33,13 @@ export function DisplayBoardingPass({ boardingPass = SAMPLE }) {
             {boardingPass.departure.cityName}
           </div>
           <div className="text-yellow-800 text-2xl sm:text-3xl font-semibold">
-            {boardingPass.departure.airportCode}
+            {boardingPass.departure.stationCode}
           </div>
         </div>
 
         <div className="absolute w-full flex flex-row justify-center">
           <div className="text-amber-800">
-            <PlaneTakeoffIcon />
+            <FlashlightIcon />
           </div>
         </div>
 
@@ -48,7 +48,7 @@ export function DisplayBoardingPass({ boardingPass = SAMPLE }) {
             {boardingPass.arrival.cityName}
           </div>
           <div className="text-yellow-800 text-2xl sm:text-3xl font-semibold text-right">
-            {boardingPass.arrival.airportCode}
+            {boardingPass.arrival.stationCode}
           </div>
         </div>
       </div>
@@ -67,10 +67,10 @@ export function DisplayBoardingPass({ boardingPass = SAMPLE }) {
 
         <div className="flex flex-col gap-0.5">
           <div className="text-yellow-900 text-sm font-medium sm:text-base">
-            Gate
+            Platform
           </div>
           <div className="text-lg text-yellow-700">
-            {boardingPass.departure.gate}
+            {boardingPass.departure.platform}
           </div>
         </div>
 

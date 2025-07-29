@@ -2,20 +2,20 @@ import { format } from "date-fns";
 
 const SAMPLE = {
   seats: ["4C"],
-  flightNumber: "EK413",
+  trainNumber: "TR413",
   departure: {
     cityName: "Sydney",
-    airportCode: "SYD",
+    stationCode: "SYD",
     timestamp: "2023-11-01T06:00:00",
+    platform: "1",
     gate: "A12",
-    terminal: "1",
   },
   arrival: {
     cityName: "Chennai",
-    airportCode: "MAA",
+    stationCode: "MAA",
     timestamp: "2023-11-01T18:45:00",
+    platform: "3",
     gate: "B5",
-    terminal: "3",
   },
   passengerName: "John Doe",
   totalPriceInUSD: 1200,
@@ -48,10 +48,10 @@ export function CreateReservation({ reservation = SAMPLE }) {
 
             <div className="flex flex-col gap-1">
               <div className="text sm:text-base text-sm font-medium">
-                Flight Number
+                Train Number
               </div>
               <div className="text sm:text-base text-sm text-muted-foreground">
-                {reservation.flightNumber}
+                {reservation.trainNumber}
               </div>
             </div>
 

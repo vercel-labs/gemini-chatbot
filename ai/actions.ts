@@ -3,87 +3,87 @@ import { z } from "zod";
 
 import { geminiFlashModel } from ".";
 
-export async function generateSampleFlightStatus({
-  flightNumber,
+export async function generateSampleTrainStatus({
+  trainNumber,
   date,
 }: {
-  flightNumber: string;
+  trainNumber: string;
   date: string;
 }) {
-  const { object: flightStatus } = await generateObject({
+  const { object: trainStatus } = await generateObject({
     model: geminiFlashModel,
-    prompt: `Flight status for flight number ${flightNumber} on ${date}`,
+    prompt: `Train status for train number ${trainNumber} on ${date}`,
     schema: z.object({
-      flightNumber: z.string().describe("Flight number, e.g., BA123, AA31"),
+      trainNumber: z.string().describe("Train number, e.g., TR123, ICE31"),
       departure: z.object({
         cityName: z.string().describe("Name of the departure city"),
-        airportCode: z.string().describe("IATA code of the departure airport"),
-        airportName: z.string().describe("Full name of the departure airport"),
+        stationCode: z.string().describe("Code of the departure station"),
+        stationName: z.string().describe("Full name of the departure station"),
         timestamp: z.string().describe("ISO 8601 departure date and time"),
-        terminal: z.string().describe("Departure terminal"),
+        platform: z.string().describe("Departure platform"),
         gate: z.string().describe("Departure gate"),
       }),
       arrival: z.object({
         cityName: z.string().describe("Name of the arrival city"),
-        airportCode: z.string().describe("IATA code of the arrival airport"),
-        airportName: z.string().describe("Full name of the arrival airport"),
+        stationCode: z.string().describe("Code of the arrival station"),
+        stationName: z.string().describe("Full name of the arrival station"),
         timestamp: z.string().describe("ISO 8601 arrival date and time"),
-        terminal: z.string().describe("Arrival terminal"),
+        platform: z.string().describe("Arrival platform"),
         gate: z.string().describe("Arrival gate"),
       }),
       totalDistanceInMiles: z
         .number()
-        .describe("Total flight distance in miles"),
+        .describe("Total train distance in miles"),
     }),
   });
 
-  return flightStatus;
+  return trainStatus;
 }
 
-export async function generateSampleFlightSearchResults({
+export async function generateSampleTrainSearchResults({
   origin,
   destination,
 }: {
   origin: string;
   destination: string;
 }) {
-  const { object: flightSearchResults } = await generateObject({
+  const { object: trainSearchResults } = await generateObject({
     model: geminiFlashModel,
-    prompt: `Generate search results for flights from ${origin} to ${destination}, limit to 4 results`,
+    prompt: `Generate search results for trains from ${origin} to ${destination}, limit to 4 results`,
     output: "array",
     schema: z.object({
       id: z
         .string()
-        .describe("Unique identifier for the flight, like BA123, AA31, etc."),
+        .describe("Unique identifier for the train, like TR123, ICE31, etc."),
       departure: z.object({
         cityName: z.string().describe("Name of the departure city"),
-        airportCode: z.string().describe("IATA code of the departure airport"),
+        stationCode: z.string().describe("Code of the departure station"),
         timestamp: z.string().describe("ISO 8601 departure date and time"),
       }),
       arrival: z.object({
         cityName: z.string().describe("Name of the arrival city"),
-        airportCode: z.string().describe("IATA code of the arrival airport"),
+        stationCode: z.string().describe("Code of the arrival station"),
         timestamp: z.string().describe("ISO 8601 arrival date and time"),
       }),
-      airlines: z.array(
-        z.string().describe("Airline names, e.g., American Airlines, Emirates"),
+      operators: z.array(
+        z.string().describe("Train operator names, e.g., Amtrak, Eurostar"),
       ),
-      priceInUSD: z.number().describe("Flight price in US dollars"),
-      numberOfStops: z.number().describe("Number of stops during the flight"),
+      priceInUSD: z.number().describe("Train price in US dollars"),
+      numberOfStops: z.number().describe("Number of stops during the train journey"),
     }),
   });
 
-  return { flights: flightSearchResults };
+  return { trains: trainSearchResults };
 }
 
 export async function generateSampleSeatSelection({
-  flightNumber,
+  trainNumber,
 }: {
-  flightNumber: string;
+  trainNumber: string;
 }) {
   const { object: rows } = await generateObject({
     model: geminiFlashModel,
-    prompt: `Simulate available seats for flight number ${flightNumber}, 6 seats on each row and 5 rows in total, adjust pricing based on location of seat`,
+    prompt: `Simulate available seats for train number ${trainNumber}, 6 seats on each row and 5 rows in total, adjust pricing based on location of seat`,
     output: "array",
     schema: z.array(
       z.object({
@@ -103,26 +103,26 @@ export async function generateSampleSeatSelection({
 
 export async function generateReservationPrice(props: {
   seats: string[];
-  flightNumber: string;
+  trainNumber: string;
   departure: {
     cityName: string;
-    airportCode: string;
+    stationCode: string;
     timestamp: string;
     gate: string;
-    terminal: string;
+    platform: string;
   };
   arrival: {
     cityName: string;
-    airportCode: string;
+    stationCode: string;
     timestamp: string;
     gate: string;
-    terminal: string;
+    platform: string;
   };
   passengerName: string;
 }) {
   const { object: reservation } = await generateObject({
     model: geminiFlashModel,
-    prompt: `Generate price for the following reservation \n\n ${JSON.stringify(props, null, 2)}`,
+    prompt: `Generate price for the following train reservation \n\n ${JSON.stringify(props, null, 2)}`,
     schema: z.object({
       totalPriceInUSD: z
         .number()

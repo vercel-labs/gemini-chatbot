@@ -55,15 +55,15 @@ const SAMPLE: { seats: Seat[][] } = {
 };
 
 export function SelectSeats({
-  chatId,
+  trainId,
   availability = SAMPLE,
 }: {
-  chatId: string;
+  trainId: string;
   availability?: typeof SAMPLE;
 }) {
   const { append } = useChat({
-    id: chatId,
-    body: { id: chatId },
+    id: trainId,
+    body: { id: trainId },
     maxSteps: 5,
   });
 

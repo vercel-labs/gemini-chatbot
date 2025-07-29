@@ -1,0 +1,3 @@
+// Migrated from flights/flight-status.tsx
+import React from "react";
+// ...existing code from flights/flight-status.tsx...

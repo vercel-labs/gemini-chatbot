@@ -8,13 +8,14 @@ import { BotIcon, UserIcon } from "./icons";
 import { Markdown } from "./markdown";
 import { PreviewAttachment } from "./preview-attachment";
 import { Weather } from "./weather";
-import { AuthorizePayment } from "../flights/authorize-payment";
-import { DisplayBoardingPass } from "../flights/boarding-pass";
-import { CreateReservation } from "../flights/create-reservation";
-import { FlightStatus } from "../flights/flight-status";
-import { ListFlights } from "../flights/list-flights";
-import { SelectSeats } from "../flights/select-seats";
-import { VerifyPayment } from "../flights/verify-payment";
+import { VerifyPayment } from "../trains/verify-payment";
+import { DisplayBoardingPass } from "../trains/boarding-pass";
+import { AuthorizePayment } from "../trains/authorize-payment";
+import { CreateReservation } from "../trains/create-reservation";
+import { TrainStatus } from "../trains/flight-status";
+import { ListTrains } from "../trains/list-flights";
+import { SelectSeats } from "../trains/select-seats";
+
 
 export const Message = ({
   chatId,
@@ -58,12 +59,12 @@ export const Message = ({
                   <div key={toolCallId}>
                     {toolName === "getWeather" ? (
                       <Weather weatherAtLocation={result} />
-                    ) : toolName === "displayFlightStatus" ? (
-                      <FlightStatus flightStatus={result} />
-                    ) : toolName === "searchFlights" ? (
-                      <ListFlights chatId={chatId} results={result} />
+                    ) : toolName === "displayTrainStatus" ? (
+                      <TrainStatus trainStatus={result} />
+                    ) : toolName === "searchTrains" ? (
+                      <ListTrains trainId={chatId} results={result} />
                     ) : toolName === "selectSeats" ? (
-                      <SelectSeats chatId={chatId} availability={result} />
+                      <SelectSeats trainId={chatId} availability={result} />
                     ) : toolName === "createReservation" ? (
                       Object.keys(result).includes("error") ? null : (
                         <CreateReservation reservation={result} />
@@ -84,12 +85,12 @@ export const Message = ({
                   <div key={toolCallId} className="skeleton">
                     {toolName === "getWeather" ? (
                       <Weather />
-                    ) : toolName === "displayFlightStatus" ? (
-                      <FlightStatus />
-                    ) : toolName === "searchFlights" ? (
-                      <ListFlights chatId={chatId} />
+                    ) : toolName === "displayTrainStatus" ? (
+                      <TrainStatus />
+                    ) : toolName === "searchTrains" ? (
+                      <ListTrains trainId={chatId} />
                     ) : toolName === "selectSeats" ? (
-                      <SelectSeats chatId={chatId} />
+                      <SelectSeats trainId={chatId} />
                     ) : toolName === "createReservation" ? (
                       <CreateReservation />
                     ) : toolName === "authorizePayment" ? (
