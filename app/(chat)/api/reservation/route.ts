@@ -59,10 +59,20 @@ export async function PATCH(request: Request) {
       return new Response("Reservation is already paid!", { status: 409 });
     }
 
-    const { magicWord } = await request.json();
+    const body = await request.json();
 
-    if (magicWord.toLowerCase() !== "vercel") {
-      return new Response("Invalid magic word!", { status: 400 });
+    // Legacy flow: magicWord
+    if (body.magicWord !== undefined) {
+      if (typeof body.magicWord !== "string" || body.magicWord.toLowerCase() !== "vercel") {
+        return new Response("Invalid magic word!", { status: 400 });
+      }
+    } else {
+      // New flow: card details
+      const { cardNumber, expiry, cvv, name } = body;
+      if (!cardNumber || !expiry || !cvv || !name) {
+        return new Response("Missing card details!", { status: 400 });
+      }
+      // Optionally: validate card details format here
     }
 
     const updatedReservation = await updateReservation({
