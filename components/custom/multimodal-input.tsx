@@ -286,7 +286,7 @@ export function MultimodalInput({
         />
         <div className="absolute right-2 bottom-2 flex flex-row gap-2">
           <Button
-            className="rounded-full p-1.5 h-fit m-0.5 text-white"
+            className="rounded-full p-1.5 h-fit m-0.5 text-zinc-700 dark:text-zinc-300"
             onClick={(event) => {
               event.preventDefault();
               fileInputRef.current?.click();
