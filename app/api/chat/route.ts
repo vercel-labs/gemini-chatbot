@@ -1,7 +1,7 @@
 import { convertToCoreMessages, Message, streamText } from "ai";
 import { z } from "zod";
 
-import { geminiProModel } from "@/ai";
+import { geminiProModel, geminiFlashModel } from "@/ai";
 import {
   generateReservationPrice,
   generateSampleTrainSearchResults,
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
   );
 
   const result = await streamText({
-    model: geminiProModel,
+    model: geminiFlashModel,
     system: `
         - you help users book trains!
   - keep your responses limited to a sentence, except when showing train search results.

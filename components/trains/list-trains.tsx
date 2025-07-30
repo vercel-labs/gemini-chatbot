@@ -107,25 +107,26 @@ export function ListTrains({
   return (
     <div className="rounded-lg bg-muted px-4 py-1.5 flex flex-col">
       {trainsWithComputed.map((train) => (
-        <div
+        <button
           key={train.id}
-          className="cursor-pointer flex flex-row border-b dark:border-zinc-700 py-2 last-of-type:border-none group"
+          className="cursor-pointer flex flex-row border-b dark:border-zinc-700 py-2 last-of-type:border-none group w-full text-left bg-transparent"
           onClick={() => {
             append({
               role: "user",
-              content: `I would like to book the ${train.operators} one!`,
+              content: `I want to book train ${train.id} (${train.operators.join(", ")}) departing at ${train.formattedDeparture} from ${train.departure.cityName} to ${train.arrival.cityName}.`,
             });
           }}
+          type="button"
         >
           <div className="flex flex-col w-full gap-0.5 justify-between">
             <div className="flex flex-row gap-0.5 text-base sm:text-base font-medium group-hover:underline">
-              <div className="text">
-                {train.formattedDeparture}
-              </div>
-              <div className="no-skeleton">–</div>
-              <div className="text">
-                {train.formattedArrival}
-              </div>
+<div className="text">
+  {train.formattedDeparture}
+</div>
+<div className="no-skeleton">–</div>
+<div className="text">
+  {train.formattedArrival}
+</div>
             </div>
             <div className="text w-fit hidden sm:flex text-sm text-muted-foreground flex-row gap-2">
               <div>{train.operators.join(", ")}</div>
@@ -158,7 +159,7 @@ export function ListTrains({
               Round Trip
             </div>
           </div>
-        </div>
+        </button>
       ))}
     </div>
   );

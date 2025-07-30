@@ -34,6 +34,7 @@ export function Chat({
 
   // Show initial state if no messages (except system/assistant)
   const hasUserMessages = messages.some(m => m.role === "user" || m.role === "assistant");
+  const isInitialChatLoad = messages.length === 0 && initialMessages.length === 0;
 
   // Scroll to bottom on new message or loading
   useEffect(() => {
@@ -68,7 +69,31 @@ export function Chat({
         // Initial state: centered input and logo
         <div className="flex flex-col items-center justify-center size-full">
           {/* Updated Rail logo */}
-          <form className="flex flex-row gap-3 items-center size-full max-w-xl px-6">
+          {isInitialChatLoad && (
+            <div className="flex flex-row gap-6 mb-6">
+              <button
+                className="bg-muted px-6 py-4 rounded-xl text-left text-lg text-muted-foreground hover:bg-zinc-800"
+                onClick={() => append({
+                  role: "user",
+                  content: "Book a train from Rome to Florence",
+                })}
+              >
+                <div className="font-medium">Book a train from Rome to Florence</div>
+                <div className="text-xs">from Roma Termini to Firenze SMN</div>
+              </button>
+              <button
+                className="bg-muted px-6 py-4 rounded-xl text-left text-lg text-muted-foreground hover:bg-zinc-800"
+                onClick={() => append({
+                  role: "user",
+                  content: "What is the status of train ITALO9512 departing tomorrow?",
+                })}
+              >
+                <div className="font-medium">What is the status</div>
+                <div className="text-xs">of train ITALO9512 departing tomorrow?</div>
+              </button>
+            </div>
+          )}
+          <form className="flex flex-row gap-3 items-center size-full max-w-xl px-6" onSubmit={handleSubmit}>
             <MultimodalInput
               input={input}
               setInput={setInput}
@@ -85,30 +110,6 @@ export function Chat({
       ) : (
         // Chat state: messages and input at bottom
         <div className="flex flex-col justify-between items-center gap-6 size-full">
-          {/* Italian train route suggestions */}
-          <div className="flex flex-row gap-6 mb-6">
-            <button
-              className="bg-muted px-6 py-4 rounded-xl text-left text-lg text-muted-foreground hover:bg-zinc-800"
-              onClick={() => append({
-                role: "user",
-                content: "Book a train from Rome to Florence",
-              })}
-            >
-              <div className="font-medium">Book a train from Rome to Florence</div>
-              <div className="text-xs">from Roma Termini to Firenze SMN</div>
-            </button>
-            <button
-              className="bg-muted px-6 py-4 rounded-xl text-left text-lg text-muted-foreground hover:bg-zinc-800"
-              onClick={() => append({
-                role: "user",
-                content: "What is the status of train ITALO9512 departing tomorrow?",
-              })}
-            >
-              <div className="font-medium">What is the status</div>
-              <div className="text-xs">of train ITALO9512 departing tomorrow?</div>
-            </button>
-          </div>
-
           <div
             ref={messagesContainerRef}
             className="flex flex-col gap-4 size-full max-w-2xl mx-auto  overflow-y-scroll custom-scrollbar pb-32"
@@ -128,7 +129,7 @@ export function Chat({
               className="shrink-0 min-w-[24px] min-h-[24px]"
             />
           </div>
-          <form className="flex flex-row gap-3 fixed bottom-8 left-1/2 -translate-x-1/2 items-end size-full md:max-w-[700px] max-w-[calc(100dvw-32px)] px-6 md:px-0 z-10">
+          <form className="flex flex-row gap-3 fixed bottom-8 left-1/2 -translate-x-1/2 items-end w-full md:max-w-[700px] max-w-[calc(100dvw-32px)] px-6 md:px-0 z-10 pointer-events-auto" onSubmit={handleSubmit}>
             <MultimodalInput
               input={input}
               setInput={setInput}

@@ -44,7 +44,7 @@ export function SelectSeats({
   });
 
   return (
-    <div className="flex flex-col gap-2 bg-muted rounded-lg">
+    <div className="flex flex-col gap-2 bg-muted rounded-lg overflow-auto max-h-[400px]">
       <div className="flex flex-col gap-4 scale-75">
         <div className="flex flex-row w-full justify-between text-muted-foreground">
           <div className="flex flex-row">
@@ -68,7 +68,7 @@ export function SelectSeats({
                     {index + 1}
                   </div>
                 ) : null}
-                <div
+                <button
                   key={seat.seatNumber}
                   onClick={() => {
                     append({
@@ -83,6 +83,8 @@ export function SelectSeats({
                       "bg-gray-500 cursor-not-allowed": !seat.isAvailable,
                     },
                   )}
+                  disabled={!seat.isAvailable}
+                  type="button"
                 >
                   <div className="text-xs text-white">${seat.priceInUSD}</div>
                   <div
@@ -94,7 +96,7 @@ export function SelectSeats({
                       },
                     )}
                   />
-                </div>
+                </button>
               </>
             ))}
           </div>
