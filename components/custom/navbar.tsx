@@ -21,7 +21,6 @@ export const Navbar = async () => {
     <>
       <div className="bg-background absolute top-0 left-0 w-dvw py-2 px-3 justify-between flex flex-row items-center z-30">
         <div className="flex flex-row gap-3 items-center">
-          <History user={session?.user} />
           <div className="flex flex-row gap-2 items-center">
             <Image
               src="/images/italia-rail.png"
@@ -29,50 +28,56 @@ export const Navbar = async () => {
               width={200}
               alt="Italia Rail logo"
             />
-            
           </div>
         </div>
 
-        {session ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                className="py-1.5 px-2 h-fit font-normal"
-                variant="secondary"
-              >
-                {session.user?.email}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>
-                <ThemeToggle />
-              </DropdownMenuItem>
-              <DropdownMenuItem className="p-1 z-50">
-                <form
-                  className="w-full"
-                  action={async () => {
-                    "use server";
-
-                    await signOut({
-                      redirectTo: "/",
-                    });
-                  }}
-                >
-                  <button
-                    type="submit"
-                    className="w-full text-left px-1 py-0.5 text-red-500"
+        <div className="flex flex-row gap-2 items-center">
+          {session ? (
+            <>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    className="py-1.5 px-2 h-fit font-normal rounded-full bg-emerald-600 text-white w-8 h-8 flex items-center justify-center text-lg"
+                    variant="secondary"
                   >
-                    Sign out
-                  </button>
-                </form>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ) : (
-          <Button className="py-1.5 px-2 h-fit font-normal text-white" asChild>
-            <Link href="/login">Login</Link>
-          </Button>
-        )}
+                    {session.user?.email?.slice(0, 2).toUpperCase()}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem>
+                    {session.user?.email}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <ThemeToggle />
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="p-1 z-50">
+                    <form
+                      className="w-full"
+                      action={async () => {
+                        "use server";
+                        await signOut({
+                          redirectTo: "/",
+                        });
+                      }}
+                    >
+                      <button
+                        type="submit"
+                        className="w-full text-left px-1 py-0.5 text-red-500"
+                      >
+                        Sign out
+                      </button>
+                    </form>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <History user={session?.user} triggerOnly />
+            </>
+          ) : (
+            <Button className="py-1.5 px-2 h-fit font-normal text-white" asChild>
+              <Link href="/login">Login</Link>
+            </Button>
+          )}
+        </div>
       </div>
     </>
   );
