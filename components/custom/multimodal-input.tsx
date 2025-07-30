@@ -21,7 +21,7 @@ import { Textarea } from "../ui/textarea";
 
 const suggestedActions = [
   {
-    title: "Book a train from Rome to Florence",
+    title: "Book a train ",
     label: "from Roma Termini to Firenze SMN",
     action: "Help me book a train from Rome to Florence",
   },

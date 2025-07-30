@@ -32,7 +32,7 @@ export const Message = ({
 }) => {
   return (
     <motion.div
-      className={`flex flex-row gap-4 px-4 w-full md:w-[500px] md:px-0 first-of-type:pt-20`}
+  className="flex flex-row gap-4 px-4 w-full  md:px-0"
       initial={{ y: 5, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
     >
@@ -43,7 +43,11 @@ export const Message = ({
       <div className="flex flex-col gap-2 w-full">
         {content && typeof content === "string" && (
           <div className="text-zinc-800 dark:text-zinc-300 flex flex-col gap-4">
-            <Markdown>{content}</Markdown>
+            {/* If train options are present, show a simple summary instead of full details */}
+            {content.match(/train options from Rome to Florence:/i)
+              ? <Markdown>I found several train options for your route. Please select or book your preferred train from the list above.</Markdown>
+              : <Markdown>{content}</Markdown>
+            }
           </div>
         )}
 
