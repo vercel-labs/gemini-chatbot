@@ -22,14 +22,16 @@ export const Navbar = async () => {
       <div className="bg-background absolute top-0 left-0 w-dvw py-1 px-2 justify-between flex flex-row items-center z-30">
         <div className="flex flex-row gap-3 items-center">
           <div className="flex flex-row gap-2 items-center">
-            <Image
-              src="/images/italia-rail.png"
-              height={150}
-              width={150}
-              alt="Italia Rail logo"
-              priority
-              style={{ width: 'auto', height: 'auto' }}
-            />
+            <Link href="/" passHref>
+              <Image
+                src="/images/italia-rail.png"
+                height={200}
+                width={200}
+                alt="Italia Rail logo"
+                priority
+                style={{ width: 'auto', height: 'auto', cursor: 'pointer' }}
+              />
+            </Link>
           </div>
         </div>
 
