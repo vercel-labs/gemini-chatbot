@@ -40,16 +40,19 @@ export async function generateSampleTrainStatus({
   return trainStatus;
 }
 
+
 export async function generateSampleTrainSearchResults({
   origin,
   destination,
+  date,
 }: {
   origin: string;
   destination: string;
+  date: string;
 }) {
   const { object: trainSearchResults } = await generateObject({
     model: geminiFlashModel,
-    prompt: `Generate search results for trains from ${origin} to ${destination}, limit to 4 results`,
+    prompt: `Generate search results for trains from ${origin} to ${destination} on ${date}, limit to 4 results`,
     output: "array",
     schema: z.object({
       id: z

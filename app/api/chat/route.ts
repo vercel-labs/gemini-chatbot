@@ -92,12 +92,14 @@ export async function POST(request: Request) {
         parameters: z.object({
           origin: z.string().describe("Origin station or city"),
           destination: z.string().describe("Destination station or city"),
+          date: z.string().describe("Date of travel (ISO or natural language)")
         }),
-        execute: async ({ origin, destination }) => {
-          console.log('[searchTrains] start', { origin, destination });
+        execute: async ({ origin, destination, date }) => {
+          console.log('[searchTrains] start', { origin, destination, date });
           const results = await generateSampleTrainSearchResults({
             origin,
             destination,
+            date,
           });
           console.log('[searchTrains] end', results);
           return results;
