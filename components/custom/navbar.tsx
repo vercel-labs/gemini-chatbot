@@ -19,13 +19,13 @@ export const Navbar = async () => {
 
   return (
     <>
-      <div className="bg-background absolute top-0 left-0 w-dvw py-2 px-3 justify-between flex flex-row items-center z-30">
+      <div className="bg-background absolute top-0 left-0 w-dvw py-1 px-2 justify-between flex flex-row items-center z-30">
         <div className="flex flex-row gap-3 items-center">
           <div className="flex flex-row gap-2 items-center">
             <Image
               src="/images/italia-rail.png"
-              height={200}
-              width={200}
+              height={150}
+              width={150}
               alt="Italia Rail logo"
               priority
               style={{ width: 'auto', height: 'auto' }}
@@ -38,12 +38,15 @@ export const Navbar = async () => {
             <>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button
-                    className="py-1.5 px-2 font-normal rounded-full bg-emerald-600 text-white size-8 flex items-center justify-center text-lg"
-                    variant="secondary"
-                  >
-                    {session.user?.email?.slice(0, 2).toUpperCase()}
-                  </Button>
+                  <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-emerald-600">
+                    <Image
+                      src="/images/person.png"
+                      alt="User avatar"
+                      width={40}
+                      height={40}
+                      style={{ width: "40px", height: "40px" }}
+                    />
+                  </div>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem>
