@@ -37,7 +37,7 @@ export const Navbar = async () => {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
-                    className="py-1.5 px-2 h-fit font-normal rounded-full bg-emerald-600 text-white w-8 h-8 flex items-center justify-center text-lg"
+                    className="py-1.5 px-2 font-normal rounded-full bg-emerald-600 text-white size-8 flex items-center justify-center text-lg"
                     variant="secondary"
                   >
                     {session.user?.email?.slice(0, 2).toUpperCase()}
