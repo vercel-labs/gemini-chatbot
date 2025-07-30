@@ -176,22 +176,29 @@ export function MultimodalInput({
   return (
     <div className="relative w-full flex flex-col gap-4">
       {/* Animated greeting above input */}
-      <div className="w-full flex justify-center items-center mt-2 mb-2" style={{ minHeight: "2.5rem", height: "2.5rem" }}>
+      <div
+        className="w-full flex justify-center items-center mt-2 mb-2"
+        style={{
+          minHeight: "2.5rem",
+          height: "2.5rem",
+          perspective: "800px"
+        }}
+      >
         <motion.div
-          initial={false}
-          style={{ position: "relative", width: "100%", display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}
+          key={greetingIndex}
+          initial={{ rotateX: -90, opacity: 0 }}
+          animate={{ rotateX: 0, opacity: 1 }}
+          exit={{ rotateX: 90, opacity: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-xl font-semibold"
+          style={{
+            textAlign: "center",
+            display: "inline-block",
+            width: "100%",
+            backfaceVisibility: "hidden"
+          }}
         >
-          <motion.span
-            key={greetingIndex}
-            initial={{ opacity: 0, x: -40, y: -20 }}
-            animate={{ opacity: 1, x: 0, y: 0 }}
-            exit={{ opacity: 0, x: 0, y: 40 }}
-            transition={{ duration: 0.5 }}
-            className="text-xl font-semibold"
-            style={{ textAlign: "center", display: "inline-block", width: "100%" }}
-          >
-            {greetings[greetingIndex]}
-          </motion.span>
+          {greetings[greetingIndex]}
         </motion.div>
       </div>
 
