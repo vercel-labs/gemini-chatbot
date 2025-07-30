@@ -1,9 +1,9 @@
-
 "use client";
 
-import { useEffect, useState } from "react";
 import { Attachment, Message } from "ai";
 import { useChat } from "ai/react";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 
 import { Message as PreviewMessage } from "@/components/custom/message";
 import { useScrollToBottom } from "@/components/custom/use-scroll-to-bottom";
@@ -40,7 +40,7 @@ export function Chat({
     if (messagesEndRef && messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messages.length, isLoading]);
+  }, [messages.length, isLoading, messagesEndRef]);
 
   return (
     <div className="flex flex-col items-center justify-center h-dvh w-dvw bg-background">
@@ -66,10 +66,10 @@ export function Chat({
       `}</style>
       {!hasUserMessages ? (
         // Initial state: centered input and logo
-        <div className="flex flex-col items-center justify-center h-full w-full">
+        <div className="flex flex-col items-center justify-center size-full">
           {/* Updated Rail logo */}
-          <img src="/images/ir-logo.png" alt="Rail Logo" className="w-20 h-20 mb-6 rounded-full shadow object-cover" />
-          <form className="flex flex-row gap-3 items-center w-full max-w-xl px-6">
+          <Image src="/images/ir-logo.png" alt="Rail Logo" width={80} height={80} className="size-20 mb-6 rounded-full shadow object-cover" />
+          <form className="flex flex-row gap-3 items-center size-full max-w-xl px-6">
             <MultimodalInput
               input={input}
               setInput={setInput}
@@ -85,7 +85,7 @@ export function Chat({
         </div>
       ) : (
         // Chat state: messages and input at bottom
-  <div className="flex flex-col justify-between items-center gap-6 h-full w-full">
+        <div className="flex flex-col justify-between items-center gap-6 size-full">
           {/* Italian train route suggestions */}
           <div className="flex flex-row gap-6 mb-6">
             <button
@@ -112,7 +112,7 @@ export function Chat({
 
           <div
             ref={messagesContainerRef}
-            className="flex flex-col gap-4 h-full w-full max-w-2xl mx-auto  overflow-y-scroll custom-scrollbar pb-32"
+            className="flex flex-col gap-4 size-full max-w-2xl mx-auto  overflow-y-scroll custom-scrollbar pb-32"
           >
             {messages.map((message) => (
               <PreviewMessage
@@ -124,14 +124,12 @@ export function Chat({
                 toolInvocations={message.toolInvocations}
               />
             ))}
-
             <div
               ref={messagesEndRef}
               className="shrink-0 min-w-[24px] min-h-[24px]"
             />
           </div>
-
-          <form className="flex flex-row gap-3 fixed bottom-8 left-1/2 -translate-x-1/2 items-end w-full md:max-w-[700px] max-w-[calc(100dvw-32px)] px-6 md:px-0 z-10">
+          <form className="flex flex-row gap-3 fixed bottom-8 left-1/2 -translate-x-1/2 items-end size-full md:max-w-[700px] max-w-[calc(100dvw-32px)] px-6 md:px-0 z-10">
             <MultimodalInput
               input={input}
               setInput={setInput}
