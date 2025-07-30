@@ -178,61 +178,31 @@ export function MultimodalInput({
     <div className="relative w-full flex flex-col gap-4">
       {/* Show greeting and suggested actions only for new chat */}
       {messages.length === 0 && (
-        <>
-          <div
-            className="w-full flex justify-center items-center my-2"
+        <div
+          className="w-full flex justify-center items-center my-2"
+          style={{
+            minHeight: "2.5rem",
+            height: "2.5rem",
+            perspective: "800px"
+          }}
+        >
+          <motion.div
+            key={greetingIndex}
+            initial={{ rotateX: -90, opacity: 0 }}
+            animate={{ rotateX: 0, opacity: 1 }}
+            exit={{ rotateX: 90, opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-2xl font-semibold"
             style={{
-              minHeight: "2.5rem",
-              height: "2.5rem",
-              perspective: "800px"
+              textAlign: "center",
+              display: "inline-block",
+              width: "100%",
+              backfaceVisibility: "hidden"
             }}
           >
-            <motion.div
-              key={greetingIndex}
-              initial={{ rotateX: -90, opacity: 0 }}
-              animate={{ rotateX: 0, opacity: 1 }}
-              exit={{ rotateX: 90, opacity: 0 }}
-              transition={{ duration: 0.5 }}
-              className="text-2xl font-semibold"
-              style={{
-                textAlign: "center",
-                display: "inline-block",
-                width: "100%",
-                backfaceVisibility: "hidden"
-              }}
-            >
-              {greetings[greetingIndex]}
-            </motion.div>
-          </div>
-          {/* Suggested actions below input, always visible for new chat */}
-          <div className="grid sm:grid-cols-2 gap-4 w-full md:px-0 mx-auto md:max-w-[500px] mt-4">
-            {suggestedActions.map((suggestedAction, index) => (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                transition={{ delay: 0.05 * index }}
-                key={index}
-                className={index > 1 ? "hidden sm:block" : "block"}
-              >
-                <button
-                  onClick={async () => {
-                    append({
-                      role: "user",
-                      content: suggestedAction.action,
-                    });
-                  }}
-                  className="border-none bg-muted/50 w-full text-left border border-zinc-200 dark:border-zinc-800 text-zinc-800 dark:text-zinc-300 rounded-lg p-3 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors flex flex-col"
-                >
-                  <span className="font-medium">{suggestedAction.title}</span>
-                  <span className="text-zinc-500 dark:text-zinc-400">
-                    {suggestedAction.label}
-                  </span>
-                </button>
-              </motion.div>
-            ))}
-          </div>
-        </>
+            {greetings[greetingIndex]}
+          </motion.div>
+        </div>
       )}
 
       <input
@@ -323,6 +293,37 @@ export function MultimodalInput({
           )}
         </div>
       </div>
+
+      {/* Suggested actions below input, always visible for new chat */}
+      {messages.length === 0 && (
+        <div className="grid sm:grid-cols-2 gap-4 w-full md:px-0 mx-auto md:max-w-[500px] mt-4">
+          {suggestedActions.map((suggestedAction, index) => (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ delay: 0.05 * index }}
+              key={index}
+              className={index > 1 ? "hidden sm:block" : "block"}
+            >
+              <button
+                onClick={async () => {
+                  append({
+                    role: "user",
+                    content: suggestedAction.action,
+                  });
+                }}
+                className="border-none bg-muted/50 w-full text-left border border-zinc-200 dark:border-zinc-800 text-zinc-800 dark:text-zinc-300 rounded-lg p-3 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors flex flex-col"
+              >
+                <span className="font-medium">{suggestedAction.title}</span>
+                <span className="text-zinc-500 dark:text-zinc-400">
+                  {suggestedAction.label}
+                </span>
+              </button>
+            </motion.div>
+          ))}
+        </div>
+      )}
 
     </div>
   );
