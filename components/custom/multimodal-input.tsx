@@ -2,6 +2,7 @@
 
 import { Attachment, ChatRequestOptions, CreateMessage, Message } from "ai";
 import { motion } from "framer-motion";
+import { useSession } from "next-auth/react";
 import React, {
   useRef,
   useEffect,
@@ -18,7 +19,7 @@ import { PreviewAttachment } from "./preview-attachment";
 import useWindowSize from "./use-window-size";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
-import { useSession } from "next-auth/react";
+
 
 const suggestedActions = [
   {
@@ -171,7 +172,7 @@ export function MultimodalInput({
       setGreetingIndex((i) => (i + 1) % greetings.length);
     }, 3000);
     return () => clearInterval(interval);
-  }, []);
+  }, [greetings.length]);
 
   return (
     <div className="relative w-full flex flex-col gap-4">
@@ -179,7 +180,7 @@ export function MultimodalInput({
       {messages.length === 0 && (
         <>
           <div
-            className="w-full flex justify-center items-center mt-2 mb-2"
+            className="w-full flex justify-center items-center my-2"
             style={{
               minHeight: "2.5rem",
               height: "2.5rem",

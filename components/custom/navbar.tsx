@@ -40,7 +40,7 @@ export const Navbar = async () => {
             <>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-emerald-600">
+                  <div className="size-10 rounded-full overflow-hidden flex items-center justify-center bg-emerald-600">
                     <Image
                       src="/images/person.png"
                       alt="User avatar"

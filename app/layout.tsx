@@ -1,6 +1,6 @@
 import { Metadata } from "next";
-import { Toaster } from "sonner";
 import { SessionProvider } from "next-auth/react";
+import { Toaster } from "sonner";
 
 import { Navbar } from "@/components/custom/navbar";
 import { ThemeProvider } from "@/components/custom/theme-provider";
