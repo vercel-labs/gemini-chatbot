@@ -72,6 +72,7 @@ const SAMPLE = {
   ],
 };
 
+
 export function ListTrains({
   trainId,
   results,
@@ -87,9 +88,25 @@ export function ListTrains({
 
   const safeResults = results && results.trains ? results : SAMPLE;
 
+  // Precompute formatted times and durations to avoid hydration mismatch
+  const trainsWithComputed = safeResults.trains.map((train) => {
+    const departureDate = new Date(train.departure.timestamp);
+    const arrivalDate = new Date(train.arrival.timestamp);
+    // Use UTC to avoid locale/timezone mismatch
+    const formattedDeparture = departureDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'UTC' });
+    const formattedArrival = arrivalDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'UTC' });
+    const durationHr = Math.round((arrivalDate.getTime() - departureDate.getTime()) / (1000 * 60 * 60));
+    return {
+      ...train,
+      formattedDeparture,
+      formattedArrival,
+      durationHr,
+    };
+  });
+
   return (
     <div className="rounded-lg bg-muted px-4 py-1.5 flex flex-col">
-      {safeResults.trains.map((train) => (
+      {trainsWithComputed.map((train) => (
         <div
           key={train.id}
           className="cursor-pointer flex flex-row border-b dark:border-zinc-700 py-2 last-of-type:border-none group"
@@ -103,11 +120,11 @@ export function ListTrains({
           <div className="flex flex-col w-full gap-0.5 justify-between">
             <div className="flex flex-row gap-0.5 text-base sm:text-base font-medium group-hover:underline">
               <div className="text">
-                {format(new Date(train.departure.timestamp), "h:mm a")}
+                {train.formattedDeparture}
               </div>
               <div className="no-skeleton">–</div>
               <div className="text">
-                {format(new Date(train.arrival.timestamp), "h:mm a")}
+                {train.formattedArrival}
               </div>
             </div>
             <div className="text w-fit hidden sm:flex text-sm text-muted-foreground flex-row gap-2">
@@ -121,11 +138,7 @@ export function ListTrains({
           <div className="flex flex-col gap-0.5 justify-between">
             <div className="flex flex-row gap-2">
               <div className="text-base sm:text-base">
-                {differenceInHours(
-                  new Date(train.arrival.timestamp),
-                  new Date(train.departure.timestamp),
-                )}{" "}
-                hr
+                {train.durationHr} hr
               </div>
             </div>
             <div className="text-xs sm:text-sm text-muted-foreground flex flex-row">

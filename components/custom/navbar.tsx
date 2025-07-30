@@ -27,6 +27,8 @@ export const Navbar = async () => {
               height={200}
               width={200}
               alt="Italia Rail logo"
+              priority
+              style={{ width: 'auto', height: 'auto' }}
             />
           </div>
         </div>

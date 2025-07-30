@@ -68,7 +68,6 @@ export function Chat({
         // Initial state: centered input and logo
         <div className="flex flex-col items-center justify-center size-full">
           {/* Updated Rail logo */}
-          <Image src="/images/ir-logo.png" alt="Rail Logo" width={80} height={80} className="size-20 mb-6 rounded-full shadow object-cover" />
           <form className="flex flex-row gap-3 items-center size-full max-w-xl px-6">
             <MultimodalInput
               input={input}
