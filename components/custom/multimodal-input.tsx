@@ -193,7 +193,7 @@ export function MultimodalInput({
               animate={{ rotateX: 0, opacity: 1 }}
               exit={{ rotateX: 90, opacity: 0 }}
               transition={{ duration: 0.5 }}
-              className="text-xl font-semibold"
+              className="text-2xl font-semibold"
               style={{
                 textAlign: "center",
                 display: "inline-block",

@@ -40,13 +40,13 @@ export const Navbar = async () => {
             <>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <div className="size-10 rounded-full overflow-hidden flex items-center justify-center bg-emerald-600">
+                  <div className="size-8 rounded-full overflow-hidden flex items-center justify-center bg-emerald-600 shadow-md border border-zinc-200 dark:border-zinc-700">
                     <Image
                       src="/images/person.png"
                       alt="User avatar"
-                      width={40}
-                      height={40}
-                      style={{ width: "40px", height: "40px" }}
+                      width={32}
+                      height={32}
+                      style={{ width: "32px", height: "32px" }}
                     />
                   </div>
                 </DropdownMenuTrigger>
