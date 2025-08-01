@@ -4,8 +4,8 @@ import { z } from "zod";
 import { geminiProModel } from "@/ai";
 import {
   generateReservationPrice,
-  generateSampleFlightSearchResults,
-  generateSampleFlightStatus,
+  generateSampleTrainSearchResults,
+  generateSampleTrainStatus,
   generateSampleSeatSelection,
 } from "@/ai/actions";
 import { auth } from "@/app/(auth)/auth";
@@ -34,21 +34,22 @@ export async function POST(request: Request) {
 
   const result = await streamText({
     model: geminiProModel,
-    system: `\n
-        - you help users book flights!
-        - keep your responses limited to a sentence.
-        - DO NOT output lists.
-        - after every tool call, pretend you're showing the result to the user and keep your response limited to a phrase.
+    system: `
+        - you help users book trains!
+  - keep your responses limited to a sentence, except when showing train search results.
+  - When showing train search results, you MAY output a list of train options for the user to choose from.
+  - When the user selects a train (by clicking or sending a train number), immediately proceed to seat selection for that train. Do NOT ask for further preference or clarification if a train is already selected.
+  - after every tool call, pretend you're showing the result to the user and keep your response limited to a phrase unless showing train options.
         - today's date is ${new Date().toLocaleDateString()}.
         - ask follow up questions to nudge user into the optimal flow
         - ask for any details you don't know, like name of passenger, etc.'
         - C and D are aisle seats, A and F are window seats, B and E are middle seats
-        - assume the most popular airports for the origin and destination
+        - assume the most popular stations for the origin and destination
         - here's the optimal flow
-          - search for flights
-          - choose flight
+          - search for trains
+          - choose train
           - select seats
-          - create reservation (ask user whether to proceed with payment or change reservation)
+          - create reservation (ask user whether to proceed with payment or change reservation; if details are complete, prompt user to confirm and proceed to payment)
           - authorize payment (requires user consent, wait for user to finish payment and let you know when done)
           - display boarding pass (DO NOT display boarding pass without verifying payment)
         '
@@ -70,68 +71,75 @@ export async function POST(request: Request) {
           return weatherData;
         },
       },
-      displayFlightStatus: {
-        description: "Display the status of a flight",
+      displayTrainStatus: {
+        description: "Display the status of a train",
         parameters: z.object({
-          flightNumber: z.string().describe("Flight number"),
-          date: z.string().describe("Date of the flight"),
+          trainNumber: z.string().describe("Train number"),
+          date: z.string().describe("Date of the train"),
         }),
-        execute: async ({ flightNumber, date }) => {
-          const flightStatus = await generateSampleFlightStatus({
-            flightNumber,
+        execute: async ({ trainNumber, date }) => {
+          console.log('[displayTrainStatus] start', { trainNumber, date });
+          const trainStatus = await generateSampleTrainStatus({
+            trainNumber,
             date,
           });
-
-          return flightStatus;
+          console.log('[displayTrainStatus] end', trainStatus);
+          return trainStatus;
         },
       },
-      searchFlights: {
-        description: "Search for flights based on the given parameters",
+      searchTrains: {
+        description: "Search for trains based on the given parameters",
         parameters: z.object({
-          origin: z.string().describe("Origin airport or city"),
-          destination: z.string().describe("Destination airport or city"),
+          origin: z.string().describe("Origin station or city"),
+          destination: z.string().describe("Destination station or city"),
+          date: z.string().describe("Date of travel (ISO or natural language)")
         }),
-        execute: async ({ origin, destination }) => {
-          const results = await generateSampleFlightSearchResults({
+        execute: async ({ origin, destination, date }) => {
+          console.log('[searchTrains] start', { origin, destination, date });
+          const results = await generateSampleTrainSearchResults({
             origin,
             destination,
+            date,
           });
-
+          console.log('[searchTrains] end', results);
           return results;
         },
       },
       selectSeats: {
-        description: "Select seats for a flight",
+        description: "Select seats for a train",
         parameters: z.object({
-          flightNumber: z.string().describe("Flight number"),
+          trainNumber: z.string().describe("Train number"),
         }),
-        execute: async ({ flightNumber }) => {
-          const seats = await generateSampleSeatSelection({ flightNumber });
+        execute: async ({ trainNumber }) => {
+          console.log('[selectSeats] start', { trainNumber });
+          const seats = await generateSampleSeatSelection({ trainNumber });
+          console.log('[selectSeats] end', seats);
           return seats;
         },
       },
       createReservation: {
-        description: "Display pending reservation details",
+        description: "Display pending train reservation details",
         parameters: z.object({
           seats: z.string().array().describe("Array of selected seat numbers"),
-          flightNumber: z.string().describe("Flight number"),
+          trainNumber: z.string().describe("Train number"),
           departure: z.object({
             cityName: z.string().describe("Name of the departure city"),
-            airportCode: z.string().describe("Code of the departure airport"),
+            stationCode: z.string().describe("Code of the departure station"),
             timestamp: z.string().describe("ISO 8601 date of departure"),
             gate: z.string().describe("Departure gate"),
-            terminal: z.string().describe("Departure terminal"),
+            platform: z.string().describe("Departure platform"),
           }),
           arrival: z.object({
             cityName: z.string().describe("Name of the arrival city"),
-            airportCode: z.string().describe("Code of the arrival airport"),
+            stationCode: z.string().describe("Code of the arrival station"),
             timestamp: z.string().describe("ISO 8601 date of arrival"),
             gate: z.string().describe("Arrival gate"),
-            terminal: z.string().describe("Arrival terminal"),
+            platform: z.string().describe("Arrival platform"),
           }),
           passengerName: z.string().describe("Name of the passenger"),
         }),
         execute: async (props) => {
+          console.log('[createReservation] start', props);
           const { totalPriceInUSD } = await generateReservationPrice(props);
           const session = await auth();
 
@@ -143,9 +151,19 @@ export async function POST(request: Request) {
               userId: session.user.id,
               details: { ...props, totalPriceInUSD },
             });
-
-            return { id, ...props, totalPriceInUSD };
+            console.log('[createReservation] end', { id, ...props, totalPriceInUSD });
+            // Immediately prompt for payment after reservation creation
+            return {
+              id,
+              ...props,
+              totalPriceInUSD,
+              nextTool: {
+                name: "authorizePayment",
+                parameters: { reservationId: id },
+              },
+            };
           } else {
+            console.log('[createReservation] error: not signed in');
             return {
               error: "User is not signed in to perform this action!",
             };
@@ -161,6 +179,7 @@ export async function POST(request: Request) {
             .describe("Unique identifier for the reservation"),
         }),
         execute: async ({ reservationId }) => {
+          console.log('[authorizePayment] start', { reservationId });
           return { reservationId };
         },
       },
@@ -172,8 +191,9 @@ export async function POST(request: Request) {
             .describe("Unique identifier for the reservation"),
         }),
         execute: async ({ reservationId }) => {
+          console.log('[verifyPayment] start', { reservationId });
           const reservation = await getReservationById({ id: reservationId });
-
+          console.log('[verifyPayment] reservation', reservation);
           if (reservation.hasCompletedPayment) {
             return { hasCompletedPayment: true };
           } else {
@@ -182,7 +202,7 @@ export async function POST(request: Request) {
         },
       },
       displayBoardingPass: {
-        description: "Display a boarding pass",
+        description: "Display a train boarding pass",
         parameters: z.object({
           reservationId: z
             .string()
@@ -190,26 +210,27 @@ export async function POST(request: Request) {
           passengerName: z
             .string()
             .describe("Name of the passenger, in title case"),
-          flightNumber: z.string().describe("Flight number"),
+          trainNumber: z.string().describe("Train number"),
           seat: z.string().describe("Seat number"),
           departure: z.object({
             cityName: z.string().describe("Name of the departure city"),
-            airportCode: z.string().describe("Code of the departure airport"),
-            airportName: z.string().describe("Name of the departure airport"),
+            stationCode: z.string().describe("Code of the departure station"),
+            stationName: z.string().describe("Name of the departure station"),
             timestamp: z.string().describe("ISO 8601 date of departure"),
-            terminal: z.string().describe("Departure terminal"),
+            platform: z.string().describe("Departure platform"),
             gate: z.string().describe("Departure gate"),
           }),
           arrival: z.object({
             cityName: z.string().describe("Name of the arrival city"),
-            airportCode: z.string().describe("Code of the arrival airport"),
-            airportName: z.string().describe("Name of the arrival airport"),
+            stationCode: z.string().describe("Code of the arrival station"),
+            stationName: z.string().describe("Name of the arrival station"),
             timestamp: z.string().describe("ISO 8601 date of arrival"),
-            terminal: z.string().describe("Arrival terminal"),
+            platform: z.string().describe("Arrival platform"),
             gate: z.string().describe("Arrival gate"),
           }),
         }),
         execute: async (boardingPass) => {
+          console.log('[displayBoardingPass] start', boardingPass);
           return boardingPass;
         },
       },
