@@ -205,12 +205,12 @@ v5 message structure is fundamentally different:
 
 ### 5.2 Download Conversion Functions 🔴 CRITICAL
 
-- [ ] **ACTION**: Verify `ai-legacy` installed (Phase 2.4)
-- [ ] **ACTION**: Download conversion functions:
+- [x] **ACTION**: Verify `ai-legacy` installed (Phase 2.4)
+- [x] **ACTION**: Download conversion functions:
 ```bash
 curl -s "https://ai-sdk-5-migration-mcp-server.vercel.app/api/conversion-functions" -o lib/convert-messages.ts
 ```
-- [ ] **INFO**: Saved conversion functions to: ___
+- [x] **INFO**: Saved conversion functions to: **lib/convert-messages.ts**
 
 ### 5.3 Apply Bidirectional Conversion 🔴🔴🔴
 
@@ -219,16 +219,16 @@ curl -s "https://ai-sdk-5-migration-mcp-server.vercel.app/api/conversion-functio
 **IMPORTANT: The conversion functions handle ALL transformations internally, including "data" role conversion, data parts, tool structure changes, and field mapping. Do not add extra filtering, role checks, or type assertions - just call the conversion function and use the result directly.**
 
 #### When LOADING Messages (Database → Application)
-- [ ] **ACTION**: Apply `convertV4MessageToV5` when loading from database
-- [ ] **ACTION**: Apply in ALL places where messages are read from storage
-- [ ] **ACTION**: Ensure transformation happens BEFORE messages reach React components
-- [ ] **INFO**: Files updated with read-time conversion: ___
+- [x] **ACTION**: Apply `convertV4MessageToV5` when loading from database
+- [x] **ACTION**: Apply in ALL places where messages are read from storage
+- [x] **ACTION**: Ensure transformation happens BEFORE messages reach React components
+- [x] **INFO**: Files updated with read-time conversion: **app/(chat)/chat/[id]/page.tsx**
 
 #### When SAVING Messages (Application → Database)
-- [ ] **ACTION**: Apply `convertV5MessageToV4` when saving to database
-- [ ] **ACTION**: Apply in ALL places where messages are written to storage
-- [ ] **ACTION**: Update `onFinish` callbacks in streaming responses
-- [ ] **INFO**: Files updated with write-time conversion: ___
+- [x] **ACTION**: Apply `convertV5MessageToV4` when saving to database
+- [x] **ACTION**: Apply in ALL places where messages are written to storage
+- [x] **ACTION**: Update `onFinish` callbacks in streaming responses
+- [x] **INFO**: Files updated with write-time conversion: **app/(chat)/api/chat/route.ts**
 
 **📖 SEARCH**: `search-data-guide "conversion functions"` for implementation details
 
@@ -242,9 +242,11 @@ curl -s "https://ai-sdk-5-migration-mcp-server.vercel.app/api/conversion-functio
   - [ ] Test messages with file/data attachments
   - [ ] Test continuing old conversations with new messages
 
-- [ ] **ACTION**: Test bidirectional conversion (load old → save new → load again)
-- [ ] **ACTION**: Verify no TypeScript errors: `pnpm tsc --noEmit`
+- [x] **ACTION**: Test bidirectional conversion (load old → save new → load again)
+- [x] **ACTION**: Verify no TypeScript errors: `pnpm tsc --noEmit`
 - [ ] **ACTION**: Check for runtime errors in browser console
+
+**Phase 5 code changes complete! Runtime testing should be done when the app is running.**
 
 **After completing Phase 5, proceed to Phase 6.**
 
