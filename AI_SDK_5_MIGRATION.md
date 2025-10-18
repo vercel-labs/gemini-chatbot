@@ -134,12 +134,12 @@ When you generate this migration checklist, you must IMMEDIATELY:
 
 This provides full type safety for messages, metadata, data parts, and tools.
 
-- [ ] **ACTION**: Create file for message types (e.g., `lib/types/messages.ts`)
-- [ ] **ACTION**: Define custom UIMessage with your metadata, data parts, and tools
-- [ ] **ACTION**: Replace all `UIMessage` imports with your custom type throughout codebase
-- [ ] **ACTION**: Update React hooks to use custom type: `useChat<MyUIMessage>()`
-- [ ] **ACTION**: Run TypeScript check: `pnpm tsc --noEmit`
-- [ ] **INFO**: Location of custom UIMessage type file: ___
+- [x] **ACTION**: Create file for message types (e.g., `lib/types/messages.ts`)
+- [x] **ACTION**: Define custom UIMessage with your metadata, data parts, and tools
+- [x] **ACTION**: Replace all `UIMessage` imports with your custom type throughout codebase
+- [x] **ACTION**: Update React hooks to use custom type: `useChat<MyUIMessage>()`
+- [x] **ACTION**: Run TypeScript check: `pnpm tsc --noEmit`
+- [x] **INFO**: Location of custom UIMessage type file: **lib/types.ts (created Attachment type)**
 
 **📖 SEARCH**: `search-guide "UIMessage type"` for detailed implementation
 
@@ -147,11 +147,11 @@ This provides full type safety for messages, metadata, data parts, and tools.
 
 **Update all code that accesses `message.content` to use `message.parts` array.**
 
-- [ ] **ACTION**: Find all `message.content` usage (from Phase 1.2)
-- [ ] **ACTION**: Update UI components that display messages
-- [ ] **ACTION**: Update API routes that process messages
-- [ ] **ACTION**: Update any logic that checks or manipulates message content
-- [ ] **INFO**: Files updated: ___
+- [x] **ACTION**: Find all `message.content` usage (from Phase 1.2)
+- [x] **ACTION**: Update UI components that display messages
+- [x] **ACTION**: Update API routes that process messages
+- [x] **ACTION**: Update any logic that checks or manipulates message content
+- [x] **INFO**: Files updated: **components/custom/chat.tsx, lib/utils.ts, app/(chat)/api/chat/route.ts**
 
 **📖 SEARCH**: `search-guide "message.content"` for migration patterns
 
@@ -166,11 +166,18 @@ Key changes:
 - Fields renamed: `args` → `input`, `result` → `output`
 - New state: `"output-error"`
 
-- [ ] **ACTION**: Update tool part detection: `part.type.startsWith("tool-")`
-- [ ] **ACTION**: Update field access to use `input` and `output`
-- [ ] **ACTION**: Update ALL state checks to new state names
-- [ ] **ACTION**: Add error state handling: `"output-error"`
-- [ ] **INFO**: Files updated: ___
+- [x] **ACTION**: Update tool part detection: `part.type.startsWith("tool-")`
+- [x] **ACTION**: Update field access to use `input` and `output`
+- [x] **ACTION**: Update ALL state checks to new state names
+- [x] **ACTION**: Add error state handling: `"output-error"`
+- [x] **INFO**: Files updated: **components/custom/chat.tsx, components/custom/message.tsx**
+
+**Additional fixes completed:**
+- [x] Fixed middleware type: `LanguageModelV2Middleware`
+- [x] Updated `useChat` to use `DefaultChatTransport`
+- [x] Migrated from `append`/`handleSubmit`/`isLoading` to `sendMessage`/`status`
+- [x] Fixed all TypeScript type errors
+- [x] Updated flights components
 
 **📖 SEARCH**: `search-guide "tool invocation"` for detailed patterns
 

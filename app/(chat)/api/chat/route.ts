@@ -2,6 +2,7 @@ import { convertToModelMessages, UIMessage, streamText, generateId } from "ai";
 import { z } from 'zod/v3';
 
 import { geminiProModel } from "@/ai";
+import { convertV5MessageToV4 } from "@/lib/convert-messages";
 import {
   generateReservationPrice,
   generateSampleFlightSearchResults,
@@ -224,10 +225,13 @@ export async function POST(request: Request) {
     onFinish: async ({ messages: allMessages }) => {
       if (session && session.user && session.user.id) {
         try {
-          // allMessages contains original messages + response in UIMessage format
+          // Convert v5 messages to v4 format for database storage
+          const v4Messages = allMessages.map((msg: any) => convertV5MessageToV4(msg));
+          
+          // Save v4 messages directly (they're already in the right format for database)
           await saveChat({
             id,
-            messages: convertToModelMessages(allMessages),
+            messages: v4Messages as any,
             userId: session.user.id,
           });
         } catch (error) {
