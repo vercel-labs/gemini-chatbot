@@ -1,7 +1,6 @@
 "use client";
 
 import { ChatRequestOptions, CreateUIMessage, UIMessage } from "ai";
-import { Attachment } from "@/lib/types";
 import { motion } from "framer-motion";
 import React, {
   useRef,
@@ -13,6 +12,8 @@ import React, {
   ChangeEvent,
 } from "react";
 import { toast } from "sonner";
+
+import { Attachment } from "@/lib/types";
 
 import { ArrowUpIcon, PaperclipIcon, StopIcon } from "./icons";
 import { PreviewAttachment } from "./preview-attachment";

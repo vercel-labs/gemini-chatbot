@@ -1,9 +1,9 @@
-import type {
+import type { JSONValue, ToolUIPart, UIMessage, UITools } from 'ai';
+  import type {
     ToolInvocation,
     Message as V4Message,
     UIMessage as LegacyUIMessage,
   } from 'ai-legacy';
-  import type { JSONValue, ToolUIPart, UIMessage, UITools } from 'ai';
 
   export type MyUIMessage = UIMessage<never, { custom: JSONValue }, UITools>;
 

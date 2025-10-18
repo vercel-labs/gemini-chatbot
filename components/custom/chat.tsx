@@ -1,14 +1,14 @@
 "use client";
 
-import { UIMessage, DefaultChatTransport } from "ai";
 import { useChat } from '@ai-sdk/react';
-import { Attachment } from "@/lib/types";
+import { UIMessage, DefaultChatTransport } from "ai";
 import { User } from "next-auth";
 import { useState } from "react";
 import { toast } from "sonner";
 
 import { Message as PreviewMessage } from "@/components/custom/message";
 import { useScrollToBottom } from "@/components/custom/use-scroll-to-bottom";
+import { Attachment } from "@/lib/types";
 
 import { MultimodalInput } from "./multimodal-input";
 import { Overview } from "./overview";

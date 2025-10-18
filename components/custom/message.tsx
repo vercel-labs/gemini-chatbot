@@ -1,9 +1,10 @@
 "use client";
 
 import { UIToolInvocation } from "ai";
-import { Attachment } from "@/lib/types";
 import { motion } from "framer-motion";
 import { ReactNode } from "react";
+
+import { Attachment } from "@/lib/types";
 
 import { BotIcon, InfoIcon, UserIcon } from "./icons";
 import { Markdown } from "./markdown";

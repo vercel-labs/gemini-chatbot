@@ -2,7 +2,6 @@ import { convertToModelMessages, UIMessage, streamText, generateId } from "ai";
 import { z } from 'zod/v3';
 
 import { geminiProModel } from "@/ai";
-import { convertV5MessageToV4 } from "@/lib/convert-messages";
 import {
   generateReservationPrice,
   generateSampleFlightSearchResults,
@@ -17,6 +16,7 @@ import {
   getReservationById,
   saveChat,
 } from "@/db/queries";
+import { convertV5MessageToV4 } from "@/lib/convert-messages";
 import { generateUUID } from "@/lib/utils";
 
 export async function POST(request: Request) {
