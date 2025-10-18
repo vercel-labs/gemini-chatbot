@@ -1,5 +1,5 @@
 import { generateObject } from "ai";
-import { z } from "zod";
+import { z } from 'zod/v3';
 
 import { geminiFlashModel } from ".";
 

@@ -1,8 +1,8 @@
 import {
-  CoreMessage,
+  ModelMessage,
   CoreToolMessage,
   generateId,
-  Message,
+  UIMessage,
   ToolInvocation,
 } from "ai";
 import { clsx, type ClassValue } from "clsx";
@@ -56,8 +56,8 @@ function addToolMessageToChat({
   messages,
 }: {
   toolMessage: CoreToolMessage;
-  messages: Array<Message>;
-}): Array<Message> {
+  messages: Array<UIMessage>;
+}): Array<UIMessage> {
   return messages.map((message) => {
     if (message.toolInvocations) {
       return {
@@ -85,9 +85,9 @@ function addToolMessageToChat({
 }
 
 export function convertToUIMessages(
-  messages: Array<CoreMessage>,
-): Array<Message> {
-  return messages.reduce((chatMessages: Array<Message>, message) => {
+  messages: Array<ModelMessage>,
+): Array<UIMessage> {
+  return messages.reduce((chatMessages: Array<UIMessage>, message) => {
     if (message.role === "tool") {
       return addToolMessageToChat({
         toolMessage: message as CoreToolMessage,
@@ -127,7 +127,7 @@ export function convertToUIMessages(
 }
 
 export function getTitleFromChat(chat: Chat) {
-  const messages = convertToUIMessages(chat.messages as Array<CoreMessage>);
+  const messages = convertToUIMessages(chat.messages as Array<ModelMessage>);
   const firstMessage = messages[0];
 
   if (!firstMessage) {

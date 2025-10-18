@@ -1,7 +1,7 @@
 "use client";
 
-import { Attachment, Message } from "ai";
-import { useChat } from "ai/react";
+import { Attachment, UIMessage } from "ai";
+import { useChat } from '@ai-sdk/react';
 import { User } from "next-auth";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -18,10 +18,18 @@ export function Chat({
   user,
 }: {
   id: string;
-  initialMessages: Array<Message>;
+  initialMessages: Array<UIMessage>;
   user: User | undefined;
 }) {
-  const { messages, handleSubmit, input, setInput, append, isLoading, stop } =
+  const [input, setInput] = useState('');
+  const {
+    messages,
+    handleSubmit,
+    setInput,
+    append,
+    isLoading,
+    stop
+  } =
     useChat({
       id,
       body: { id },
