@@ -1,6 +1,7 @@
 "use client";
 
-import { useChat } from "ai/react";
+import { useChat } from '@ai-sdk/react';
+import { DefaultChatTransport } from 'ai';
 import { differenceInHours, format } from "date-fns";
 import { useId } from "react";
 
@@ -81,11 +82,17 @@ export function ListFlights({
   chatId: string;
   results?: typeof SAMPLE;
 }) {
-  const { append } = useChat({
-    id: chatId,
-    body: { id: chatId },
-    maxSteps: 5,
+  const { sendMessage } = useChat({
+    transport: new DefaultChatTransport({
+      api: "/api/chat",
+      body: { id: chatId },
+    }),
   });
+  
+  const append = async (message: any) => {
+    await sendMessage(message);
+    return null;
+  };
 
   return (
     <div className="rounded-lg bg-muted px-4 py-1.5 flex flex-col">

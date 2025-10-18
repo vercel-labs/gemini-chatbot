@@ -1,11 +1,10 @@
-import { CoreMessage } from "ai";
 import { notFound } from "next/navigation";
 
 import { auth } from "@/app/(auth)/auth";
 import { Chat as PreviewChat } from "@/components/custom/chat";
 import { getChatById } from "@/db/queries";
 import { Chat } from "@/db/schema";
-import { convertToUIMessages } from "@/lib/utils";
+import { convertV4MessageToV5 } from "@/lib/convert-messages";
 
 export default async function Page({ params }: { params: any }) {
   const { id } = params;
@@ -15,10 +14,10 @@ export default async function Page({ params }: { params: any }) {
     notFound();
   }
 
-  // type casting and converting messages to UI messages
+  // Convert v4 messages from database to v5 format for application use
   const chat: Chat = {
     ...chatFromDb,
-    messages: convertToUIMessages(chatFromDb.messages as Array<CoreMessage>),
+    messages: (chatFromDb.messages as any[]).map((msg: any, index: number) => convertV4MessageToV5(msg, index)),
   };
 
   const session = await auth();

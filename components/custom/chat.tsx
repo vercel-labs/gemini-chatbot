@@ -1,13 +1,14 @@
 "use client";
 
-import { Attachment, Message } from "ai";
-import { useChat } from "ai/react";
+import { useChat } from '@ai-sdk/react';
+import { UIMessage, DefaultChatTransport } from "ai";
 import { User } from "next-auth";
 import { useState } from "react";
 import { toast } from "sonner";
 
 import { Message as PreviewMessage } from "@/components/custom/message";
 import { useScrollToBottom } from "@/components/custom/use-scroll-to-bottom";
+import { Attachment } from "@/lib/types";
 
 import { MultimodalInput } from "./multimodal-input";
 import { Overview } from "./overview";
@@ -18,26 +19,48 @@ export function Chat({
   user,
 }: {
   id: string;
-  initialMessages: Array<Message>;
+  initialMessages: Array<UIMessage>;
   user: User | undefined;
 }) {
-  const { messages, handleSubmit, input, setInput, append, isLoading, stop } =
+  const [input, setInput] = useState('');
+  const {
+    messages,
+    sendMessage,
+    status,
+    stop
+  } =
     useChat({
-      id,
-      body: { id },
-      initialMessages,
-      maxSteps: 10,
+      transport: new DefaultChatTransport({ 
+        api: "/api/chat",
+        body: { id },
+      }),
+      messages: initialMessages,
       onFinish: () => {
         if (user) {
           window.history.replaceState({}, "", `/chat/${id}`);
         }
       },
-      onError: (error) => {
+      onError: (error: Error) => {
         if (error.message === "Too many requests") {
           toast.error("Too many requests. Please try again later!");
         }
       },
     });
+  
+  const isLoading = status === "streaming";
+  
+  const handleSubmit = (e?: React.FormEvent) => {
+    e?.preventDefault();
+    if (input.trim()) {
+      sendMessage({ text: input });
+      setInput('');
+    }
+  };
+  
+  const append = async (message: UIMessage): Promise<string | null | undefined> => {
+    await sendMessage(message);
+    return null;
+  };
 
   const [messagesContainerRef, messagesEndRef] =
     useScrollToBottom<HTMLDivElement>();
@@ -53,16 +76,45 @@ export function Chat({
         >
           {messages.length === 0 && <Overview />}
 
-          {messages.map((message) => (
-            <PreviewMessage
-              key={message.id}
-              chatId={id}
-              role={message.role}
-              content={message.content}
-              attachments={message.experimental_attachments}
-              toolInvocations={message.toolInvocations}
-            />
-          ))}
+          {messages.map((message: UIMessage) => {
+            // Extract text content from parts
+            const textContent = message.parts
+              ?.filter((part: any) => part.type === "text")
+              .map((part: any) => part.text)
+              .join("");
+            
+            // Extract file attachments from parts
+            const fileAttachments = message.parts
+              ?.filter((part: any) => part.type === "file")
+              .map((part: any) => ({
+                url: part.url,
+                name: part.name || "",
+                contentType: part.mediaType || "",
+              })) || [];
+            
+            // Extract tool invocations from parts (v5 format) - cast to any for compatibility
+            const toolInvocations: any[] = message.parts
+              ?.filter((part: any) => part.type?.startsWith("tool-"))
+              .map((part: any) => ({
+                ...part,
+                // Add v4 compatibility properties for Message component
+                state: part.state === "output-available" ? "result" : part.state,
+                toolName: part.toolName || part.type?.replace("tool-", ""),
+                args: part.input,
+                result: part.output,
+              })) || [];
+
+            return (
+              <PreviewMessage
+                key={message.id}
+                chatId={id}
+                role={message.role}
+                content={textContent || ""}
+                attachments={fileAttachments}
+                toolInvocations={toolInvocations}
+              />
+            );
+          })}
 
           <div
             ref={messagesEndRef}

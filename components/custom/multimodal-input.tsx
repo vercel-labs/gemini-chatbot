@@ -1,6 +1,6 @@
 "use client";
 
-import { Attachment, ChatRequestOptions, CreateMessage, Message } from "ai";
+import { ChatRequestOptions, CreateUIMessage, UIMessage } from "ai";
 import { motion } from "framer-motion";
 import React, {
   useRef,
@@ -12,6 +12,8 @@ import React, {
   ChangeEvent,
 } from "react";
 import { toast } from "sonner";
+
+import { Attachment } from "@/lib/types";
 
 import { ArrowUpIcon, PaperclipIcon, StopIcon } from "./icons";
 import { PreviewAttachment } from "./preview-attachment";
@@ -49,15 +51,13 @@ export function MultimodalInput({
   stop: () => void;
   attachments: Array<Attachment>;
   setAttachments: Dispatch<SetStateAction<Array<Attachment>>>;
-  messages: Array<Message>;
+  messages: Array<UIMessage>;
   append: (
-    message: Message | CreateMessage,
+    message: any,
     chatRequestOptions?: ChatRequestOptions,
   ) => Promise<string | null | undefined>;
   handleSubmit: (
-    event?: {
-      preventDefault?: () => void;
-    },
+    event?: React.FormEvent,
     chatRequestOptions?: ChatRequestOptions,
   ) => void;
 }) {
@@ -86,8 +86,10 @@ export function MultimodalInput({
   const [uploadQueue, setUploadQueue] = useState<Array<string>>([]);
 
   const submitForm = useCallback(() => {
+    // In v5, attachments should be handled via custom body data
+    // TODO: Update this once we finalize the attachment handling strategy
     handleSubmit(undefined, {
-      experimental_attachments: attachments,
+      body: { attachments: attachments },
     });
 
     setAttachments([]);
@@ -170,7 +172,7 @@ export function MultimodalInput({
                   onClick={async () => {
                     append({
                       role: "user",
-                      content: suggestedAction.action,
+                      parts: [{ type: "text", text: suggestedAction.action }],
                     });
                   }}
                   className="border-none bg-muted/50 w-full text-left border border-zinc-200 dark:border-zinc-800 text-zinc-800 dark:text-zinc-300 rounded-lg p-3 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors flex flex-col"

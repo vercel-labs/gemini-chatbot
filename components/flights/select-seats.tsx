@@ -1,6 +1,7 @@
 "use client";
 
-import { useChat } from "ai/react";
+import { useChat } from '@ai-sdk/react';
+import { DefaultChatTransport } from 'ai';
 import cx from "classnames";
 
 interface Seat {
@@ -61,11 +62,17 @@ export function SelectSeats({
   chatId: string;
   availability?: typeof SAMPLE;
 }) {
-  const { append } = useChat({
-    id: chatId,
-    body: { id: chatId },
-    maxSteps: 5,
+  const { sendMessage } = useChat({
+    transport: new DefaultChatTransport({
+      api: "/api/chat",
+      body: { id: chatId },
+    }),
   });
+  
+  const append = async (message: any) => {
+    await sendMessage(message);
+    return null;
+  };
 
   return (
     <div className="flex flex-col gap-2 bg-muted rounded-lg">
