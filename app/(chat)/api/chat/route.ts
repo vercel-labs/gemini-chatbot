@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     (message) => Array.isArray(message.content) && message.content.length > 0,
   );
 
-  const result = await streamText({
+  const result = streamText({
     model: geminiProModel,
     system: `\n
         - you help users book flights!
