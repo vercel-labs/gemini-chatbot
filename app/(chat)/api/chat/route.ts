@@ -92,6 +92,7 @@ export async function POST(request: Request) {
             origin,
             destination,
           });
+          console.log(results);
 
           return results;
         },
