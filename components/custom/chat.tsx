@@ -25,7 +25,6 @@ export function Chat({
   const {
     messages,
     handleSubmit,
-    setInput,
     append,
     isLoading,
     stop
@@ -61,16 +60,33 @@ export function Chat({
         >
           {messages.length === 0 && <Overview />}
 
-          {messages.map((message) => (
-            <PreviewMessage
-              key={message.id}
-              chatId={id}
-              role={message.role}
-              content={message.content}
-              attachments={message.experimental_attachments}
-              toolInvocations={message.toolInvocations}
-            />
-          ))}
+          {messages.map((message) => {
+            // Extract text content from parts
+            const textContent = message.parts
+              ?.filter((part) => part.type === "text")
+              .map((part) => part.text)
+              .join("");
+            
+            // Extract file attachments from parts
+            const fileAttachments = message.parts
+              ?.filter((part) => part.type === "file")
+              .map((part) => ({
+                url: part.url,
+                name: part.name || "",
+                contentType: part.mediaType || "",
+              })) || [];
+
+            return (
+              <PreviewMessage
+                key={message.id}
+                chatId={id}
+                role={message.role}
+                content={textContent || ""}
+                attachments={fileAttachments}
+                toolInvocations={message.toolInvocations}
+              />
+            );
+          })}
 
           <div
             ref={messagesEndRef}

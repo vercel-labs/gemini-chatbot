@@ -105,17 +105,20 @@ When you generate this migration checklist, you must IMMEDIATELY:
 ## Phase 3: Run Automated Codemods
 
 ### 3.1 Run Codemods
-- [ ] **ACTION**: Run codemod: `npx @ai-sdk/codemod@latest v5`
-- [ ] **ACTION**: Review changes with `git diff`
-- [ ] **ACTION**: Commit codemod changes: `git add -A && git commit -m "Apply AI SDK 5 codemods"`
+- [x] **ACTION**: Run codemod: `npx @ai-sdk/codemod@latest v5`
+- [x] **ACTION**: Review changes with `git diff`
+- [x] **ACTION**: Commit codemod changes: `git add -A && git commit -m "Apply AI SDK 5 codemods"`
 
 **Note:** Codemods fix ~80% of breaking changes automatically.
 
 ### 3.2 Find All FIXME Comments
-- [ ] **ACTION**: Search entire codebase: `grep -r "FIXME" --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" .`
-- [ ] **ACTION**: List ALL FIXME locations with file paths and line numbers
-- [ ] **INFO**: Total FIXME comments found: ___
-- [ ] **ACTION**: Create a plan for addressing each FIXME in Phase 4
+- [x] **ACTION**: Search entire codebase: `grep -r "FIXME" --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" .`
+- [x] **ACTION**: List ALL FIXME locations with file paths and line numbers
+- [x] **INFO**: Total FIXME comments found: **1**
+  - **components/custom/multimodal-input.tsx:89** - experimental_attachments migration
+- [x] **ACTION**: Create a plan for addressing each FIXME in Phase 4
+  - Fix duplicate setInput in chat.tsx (syntax error from codemod)
+  - Migrate experimental_attachments to parts array in multimodal-input.tsx
 
 **After completing Phase 3, update this file to mark items as [x], then proceed to Phase 4.**
 

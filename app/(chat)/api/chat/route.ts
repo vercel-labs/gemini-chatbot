@@ -1,4 +1,4 @@
-import { convertToModelMessages, UIMessage, streamText } from "ai";
+import { convertToModelMessages, UIMessage, streamText, generateId } from "ai";
 import { z } from 'zod/v3';
 
 import { geminiProModel } from "@/ai";
@@ -24,8 +24,9 @@ export async function POST(request: Request) {
 
   const session = await auth();
 
+  // In v5, content is an array of parts, so we filter based on parts length
   const coreMessages = convertToModelMessages(messages).filter(
-    (message) => message.content.length > 0,
+    (message) => Array.isArray(message.content) && message.content.length > 0,
   );
 
   const result = await streamText({
@@ -211,12 +212,22 @@ export async function POST(request: Request) {
         },
       },
     },
-    onFinish: async ({ responseMessages }) => {
+    experimental_telemetry: {
+      isEnabled: true,
+      functionId: "stream-text",
+    },
+  });
+
+  return result.toUIMessageStreamResponse({
+    originalMessages: messages,
+    generateMessageId: () => generateId(),
+    onFinish: async ({ messages: allMessages }) => {
       if (session && session.user && session.user.id) {
         try {
+          // allMessages contains original messages + response in UIMessage format
           await saveChat({
             id,
-            messages: [...coreMessages, ...responseMessages],
+            messages: convertToModelMessages(allMessages),
             userId: session.user.id,
           });
         } catch (error) {
@@ -224,13 +235,7 @@ export async function POST(request: Request) {
         }
       }
     },
-    experimental_telemetry: {
-      isEnabled: true,
-      functionId: "stream-text",
-    },
   });
-
-  return result.toUIMessageStreamResponse({});
 }
 
 export async function DELETE(request: Request) {

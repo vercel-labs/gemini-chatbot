@@ -134,5 +134,15 @@ export function getTitleFromChat(chat: Chat) {
     return "Untitled";
   }
 
-  return firstMessage.content;
+  // Extract text from parts array (v5)
+  if (firstMessage.parts) {
+    const textParts = firstMessage.parts
+      .filter((part: any) => part.type === "text")
+      .map((part: any) => part.text)
+      .join("");
+    return textParts || "Untitled";
+  }
+
+  // Fallback for v4 format (if content exists)
+  return (firstMessage as any).content || "Untitled";
 }

@@ -86,9 +86,16 @@ export function MultimodalInput({
   const [uploadQueue, setUploadQueue] = useState<Array<string>>([]);
 
   const submitForm = useCallback(() => {
-    /* FIXME(@ai-sdk-upgrade-v5): The `experimental_attachments` property has been replaced with the parts array. Please manually migrate following https://ai-sdk.dev/docs/migration-guides/migration-guide-5-0#attachments--file-parts */
+    // In v5, attachments are sent as file parts in the message
+    const fileParts = attachments.map((attachment) => ({
+      type: "file" as const,
+      url: attachment.url,
+      name: attachment.name,
+      mediaType: attachment.contentType,
+    }));
+
     handleSubmit(undefined, {
-      experimental_attachments: attachments,
+      data: { fileParts }, // Send file parts as custom data
     });
 
     setAttachments([]);
