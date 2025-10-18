@@ -1,6 +1,7 @@
 "use client";
 
-import { Attachment, ChatRequestOptions, CreateUIMessage, UIMessage } from "ai";
+import { ChatRequestOptions, CreateUIMessage, UIMessage } from "ai";
+import { Attachment } from "@/lib/types";
 import { motion } from "framer-motion";
 import React, {
   useRef,
@@ -51,13 +52,11 @@ export function MultimodalInput({
   setAttachments: Dispatch<SetStateAction<Array<Attachment>>>;
   messages: Array<UIMessage>;
   append: (
-    message: UIMessage | CreateUIMessage,
+    message: any,
     chatRequestOptions?: ChatRequestOptions,
   ) => Promise<string | null | undefined>;
   handleSubmit: (
-    event?: {
-      preventDefault?: () => void;
-    },
+    event?: React.FormEvent,
     chatRequestOptions?: ChatRequestOptions,
   ) => void;
 }) {
@@ -86,16 +85,10 @@ export function MultimodalInput({
   const [uploadQueue, setUploadQueue] = useState<Array<string>>([]);
 
   const submitForm = useCallback(() => {
-    // In v5, attachments are sent as file parts in the message
-    const fileParts = attachments.map((attachment) => ({
-      type: "file" as const,
-      url: attachment.url,
-      name: attachment.name,
-      mediaType: attachment.contentType,
-    }));
-
+    // In v5, attachments should be handled via custom body data
+    // TODO: Update this once we finalize the attachment handling strategy
     handleSubmit(undefined, {
-      data: { fileParts }, // Send file parts as custom data
+      body: { attachments: attachments },
     });
 
     setAttachments([]);
@@ -178,7 +171,7 @@ export function MultimodalInput({
                   onClick={async () => {
                     append({
                       role: "user",
-                      content: suggestedAction.action,
+                      parts: [{ type: "text", text: suggestedAction.action }],
                     });
                   }}
                   className="border-none bg-muted/50 w-full text-left border border-zinc-200 dark:border-zinc-800 text-zinc-800 dark:text-zinc-300 rounded-lg p-3 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors flex flex-col"

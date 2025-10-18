@@ -3,7 +3,7 @@ import {
   CoreToolMessage,
   generateId,
   UIMessage,
-  ToolInvocation,
+  UIToolInvocation,
 } from "ai";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -51,79 +51,43 @@ export function generateUUID(): string {
   });
 }
 
-function addToolMessageToChat({
-  toolMessage,
-  messages,
-}: {
-  toolMessage: CoreToolMessage;
-  messages: Array<UIMessage>;
-}): Array<UIMessage> {
-  return messages.map((message) => {
-    if (message.toolInvocations) {
-      return {
-        ...message,
-        toolInvocations: message.toolInvocations.map((toolInvocation) => {
-          const toolResult = toolMessage.content.find(
-            (tool) => tool.toolCallId === toolInvocation.toolCallId,
-          );
-
-          if (toolResult) {
-            return {
-              ...toolInvocation,
-              state: "result",
-              result: toolResult.result,
-            };
-          }
-
-          return toolInvocation;
-        }),
-      };
-    }
-
-    return message;
-  });
-}
-
+// Note: This utility function will be replaced by proper conversion functions in Phase 5
+// For now, it provides basic compatibility for converting stored messages
 export function convertToUIMessages(
   messages: Array<ModelMessage>,
-): Array<UIMessage> {
-  return messages.reduce((chatMessages: Array<UIMessage>, message) => {
+): Array<any> {
+  return messages.map((message) => {
     if (message.role === "tool") {
-      return addToolMessageToChat({
-        toolMessage: message as CoreToolMessage,
-        messages: chatMessages,
-      });
+      // Skip tool messages for now - will be handled by conversion functions
+      return null;
     }
 
-    let textContent = "";
-    let toolInvocations: Array<ToolInvocation> = [];
+    const parts: any[] = [];
 
     if (typeof message.content === "string") {
-      textContent = message.content;
+      parts.push({ type: "text", text: message.content });
     } else if (Array.isArray(message.content)) {
       for (const content of message.content) {
         if (content.type === "text") {
-          textContent += content.text;
+          parts.push({ type: "text", text: content.text });
         } else if (content.type === "tool-call") {
-          toolInvocations.push({
-            state: "call",
+          parts.push({
+            type: `tool-${content.toolName}`,
             toolCallId: content.toolCallId,
             toolName: content.toolName,
-            args: content.args,
+            input: (content as any).args,
+            state: "input-available",
           });
         }
       }
     }
 
-    chatMessages.push({
+    return {
       id: generateId(),
       role: message.role,
-      content: textContent,
-      toolInvocations,
-    });
-
-    return chatMessages;
-  }, []);
+      parts,
+    };
+  }).filter(Boolean);
 }
 
 export function getTitleFromChat(chat: Chat) {

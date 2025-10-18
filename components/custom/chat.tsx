@@ -1,7 +1,8 @@
 "use client";
 
-import { Attachment, UIMessage } from "ai";
+import { UIMessage, DefaultChatTransport } from "ai";
 import { useChat } from '@ai-sdk/react';
+import { Attachment } from "@/lib/types";
 import { User } from "next-auth";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -24,14 +25,15 @@ export function Chat({
   const [input, setInput] = useState('');
   const {
     messages,
-    handleSubmit,
-    append,
-    isLoading,
+    sendMessage,
+    status,
     stop
   } =
     useChat({
-      id,
-      body: { id },
+      transport: new DefaultChatTransport({ 
+        api: "/api/chat",
+        body: { id },
+      }),
       initialMessages,
       maxSteps: 10,
       onFinish: () => {
@@ -39,12 +41,26 @@ export function Chat({
           window.history.replaceState({}, "", `/chat/${id}`);
         }
       },
-      onError: (error) => {
+      onError: (error: Error) => {
         if (error.message === "Too many requests") {
           toast.error("Too many requests. Please try again later!");
         }
       },
     });
+  
+  const isLoading = status === "streaming";
+  
+  const handleSubmit = (e?: React.FormEvent) => {
+    e?.preventDefault();
+    if (input.trim()) {
+      sendMessage({ text: input });
+      setInput('');
+    }
+  };
+  
+  const append = async (message: UIMessage) => {
+    await sendMessage(message);
+  };
 
   const [messagesContainerRef, messagesEndRef] =
     useScrollToBottom<HTMLDivElement>();
@@ -60,20 +76,31 @@ export function Chat({
         >
           {messages.length === 0 && <Overview />}
 
-          {messages.map((message) => {
+          {messages.map((message: UIMessage) => {
             // Extract text content from parts
             const textContent = message.parts
-              ?.filter((part) => part.type === "text")
-              .map((part) => part.text)
+              ?.filter((part: any) => part.type === "text")
+              .map((part: any) => part.text)
               .join("");
             
             // Extract file attachments from parts
             const fileAttachments = message.parts
-              ?.filter((part) => part.type === "file")
-              .map((part) => ({
+              ?.filter((part: any) => part.type === "file")
+              .map((part: any) => ({
                 url: part.url,
                 name: part.name || "",
                 contentType: part.mediaType || "",
+              })) || [];
+            
+            // Extract tool invocations from parts (v5 format)
+            const toolInvocations = message.parts
+              ?.filter((part: any) => part.type?.startsWith("tool-"))
+              .map((part: any) => ({
+                state: part.state === "output-available" ? "result" : part.state,
+                toolCallId: part.toolCallId,
+                toolName: part.toolName,
+                args: part.input,
+                result: part.output,
               })) || [];
 
             return (
@@ -83,7 +110,7 @@ export function Chat({
                 role={message.role}
                 content={textContent || ""}
                 attachments={fileAttachments}
-                toolInvocations={message.toolInvocations}
+                toolInvocations={toolInvocations}
               />
             );
           })}

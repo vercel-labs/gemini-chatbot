@@ -1,6 +1,7 @@
 "use client";
 
-import { Attachment, ToolInvocation } from "ai";
+import { UIToolInvocation } from "ai";
+import { Attachment } from "@/lib/types";
 import { motion } from "framer-motion";
 import { ReactNode } from "react";
 
@@ -26,7 +27,7 @@ export const Message = ({
   chatId: string;
   role: string;
   content: string | ReactNode;
-  toolInvocations: Array<ToolInvocation> | undefined;
+  toolInvocations: Array<UIToolInvocation<any>> | undefined;
   attachments?: Array<Attachment>;
 }) => {
   return (
