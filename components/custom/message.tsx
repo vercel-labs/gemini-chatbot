@@ -27,7 +27,7 @@ export const Message = ({
   chatId: string;
   role: string;
   content: string | ReactNode;
-  toolInvocations: Array<UIToolInvocation<any>> | undefined;
+  toolInvocations: Array<any> | undefined;
   attachments?: Array<Attachment>;
 }) => {
   return (

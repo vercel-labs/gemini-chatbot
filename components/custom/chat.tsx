@@ -34,8 +34,7 @@ export function Chat({
         api: "/api/chat",
         body: { id },
       }),
-      initialMessages,
-      maxSteps: 10,
+      messages: initialMessages,
       onFinish: () => {
         if (user) {
           window.history.replaceState({}, "", `/chat/${id}`);
@@ -58,8 +57,9 @@ export function Chat({
     }
   };
   
-  const append = async (message: UIMessage) => {
+  const append = async (message: UIMessage): Promise<string | null | undefined> => {
     await sendMessage(message);
+    return null;
   };
 
   const [messagesContainerRef, messagesEndRef] =
@@ -92,13 +92,14 @@ export function Chat({
                 contentType: part.mediaType || "",
               })) || [];
             
-            // Extract tool invocations from parts (v5 format)
-            const toolInvocations = message.parts
+            // Extract tool invocations from parts (v5 format) - cast to any for compatibility
+            const toolInvocations: any[] = message.parts
               ?.filter((part: any) => part.type?.startsWith("tool-"))
               .map((part: any) => ({
+                ...part,
+                // Add v4 compatibility properties for Message component
                 state: part.state === "output-available" ? "result" : part.state,
-                toolCallId: part.toolCallId,
-                toolName: part.toolName,
+                toolName: part.toolName || part.type?.replace("tool-", ""),
                 args: part.input,
                 result: part.output,
               })) || [];

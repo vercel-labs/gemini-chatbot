@@ -91,22 +91,18 @@ export function convertToUIMessages(
 }
 
 export function getTitleFromChat(chat: Chat) {
-  const messages = convertToUIMessages(chat.messages as Array<ModelMessage>);
+  const messages = chat.messages;
   const firstMessage = messages[0];
 
-  if (!firstMessage) {
+  if (!firstMessage || !firstMessage.parts) {
     return "Untitled";
   }
 
-  // Extract text from parts array (v5)
-  if (firstMessage.parts) {
-    const textParts = firstMessage.parts
-      .filter((part: any) => part.type === "text")
-      .map((part: any) => part.text)
-      .join("");
-    return textParts || "Untitled";
-  }
-
-  // Fallback for v4 format (if content exists)
-  return (firstMessage as any).content || "Untitled";
+  // Extract text from parts array (v5 format)
+  const textParts = firstMessage.parts
+    .filter((part: any) => part.type === "text")
+    .map((part: any) => part.text)
+    .join("");
+  
+  return textParts || "Untitled";
 }
