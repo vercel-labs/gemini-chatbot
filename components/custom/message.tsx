@@ -8,13 +8,14 @@ import { BotIcon, UserIcon } from "./icons";
 import { Markdown } from "./markdown";
 import { PreviewAttachment } from "./preview-attachment";
 import { Weather } from "./weather";
-import { AuthorizePayment } from "../flights/authorize-payment";
-import { DisplayBoardingPass } from "../flights/boarding-pass";
-import { CreateReservation } from "../flights/create-reservation";
-import { FlightStatus } from "../flights/flight-status";
-import { ListFlights } from "../flights/list-flights";
-import { SelectSeats } from "../flights/select-seats";
-import { VerifyPayment } from "../flights/verify-payment";
+import { AuthorizePayment } from "../trains/authorize-payment";
+import { DisplayBoardingPass } from "../trains/boarding-pass";
+import { CreateReservation } from "../trains/create-reservation";
+import { ListTrains } from "../trains/list-trains";
+import { SelectSeats } from "../trains/select-seats";
+import { TrainStatus } from "../trains/train-status";
+import { VerifyPayment } from "../trains/verify-payment";
+
 
 export const Message = ({
   chatId,
@@ -31,7 +32,7 @@ export const Message = ({
 }) => {
   return (
     <motion.div
-      className={`flex flex-row gap-4 px-4 w-full md:w-[500px] md:px-0 first-of-type:pt-20`}
+  className="flex flex-row gap-4 px-4 w-full  md:px-0"
       initial={{ y: 5, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
     >
@@ -42,7 +43,11 @@ export const Message = ({
       <div className="flex flex-col gap-2 w-full">
         {content && typeof content === "string" && (
           <div className="text-zinc-800 dark:text-zinc-300 flex flex-col gap-4">
-            <Markdown>{content}</Markdown>
+            {/* If train options are present, show a simple summary instead of full details */}
+            {content.match(/train options from Rome to Florence:/i)
+              ? <Markdown>I found several train options for your route. Please select or book your preferred train from the list above.</Markdown>
+              : <Markdown>{content}</Markdown>
+            }
           </div>
         )}
 
@@ -58,12 +63,12 @@ export const Message = ({
                   <div key={toolCallId}>
                     {toolName === "getWeather" ? (
                       <Weather weatherAtLocation={result} />
-                    ) : toolName === "displayFlightStatus" ? (
-                      <FlightStatus flightStatus={result} />
-                    ) : toolName === "searchFlights" ? (
-                      <ListFlights chatId={chatId} results={result} />
+                    ) : toolName === "displayTrainStatus" ? (
+                      <TrainStatus trainStatus={result} />
+                    ) : toolName === "searchTrains" ? (
+                      <ListTrains trainId={chatId} results={result} />
                     ) : toolName === "selectSeats" ? (
-                      <SelectSeats chatId={chatId} availability={result} />
+                      <SelectSeats trainId={chatId} availability={result} />
                     ) : toolName === "createReservation" ? (
                       Object.keys(result).includes("error") ? null : (
                         <CreateReservation reservation={result} />
@@ -81,15 +86,16 @@ export const Message = ({
                 );
               } else {
                 return (
-                  <div key={toolCallId} className="skeleton">
+                  <div key={toolCallId} className="skeleton flex flex-col gap-2 items-start">
+                    <div className="text-muted-foreground text-sm px-2 py-1 rounded bg-muted animate-pulse">Processing...</div>
                     {toolName === "getWeather" ? (
                       <Weather />
-                    ) : toolName === "displayFlightStatus" ? (
-                      <FlightStatus />
-                    ) : toolName === "searchFlights" ? (
-                      <ListFlights chatId={chatId} />
+                    ) : toolName === "displayTrainStatus" ? (
+                      <TrainStatus />
+                    ) : toolName === "searchTrains" ? (
+                      <ListTrains trainId={chatId} />
                     ) : toolName === "selectSeats" ? (
-                      <SelectSeats chatId={chatId} />
+                      <SelectSeats trainId={chatId} />
                     ) : toolName === "createReservation" ? (
                       <CreateReservation />
                     ) : toolName === "authorizePayment" ? (

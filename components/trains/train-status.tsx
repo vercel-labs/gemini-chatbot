@@ -3,24 +3,24 @@ import { differenceInHours, format } from "date-fns";
 import { ArrowUpRightSmallIcon } from "../custom/icons";
 
 const SAMPLE = {
-  flightNumber: "BA142",
+  trainNumber: "ITALO9512",
   departure: {
-    cityName: "London",
-    airportCode: "LHR",
-    airportName: "London Heathrow Airport",
-    timestamp: "2024-10-08T18:30:00Z",
-    terminal: "5",
-    gate: "A10",
+    cityName: "Milan",
+    stationCode: "MILANO",
+    stationName: "Milano Centrale",
+    timestamp: "2025-07-31T14:00:00Z",
+    platform: "5",
+    gate: "G5",
   },
   arrival: {
-    cityName: "New York",
-    airportCode: "JFK",
-    airportName: "John F. Kennedy International Airport",
-    timestamp: "2024-10-09T07:30:00Z",
-    terminal: "7",
-    gate: "B22",
+    cityName: "Rome",
+    stationCode: "ROMA",
+    stationName: "Roma Termini",
+    timestamp: "2025-07-31T18:30:00Z",
+    platform: "11",
+    gate: "G12",
   },
-  totalDistanceInMiles: 3450,
+  totalDistanceInMiles: 388,
 };
 
 export function Row({ row = SAMPLE.arrival, type = "arrival" }) {
@@ -39,11 +39,11 @@ export function Row({ row = SAMPLE.arrival, type = "arrival" }) {
               )}
             </div>
             <div className="text-sm sm:text-base text-muted-foreground">
-              {row.airportCode}
+              {row.stationCode}
             </div>
             <div>·</div>
             <div className="text-sm sm:text-base truncate max-w-32 sm:max-w-64 text-muted-foreground">
-              {row.airportName}
+              {row.stationName}
             </div>
           </div>
 
@@ -58,43 +58,43 @@ export function Row({ row = SAMPLE.arrival, type = "arrival" }) {
           {row.gate}
         </div>
         <div className="text-sm text-muted-foreground">
-          Terminal {row.terminal}
+          Platform {row.platform}
         </div>
       </div>
     </div>
   );
 }
 
-export function FlightStatus({ flightStatus = SAMPLE }) {
+export function TrainStatus({ trainStatus = SAMPLE }) {
   return (
     <div className="flex flex-col gap-2 bg-muted rounded-lg p-4">
       <div className="flex flex-col gap-1 text-sm">
-        <div className="text-muted-foreground">{flightStatus.flightNumber}</div>
+        <div className="text-muted-foreground">{trainStatus.trainNumber}</div>
         <div className="text-lg font-medium">
-          {flightStatus.departure.cityName} to {flightStatus.arrival.cityName}
+          {trainStatus.departure.cityName} to {trainStatus.arrival.cityName}
         </div>
       </div>
 
       <div className="h-px grow bg-muted-foreground/20" />
 
-      <Row row={flightStatus.arrival} type="departure" />
+      <Row row={trainStatus.arrival} type="departure" />
 
       <div className="flex flex-row gap-2 items-center">
         <div className="text-xs text-muted-foreground ">
           {differenceInHours(
-            new Date(flightStatus.arrival.timestamp),
-            new Date(flightStatus.departure.timestamp),
+            new Date(trainStatus.arrival.timestamp),
+            new Date(trainStatus.departure.timestamp),
           )}{" "}
           hours
         </div>
         <div>·</div>
         <div className="text-xs text-muted-foreground">
-          {flightStatus.totalDistanceInMiles} mi
+          {trainStatus.totalDistanceInMiles} mi
         </div>
         <div className="h-px grow bg-muted-foreground/20 ml-2" />
       </div>
 
-      <Row row={flightStatus.departure} type="arrival" />
+      <Row row={trainStatus.departure} type="arrival" />
     </div>
   );
 }

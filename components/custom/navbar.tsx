@@ -19,65 +19,72 @@ export const Navbar = async () => {
 
   return (
     <>
-      <div className="bg-background absolute top-0 left-0 w-dvw py-2 px-3 justify-between flex flex-row items-center z-30">
+      <div className="bg-background absolute top-0 left-0 w-dvw py-1 px-2 justify-between flex flex-row items-center z-30">
         <div className="flex flex-row gap-3 items-center">
-          <History user={session?.user} />
           <div className="flex flex-row gap-2 items-center">
-            <Image
-              src="/images/gemini-logo.png"
-              height={20}
-              width={20}
-              alt="gemini logo"
-            />
-            <div className="text-zinc-500">
-              <SlashIcon size={16} />
-            </div>
-            <div className="text-sm dark:text-zinc-300 truncate w-28 md:w-fit">
-              Next.js Gemini Chatbot
-            </div>
+            <Link href="/" passHref>
+              <Image
+                src="/images/italia-rail.png"
+                height={200}
+                width={200}
+                alt="Italia Rail logo"
+                priority
+                style={{ width: 'auto', height: 'auto', cursor: 'pointer' }}
+              />
+            </Link>
           </div>
         </div>
 
-        {session ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                className="py-1.5 px-2 h-fit font-normal"
-                variant="secondary"
-              >
-                {session.user?.email}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>
-                <ThemeToggle />
-              </DropdownMenuItem>
-              <DropdownMenuItem className="p-1 z-50">
-                <form
-                  className="w-full"
-                  action={async () => {
-                    "use server";
-
-                    await signOut({
-                      redirectTo: "/",
-                    });
-                  }}
-                >
-                  <button
-                    type="submit"
-                    className="w-full text-left px-1 py-0.5 text-red-500"
-                  >
-                    Sign out
-                  </button>
-                </form>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ) : (
-          <Button className="py-1.5 px-2 h-fit font-normal text-white" asChild>
-            <Link href="/login">Login</Link>
-          </Button>
-        )}
+        <div className="flex flex-row gap-2 items-center">
+          {session ? (
+            <>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <div className="size-8 rounded-full overflow-hidden flex items-center justify-center bg-emerald-600 shadow-md border border-zinc-200 dark:border-zinc-700">
+                    <Image
+                      src="/images/person.png"
+                      alt="User avatar"
+                      width={32}
+                      height={32}
+                      style={{ width: "32px", height: "32px" }}
+                    />
+                  </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem>
+                    {session.user?.email}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <ThemeToggle />
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="p-1 z-50">
+                    <form
+                      className="w-full"
+                      action={async () => {
+                        "use server";
+                        await signOut({
+                          redirectTo: "/",
+                        });
+                      }}
+                    >
+                      <button
+                        type="submit"
+                        className="w-full text-left px-1 py-0.5 text-red-500"
+                      >
+                        Sign out
+                      </button>
+                    </form>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <History user={session?.user} triggerOnly />
+            </>
+          ) : (
+            <Button className="py-1.5 px-2 h-fit font-normal text-white" asChild>
+              <Link href="/login">Login</Link>
+            </Button>
+          )}
+        </div>
       </div>
     </>
   );

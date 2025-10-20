@@ -1,15 +1,16 @@
 import { Metadata } from "next";
+import { SessionProvider } from "next-auth/react";
 import { Toaster } from "sonner";
 
 import { Navbar } from "@/components/custom/navbar";
-import { ThemeProvider } from "@/components/custom/theme-provider";
+import ThemeClientLayout from "@/components/custom/theme-client-layout";
 
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://gemini.vercel.ai"),
-  title: "Next.js Gemini Chatbot",
-  description: "Next.js chatbot template using the AI SDK and Gemini.",
+  metadataBase: new URL("https://italiachat.vercel.ai"),
+  title: "Italia Chat",
+  description: "Italia Rail chatbot template for train booking.",
 };
 
 export default async function RootLayout({
@@ -20,16 +21,13 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Toaster position="top-center" />
-          <Navbar />
-          {children}
-        </ThemeProvider>
+        <ThemeClientLayout>
+          <SessionProvider>
+            <Toaster position="top-center" />
+            <Navbar />
+            {children}
+          </SessionProvider>
+        </ThemeClientLayout>
       </body>
     </html>
   );

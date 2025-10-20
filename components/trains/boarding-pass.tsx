@@ -1,27 +1,27 @@
 import { format } from "date-fns";
-import { FlashlightIcon, PlaneTakeoffIcon } from "lucide-react";
+import { FlashlightIcon } from "lucide-react";
 
 const SAMPLE = {
-  reservationId: "RES123456",
-  flightNumber: "DL1",
-  seat: "1C",
+  reservationId: "RESIT20250731",
+  trainNumber: "ITALO9512",
+  seat: "12A",
   departure: {
-    cityName: "London",
-    airportCode: "LHR",
-    airportName: "Heathrow Airport",
-    timestamp: "2023-11-01T09:00:00Z",
-    terminal: "5",
-    gate: "A10",
+    cityName: "Rome",
+    stationCode: "ROMA",
+    stationName: "Roma Termini",
+    timestamp: "2025-07-31T08:00:00Z",
+    platform: "12",
+    gate: "A1",
   },
   arrival: {
-    cityName: "New York City",
-    airportCode: "JFK",
-    airportName: "John F. Kennedy International Airport",
-    timestamp: "2023-11-01T12:00:00Z",
-    terminal: "4",
-    gate: "B22",
+    cityName: "Florence",
+    stationCode: "FI",
+    stationName: "Firenze SMN",
+    timestamp: "2025-07-31T09:30:00Z",
+    platform: "3",
+    gate: "B3",
   },
-  passengerName: "John Doe",
+  passengerName: "Giulia Rossi",
 };
 
 export function DisplayBoardingPass({ boardingPass = SAMPLE }) {
@@ -33,13 +33,13 @@ export function DisplayBoardingPass({ boardingPass = SAMPLE }) {
             {boardingPass.departure.cityName}
           </div>
           <div className="text-yellow-800 text-2xl sm:text-3xl font-semibold">
-            {boardingPass.departure.airportCode}
+            {boardingPass.departure.stationCode}
           </div>
         </div>
 
         <div className="absolute w-full flex flex-row justify-center">
           <div className="text-amber-800">
-            <PlaneTakeoffIcon />
+            <FlashlightIcon />
           </div>
         </div>
 
@@ -48,7 +48,7 @@ export function DisplayBoardingPass({ boardingPass = SAMPLE }) {
             {boardingPass.arrival.cityName}
           </div>
           <div className="text-yellow-800 text-2xl sm:text-3xl font-semibold text-right">
-            {boardingPass.arrival.airportCode}
+            {boardingPass.arrival.stationCode}
           </div>
         </div>
       </div>
@@ -67,10 +67,10 @@ export function DisplayBoardingPass({ boardingPass = SAMPLE }) {
 
         <div className="flex flex-col gap-0.5">
           <div className="text-yellow-900 text-sm font-medium sm:text-base">
-            Gate
+            Platform
           </div>
           <div className="text-lg text-yellow-700">
-            {boardingPass.departure.gate}
+            {boardingPass.departure.platform}
           </div>
         </div>
 
