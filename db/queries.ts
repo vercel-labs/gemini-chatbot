@@ -13,27 +13,41 @@ import { user, chat, User, reservation } from "./schema";
 let client = postgres(`${process.env.POSTGRES_URL!}?sslmode=require`);
 let db = drizzle(client);
 
+/**
+ * Get user by email address
+ * @param email - User's email address
+ * @returns Promise resolving to array of users
+ */
 export async function getUser(email: string): Promise<Array<User>> {
   try {
     return await db.select().from(user).where(eq(user.email, email));
   } catch (error) {
-    console.error("Failed to get user from database");
-    throw error;
+    throw new Error(`Failed to get user from database: ${error}`);
   }
 }
 
+/**
+ * Create a new user with hashed password
+ * @param email - User's email address
+ * @param password - Plain text password
+ * @returns Promise resolving to database insert result
+ */
 export async function createUser(email: string, password: string) {
-  let salt = genSaltSync(10);
-  let hash = hashSync(password, salt);
+  const salt = genSaltSync(10);
+  const hash = hashSync(password, salt);
 
   try {
     return await db.insert(user).values({ email, password: hash });
   } catch (error) {
-    console.error("Failed to create user in database");
-    throw error;
+    throw new Error(`Failed to create user in database: ${error}`);
   }
 }
 
+/**
+ * Save or update chat messages
+ * @param params - Object containing chat id, messages, and user id
+ * @returns Promise resolving to database operation result
+ */
 export async function saveChat({
   id,
   messages,
@@ -62,20 +76,28 @@ export async function saveChat({
       userId,
     });
   } catch (error) {
-    console.error("Failed to save chat in database");
-    throw error;
+    throw new Error(`Failed to save chat in database: ${error}`);
   }
 }
 
+/**
+ * Delete chat by ID
+ * @param params - Object containing chat id
+ * @returns Promise resolving to database delete result
+ */
 export async function deleteChatById({ id }: { id: string }) {
   try {
     return await db.delete(chat).where(eq(chat.id, id));
   } catch (error) {
-    console.error("Failed to delete chat by id from database");
-    throw error;
+    throw new Error(`Failed to delete chat by id from database: ${error}`);
   }
 }
 
+/**
+ * Get all chats for a specific user
+ * @param params - Object containing user id
+ * @returns Promise resolving to array of chats ordered by creation date
+ */
 export async function getChatsByUserId({ id }: { id: string }) {
   try {
     return await db
@@ -84,21 +106,29 @@ export async function getChatsByUserId({ id }: { id: string }) {
       .where(eq(chat.userId, id))
       .orderBy(desc(chat.createdAt));
   } catch (error) {
-    console.error("Failed to get chats by user from database");
-    throw error;
+    throw new Error(`Failed to get chats by user from database: ${error}`);
   }
 }
 
+/**
+ * Get chat by ID
+ * @param params - Object containing chat id
+ * @returns Promise resolving to chat object or undefined
+ */
 export async function getChatById({ id }: { id: string }) {
   try {
     const [selectedChat] = await db.select().from(chat).where(eq(chat.id, id));
     return selectedChat;
   } catch (error) {
-    console.error("Failed to get chat by id from database");
-    throw error;
+    throw new Error(`Failed to get chat by id from database: ${error}`);
   }
 }
 
+/**
+ * Create a new flight reservation
+ * @param params - Object containing reservation details
+ * @returns Promise resolving to database insert result
+ */
 export async function createReservation({
   id,
   userId,
@@ -108,24 +138,42 @@ export async function createReservation({
   userId: string;
   details: any;
 }) {
-  return await db.insert(reservation).values({
-    id,
-    createdAt: new Date(),
-    userId,
-    hasCompletedPayment: false,
-    details: JSON.stringify(details),
-  });
+  try {
+    return await db.insert(reservation).values({
+      id,
+      createdAt: new Date(),
+      userId,
+      hasCompletedPayment: false,
+      details: JSON.stringify(details),
+    });
+  } catch (error) {
+    throw new Error(`Failed to create reservation: ${error}`);
+  }
 }
 
+/**
+ * Get reservation by ID
+ * @param params - Object containing reservation id
+ * @returns Promise resolving to reservation object or undefined
+ */
 export async function getReservationById({ id }: { id: string }) {
-  const [selectedReservation] = await db
-    .select()
-    .from(reservation)
-    .where(eq(reservation.id, id));
+  try {
+    const [selectedReservation] = await db
+      .select()
+      .from(reservation)
+      .where(eq(reservation.id, id));
 
-  return selectedReservation;
+    return selectedReservation;
+  } catch (error) {
+    throw new Error(`Failed to get reservation by id: ${error}`);
+  }
 }
 
+/**
+ * Update reservation payment status
+ * @param params - Object containing reservation id and payment status
+ * @returns Promise resolving to database update result
+ */
 export async function updateReservation({
   id,
   hasCompletedPayment,
@@ -133,10 +181,14 @@ export async function updateReservation({
   id: string;
   hasCompletedPayment: boolean;
 }) {
-  return await db
-    .update(reservation)
-    .set({
-      hasCompletedPayment,
-    })
-    .where(eq(reservation.id, id));
+  try {
+    return await db
+      .update(reservation)
+      .set({
+        hasCompletedPayment,
+      })
+      .where(eq(reservation.id, id));
+  } catch (error) {
+    throw new Error(`Failed to update reservation: ${error}`);
+  }
 }
