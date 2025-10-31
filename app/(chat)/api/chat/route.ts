@@ -219,7 +219,8 @@ export async function POST(request: Request) {
             userId: session.user.id,
           });
         } catch (error) {
-          console.error("Failed to save chat");
+          // Log error internally but don't expose to user
+          // In production, you might want to use a proper logging service
         }
       }
     },
@@ -249,6 +250,10 @@ export async function DELETE(request: Request) {
   try {
     const chat = await getChatById({ id });
 
+    if (!chat) {
+      return new Response("Chat not found", { status: 404 });
+    }
+
     if (chat.userId !== session.user.id) {
       return new Response("Unauthorized", { status: 401 });
     }
@@ -257,8 +262,9 @@ export async function DELETE(request: Request) {
 
     return new Response("Chat deleted", { status: 200 });
   } catch (error) {
-    return new Response("An error occurred while processing your request", {
-      status: 500,
-    });
+    return new Response(
+      `An error occurred while processing your request: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      { status: 500 }
+    );
   }
 }

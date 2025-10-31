@@ -10,16 +10,27 @@ import { twMerge } from "tailwind-merge";
 
 import { Chat } from "@/db/schema";
 
-export function cn(...inputs: ClassValue[]) {
+/**
+ * Utility function to merge Tailwind CSS classes
+ * @param inputs - Class values to merge
+ * @returns Merged class string
+ */
+export function cn(...inputs: ClassValue[]): string {
   return twMerge(clsx(inputs));
 }
 
 interface ApplicationError extends Error {
-  info: string;
+  info: any;
   status: number;
 }
 
-export const fetcher = async (url: string) => {
+/**
+ * Generic fetcher function for SWR with enhanced error handling
+ * @param url - URL to fetch data from
+ * @returns Parsed JSON response
+ * @throws ApplicationError with status and info
+ */
+export const fetcher = async (url: string): Promise<any> => {
   const res = await fetch(url);
 
   if (!res.ok) {
@@ -27,7 +38,11 @@ export const fetcher = async (url: string) => {
       "An error occurred while fetching the data.",
     ) as ApplicationError;
 
-    error.info = await res.json();
+    try {
+      error.info = await res.json();
+    } catch {
+      error.info = { message: "Failed to parse error response" };
+    }
     error.status = res.status;
 
     throw error;
@@ -36,13 +51,26 @@ export const fetcher = async (url: string) => {
   return res.json();
 };
 
-export function getLocalStorage(key: string) {
+/**
+ * Safely get data from localStorage with fallback
+ * @param key - LocalStorage key
+ * @returns Parsed data from localStorage or empty array as fallback
+ */
+export function getLocalStorage(key: string): any[] {
   if (typeof window !== "undefined") {
-    return JSON.parse(localStorage.getItem(key) || "[]");
+    try {
+      return JSON.parse(localStorage.getItem(key) || "[]");
+    } catch {
+      return [];
+    }
   }
   return [];
 }
 
+/**
+ * Generate a UUID v4 string
+ * @returns UUID v4 string
+ */
 export function generateUUID(): string {
   return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
     const r = (Math.random() * 16) | 0;
@@ -84,6 +112,11 @@ function addToolMessageToChat({
   });
 }
 
+/**
+ * Convert core messages to UI messages format
+ * @param messages - Array of core messages
+ * @returns Array of UI messages
+ */
 export function convertToUIMessages(
   messages: Array<CoreMessage>,
 ): Array<Message> {
@@ -126,13 +159,20 @@ export function convertToUIMessages(
   }, []);
 }
 
-export function getTitleFromChat(chat: Chat) {
+/**
+ * Extract title from chat based on first message
+ * @param chat - Chat object
+ * @returns Title string or "Untitled" if no messages
+ */
+export function getTitleFromChat(chat: Chat): string {
   const messages = convertToUIMessages(chat.messages as Array<CoreMessage>);
   const firstMessage = messages[0];
 
-  if (!firstMessage) {
+  if (!firstMessage || !firstMessage.content) {
     return "Untitled";
   }
 
-  return firstMessage.content;
+  // Truncate title if too long
+  const title = firstMessage.content.toString();
+  return title.length > 50 ? `${title.substring(0, 50)}...` : title;
 }

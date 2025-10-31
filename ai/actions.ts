@@ -3,6 +3,11 @@ import { z } from "zod";
 
 import { geminiFlashModel } from ".";
 
+/**
+ * Generate sample flight status information
+ * @param params - Object containing flight number and date
+ * @returns Promise resolving to flight status object
+ */
 export async function generateSampleFlightStatus({
   flightNumber,
   date,
@@ -40,6 +45,11 @@ export async function generateSampleFlightStatus({
   return flightStatus;
 }
 
+/**
+ * Generate sample flight search results
+ * @param params - Object containing origin and destination
+ * @returns Promise resolving to flight search results
+ */
 export async function generateSampleFlightSearchResults({
   origin,
   destination,
@@ -76,6 +86,11 @@ export async function generateSampleFlightSearchResults({
   return { flights: flightSearchResults };
 }
 
+/**
+ * Generate sample seat selection options
+ * @param params - Object containing flight number
+ * @returns Promise resolving to seat availability data
+ */
 export async function generateSampleSeatSelection({
   flightNumber,
 }: {
@@ -101,6 +116,11 @@ export async function generateSampleSeatSelection({
   return { seats: rows };
 }
 
+/**
+ * Generate reservation price based on flight details
+ * @param props - Object containing reservation details
+ * @returns Promise resolving to price information
+ */
 export async function generateReservationPrice(props: {
   seats: string[];
   flightNumber: string;

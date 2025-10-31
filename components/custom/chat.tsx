@@ -3,7 +3,7 @@
 import { Attachment, Message } from "ai";
 import { useChat } from "ai/react";
 import { User } from "next-auth";
-import { useState } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { toast } from "sonner";
 
 import { Message as PreviewMessage } from "@/components/custom/message";
@@ -21,22 +21,28 @@ export function Chat({
   initialMessages: Array<Message>;
   user: User | undefined;
 }) {
+  const onFinish = useCallback(() => {
+    if (user) {
+      window.history.replaceState({}, "", `/chat/${id}`);
+    }
+  }, [user, id]);
+  
+  const onError = useCallback((error: Error) => {
+    if (error.message === "Too many requests") {
+      toast.error("Too many requests. Please try again later!");
+    } else {
+      toast.error("An error occurred. Please try again.");
+    }
+  }, []);
+  
   const { messages, handleSubmit, input, setInput, append, isLoading, stop } =
     useChat({
       id,
       body: { id },
       initialMessages,
       maxSteps: 10,
-      onFinish: () => {
-        if (user) {
-          window.history.replaceState({}, "", `/chat/${id}`);
-        }
-      },
-      onError: (error) => {
-        if (error.message === "Too many requests") {
-          toast.error("Too many requests. Please try again later!");
-        }
-      },
+      onFinish,
+      onError,
     });
 
   const [messagesContainerRef, messagesEndRef] =
@@ -55,7 +61,7 @@ export function Chat({
 
           {messages.map((message) => (
             <PreviewMessage
-              key={message.id}
+              key={`${message.id}-${message.role}`}
               chatId={id}
               role={message.role}
               content={message.content}
@@ -67,6 +73,7 @@ export function Chat({
           <div
             ref={messagesEndRef}
             className="shrink-0 min-w-[24px] min-h-[24px]"
+            aria-hidden="true"
           />
         </div>
 
