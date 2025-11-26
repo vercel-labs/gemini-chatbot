@@ -3,7 +3,6 @@
 import { Attachment, ToolInvocation } from "ai";
 import { motion } from "framer-motion";
 import { ReactNode } from "react";
-
 import { Streamdown } from "streamdown";
 
 import { BotIcon, UserIcon } from "./icons";
