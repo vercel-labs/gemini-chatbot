@@ -3,9 +3,9 @@
 import { Attachment, ToolInvocation } from "ai";
 import { motion } from "framer-motion";
 import { ReactNode } from "react";
+import { Streamdown } from "streamdown";
 
 import { BotIcon, UserIcon } from "./icons";
-import { Markdown } from "./markdown";
 import { PreviewAttachment } from "./preview-attachment";
 import { Weather } from "./weather";
 import { AuthorizePayment } from "../flights/authorize-payment";
@@ -42,7 +42,7 @@ export const Message = ({
       <div className="flex flex-col gap-2 w-full">
         {content && typeof content === "string" && (
           <div className="text-zinc-800 dark:text-zinc-300 flex flex-col gap-4">
-            <Markdown>{content}</Markdown>
+            <Streamdown>{content}</Streamdown>
           </div>
         )}
 
