@@ -59,11 +59,14 @@ async function getKasadaMetadata(request: NextRequest): Promise<{
     value,
   }));
 
+  const clientIp =
+    request.headers.get("x-real-ip") ||
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    "unknown";
+
   const kasadaPayload: APIRequest = {
     clientIp:
-      process.env.NODE_ENV === "development"
-        ? "65.204.128.202"
-        : String(request.headers.get("x-real-ip") || request.ip),
+      process.env.NODE_ENV === "development" ? "65.204.128.202" : clientIp,
     headers: headersArray,
     method: request.method as APIRequest["method"],
     protocol: url.protocol.slice(0, -1).toUpperCase() as APIRequest["protocol"],
@@ -177,11 +180,15 @@ export async function kasadaHandler(
     metadata.classification === "BAD-BOT" &&
     metadata.application.mode === "PROTECT"
   ) {
+    const clientIp =
+      request.headers.get("x-real-ip") ||
+      request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      "unknown";
     ev.waitUntil(
       track("kasada-blocked", {
         classification: metadata.classification,
         mode: metadata.application.mode,
-        ip: request.ip || "unknown",
+        ip: clientIp,
       }),
     );
     const blockResponse = new Response("Too many requests", {
@@ -195,11 +202,15 @@ export async function kasadaHandler(
   if (metadata.classification === "GOOD-BOT") {
     try {
       const body = await request.json();
+      const clientIp =
+        request.headers.get("x-real-ip") ||
+        request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+        "unknown";
       ev.waitUntil(
         track("kasada-good-bot", {
           classification: metadata.classification,
           userAgent: request.headers.get("user-agent") || "unknown",
-          ip: request.ip || "unknown",
+          ip: clientIp,
           model: body.model || "unknown",
           prompt: body.messages?.[0]?.content || "unknown",
         }),
