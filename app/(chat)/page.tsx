@@ -1,7 +1,8 @@
+import { generateId } from "ai";
+
 import { Chat } from "@/components/custom/chat";
-import { generateUUID } from "@/lib/utils";
 
 export default async function Page() {
-  const id = generateUUID();
+  const id = generateId();
   return <Chat key={id} id={id} initialMessages={[]} />;
 }
