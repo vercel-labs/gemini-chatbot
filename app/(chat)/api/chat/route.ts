@@ -1,4 +1,4 @@
-import { convertToCoreMessages, generateId, Message, streamText } from "ai";
+import { convertToCoreMessages, Message, streamText } from "ai";
 import { z } from "zod";
 
 import { geminiProModel } from "@/ai";
@@ -16,6 +16,7 @@ import {
   getReservationById,
   saveChat,
 } from "@/db/queries";
+import { generateUUID } from "@/lib/utils";
 
 export async function POST(request: Request) {
   const { id, messages }: { id: string; messages: Array<Message> } =
@@ -134,7 +135,7 @@ export async function POST(request: Request) {
           const { totalPriceInUSD } = await generateReservationPrice(props);
           const session = await auth();
 
-          const id = generateId();
+          const id = generateUUID();
 
           if (session && session.user && session.user.id) {
             await createReservation({

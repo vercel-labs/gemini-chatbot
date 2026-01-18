@@ -43,6 +43,10 @@ export function getLocalStorage(key: string) {
   return [];
 }
 
+export function generateUUID(): string {
+  return crypto.randomUUID();
+}
+
 function addToolMessageToChat({
   toolMessage,
   messages,
