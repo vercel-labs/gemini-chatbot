@@ -192,6 +192,8 @@ export function MultimodalInput({
         multiple
         onChange={handleFileChange}
         tabIndex={-1}
+        title="Upload files"
+        aria-label="Upload files"
       />
 
       {(attachments.length > 0 || uploadQueue.length > 0) && (

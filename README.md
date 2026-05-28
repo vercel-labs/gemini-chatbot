@@ -35,7 +35,10 @@
 
 ## Model Providers
 
-This template ships with Google Gemini `gemini-1.5-pro` models as the default. However, with the [AI SDK](https://sdk.vercel.ai/docs), you can switch LLM providers to [OpenAI](https://openai.com), [Anthropic](https://anthropic.com), [Cohere](https://cohere.com/), and [many more](https://sdk.vercel.ai/providers/ai-sdk-providers) with just a few lines of code.
+This template supports Hugging Face (default runtime provider) and Google Gemini (fallback + embeddings).
+
+- Chat/object generation provider is selected by `LLM_PROVIDER` (`huggingface` or `google`).
+- Knowledge-base embeddings remain on Google `text-embedding-004` for compatibility with the existing 768-dimension pgvector schema.
 
 ## Deploy Your Own
 
@@ -45,7 +48,7 @@ You can deploy your own version of the Next.js AI Chatbot to Vercel with one cli
 
 ## Running locally
 
-You will need to use the environment variables [defined in `.env.example`](.env.example) to run Next.js AI Chatbot. It's recommended you use [Vercel Environment Variables](https://vercel.com/docs/projects/environment-variables) for this, but a `.env` file is all that is necessary.
+You will need to use the environment variables [defined in `.env.example`](.env.example) to run Next.js AI Chatbot. It's recommended you use [Vercel Environment Variables](https://vercel.com/docs/projects/environment-variables) for this, but a `.env.local` file is all that is necessary.
 
 > Note: You should not commit your `.env` file or it will expose secrets that will allow others to control access to your various Google Cloud and authentication provider accounts.
 
@@ -54,8 +57,58 @@ You will need to use the environment variables [defined in `.env.example`](.env.
 3. Download your environment variables: `vercel env pull`
 
 ```bash
-pnpm install
-pnpm dev
+npm install
+npm run dev
 ```
 
 Your app template should now be running on [localhost:3000](http://localhost:3000/).
+
+## E.U.Z Onboarding Setup (Natural Steps 1 to 3)
+
+1. Configure environment variables in `.env.local`.
+2. Run DB migrations.
+3. Seed onboarding steps and knowledge.
+
+```bash
+npm run db:migrate
+npm run seed:steps
+npm run seed:knowledge
+```
+
+Or run all three as one command:
+
+```bash
+npm run setup:onboarding
+```
+
+## Docker (Local)
+
+This repo includes local Docker orchestration with Next.js + pgvector Postgres.
+
+```bash
+docker compose up --build
+```
+
+- App: `http://localhost:3000`
+- Postgres: `localhost:5432`
+- Startup runs `db:migrate` before `next start`.
+
+To stop:
+
+```bash
+docker compose down
+```
+
+## Docker (Cloud)
+
+Use [docker-compose.cloud.yml](docker-compose.cloud.yml) when you have an external managed Postgres URL:
+
+```bash
+docker compose -f docker-compose.cloud.yml up --build
+```
+
+Set at least:
+
+- `POSTGRES_URL`
+- `AUTH_SECRET`
+- `HUGGINGFACE_API_KEY` (or set `LLM_PROVIDER=google` with `GOOGLE_GENERATIVE_AI_API_KEY`)

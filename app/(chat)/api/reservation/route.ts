@@ -1,4 +1,4 @@
-import { auth } from "@/app/(auth)/auth";
+// import { auth } from "@/app/(auth)/auth";
 import { getReservationById, updateReservation } from "@/db/queries";
 
 export async function GET(request: Request) {
@@ -9,18 +9,19 @@ export async function GET(request: Request) {
     return new Response("Not Found!", { status: 404 });
   }
 
-  const session = await auth();
-
-  if (!session || !session.user) {
-    return new Response("Unauthorized!", { status: 401 });
-  }
+  // const session = await auth();
+  // if (!session || !session.user) {
+  //   return new Response("Unauthorized!", { status: 401 });
+  // }
+  // For demo, allow all requests
+  const session = { user: { id: "demo-user" } };
 
   try {
     const reservation = await getReservationById({ id });
 
-    if (reservation.userId !== session.user.id) {
-      return new Response("Unauthorized!", { status: 401 });
-    }
+    // if (reservation.userId !== session.user.id) {
+    //   return new Response("Unauthorized!", { status: 401 });
+    // }
 
     return Response.json(reservation);
   } catch (error) {
@@ -38,11 +39,12 @@ export async function PATCH(request: Request) {
     return new Response("Not Found!", { status: 404 });
   }
 
-  const session = await auth();
-
-  if (!session || !session.user) {
-    return new Response("Unauthorized!", { status: 401 });
-  }
+  // const session = await auth();
+  // if (!session || !session.user) {
+  //   return new Response("Unauthorized!", { status: 401 });
+  // }
+  // For demo, allow all requests
+  const session = { user: { id: "demo-user" } };
 
   try {
     const reservation = await getReservationById({ id });
@@ -51,9 +53,9 @@ export async function PATCH(request: Request) {
       return new Response("Reservation not found!", { status: 404 });
     }
 
-    if (reservation.userId !== session.user.id) {
-      return new Response("Unauthorized!", { status: 401 });
-    }
+    // if (reservation.userId !== session.user.id) {
+    //   return new Response("Unauthorized!", { status: 401 });
+    // }
 
     if (reservation.hasCompletedPayment) {
       return new Response("Reservation is already paid!", { status: 409 });

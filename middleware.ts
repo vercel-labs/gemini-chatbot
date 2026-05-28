@@ -1,8 +1,10 @@
-import NextAuth from "next-auth";
 
-import { authConfig } from "@/app/(auth)/auth.config";
+// AUTH MIDDLEWARE DISABLED
+import { NextRequest, NextResponse } from "next/server";
 
-export default NextAuth(authConfig).auth;
+export default function middleware(request: NextRequest) {
+  return NextResponse.next();
+}
 
 export const config = {
   matcher: ["/", "/:id", "/api/:path*", "/login", "/register"],

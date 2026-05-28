@@ -20,10 +20,9 @@ export const Overview = () => {
           <MessageIcon />
         </p>
         <p>
-          This is an open source Chatbot template powered by the Google Gemini
-          model built with Next.js and the AI SDK by Vercel. It uses the{" "}
+          This is E.U.Z-Helper. It uses the{""}
           <code className="rounded-sm bg-muted-foreground/15 px-1.5 py-0.5">
-            streamText
+              Data from the E.U.Z-Helper onboarding process
           </code>{" "}
           function in the server and the{" "}
           <code className="rounded-sm bg-muted-foreground/15 px-1.5 py-0.5">
@@ -33,10 +32,10 @@ export const Overview = () => {
         </p>
         <p>
           {" "}
-          You can learn more about the AI SDK by visiting the{" "}
+          You can learn more about the E.U.Z by visiting{" "}
           <Link
             className="text-blue-500 dark:text-blue-400"
-            href="https://sdk.vercel.ai/docs"
+            href="https://www.e-u-z.de/"
             target="_blank"
           >
             Docs

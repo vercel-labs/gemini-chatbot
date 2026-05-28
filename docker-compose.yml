@@ -1,0 +1,49 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: euz-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: gemini_chatbot
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d gemini_chatbot" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: euz-app
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      POSTGRES_URL: postgresql://postgres:postgres@postgres:5432/gemini_chatbot
+      AUTH_SECRET: change-me-in-production
+      LLM_PROVIDER: huggingface
+      HUGGINGFACE_API_KEY: ${HUGGINGFACE_API_KEY:-}
+      HUGGINGFACE_BASE_URL: ${HUGGINGFACE_BASE_URL:-https://router.huggingface.co/v1}
+      HUGGINGFACE_MODEL: ${HUGGINGFACE_MODEL:-meta-llama/Llama-3.1-8B-Instruct}
+      HUGGINGFACE_FAST_MODEL: ${HUGGINGFACE_FAST_MODEL:-meta-llama/Llama-3.1-8B-Instruct}
+      GOOGLE_GENERATIVE_AI_API_KEY: ${GOOGLE_GENERATIVE_AI_API_KEY:-}
+      WEBHOOK_HR_URL: ${WEBHOOK_HR_URL:-}
+      WEBHOOK_SLACK_URL: ${WEBHOOK_SLACK_URL:-}
+      WEBHOOK_HRIS_URL: ${WEBHOOK_HRIS_URL:-}
+      WEBHOOK_HRIS_API_KEY: ${WEBHOOK_HRIS_API_KEY:-}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      NOTIFICATION_EMAIL_TO: ${NOTIFICATION_EMAIL_TO:-}
+    ports:
+      - "3000:3000"
+    command: sh -c "npm run db:migrate && npm run start"
+
+volumes:
+  postgres_data:

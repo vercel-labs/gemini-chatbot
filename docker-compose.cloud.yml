@@ -1,0 +1,25 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: euz-helper:latest
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      POSTGRES_URL: ${POSTGRES_URL}
+      AUTH_SECRET: ${AUTH_SECRET}
+      LLM_PROVIDER: ${LLM_PROVIDER:-huggingface}
+      HUGGINGFACE_API_KEY: ${HUGGINGFACE_API_KEY:-}
+      HUGGINGFACE_BASE_URL: ${HUGGINGFACE_BASE_URL:-https://router.huggingface.co/v1}
+      HUGGINGFACE_MODEL: ${HUGGINGFACE_MODEL:-meta-llama/Llama-3.1-8B-Instruct}
+      HUGGINGFACE_FAST_MODEL: ${HUGGINGFACE_FAST_MODEL:-meta-llama/Llama-3.1-8B-Instruct}
+      GOOGLE_GENERATIVE_AI_API_KEY: ${GOOGLE_GENERATIVE_AI_API_KEY:-}
+      WEBHOOK_HR_URL: ${WEBHOOK_HR_URL:-}
+      WEBHOOK_SLACK_URL: ${WEBHOOK_SLACK_URL:-}
+      WEBHOOK_HRIS_URL: ${WEBHOOK_HRIS_URL:-}
+      WEBHOOK_HRIS_API_KEY: ${WEBHOOK_HRIS_API_KEY:-}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      NOTIFICATION_EMAIL_TO: ${NOTIFICATION_EMAIL_TO:-}
+    command: sh -c "npm run db:migrate && npm run start"
