@@ -1,4 +1,3 @@
-import { Message } from "ai";
 import { InferSelectModel } from "drizzle-orm";
 import {
   pgTable,
@@ -8,6 +7,8 @@ import {
   uuid,
   boolean,
 } from "drizzle-orm/pg-core";
+
+import type { UIMessage } from "ai";
 
 export const user = pgTable("User", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),
@@ -20,6 +21,8 @@ export type User = InferSelectModel<typeof user>;
 export const chat = pgTable("Chat", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),
   createdAt: timestamp("createdAt").notNull(),
+  title: varchar("title", { length: 200 }),
+  modelId: varchar("modelId", { length: 50 }),
   messages: json("messages").notNull(),
   userId: uuid("userId")
     .notNull()
@@ -27,7 +30,9 @@ export const chat = pgTable("Chat", {
 });
 
 export type Chat = Omit<InferSelectModel<typeof chat>, "messages"> & {
-  messages: Array<Message>;
+  title: string | null;
+  modelId: string | null;
+  messages: Array<UIMessage>;
 };
 
 export const reservation = pgTable("Reservation", {
