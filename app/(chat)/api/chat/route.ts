@@ -228,8 +228,10 @@ export async function POST(request: Request) {
       }
     },
     experimental_telemetry: {
-      isEnabled: true,
+      isEnabled: process.env.AGENTPOND_ENABLED === "true",
       functionId: "stream-text",
+      recordInputs: true,
+      recordOutputs: true,
     },
   });
 
